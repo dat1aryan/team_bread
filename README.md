@@ -4,12 +4,8 @@
 **Round**: Round 1 — 24-Hour Campus Hackathon  
 **Problem Statement**: AI-Powered Personal Health Copilot  
 
-[![Next.js 14](https://img.shields.io/badge/Next.js-14_App_Router-black?logo=next.js)](https://nextjs.org/)
-[![Vercel Deployed](https://img.shields.io/badge/Frontend-Vercel-success?logo=vercel)](https://vercel.com)
-[![Render Backend](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render)](https://render.com)
-[![Supabase Database](https://img.shields.io/badge/Database-Supabase_PostgreSQL-3ECF8E?logo=supabase)](https://supabase.com)
-[![Google Gemini](https://img.shields.io/badge/AI_Vision-Google_Gemini_1.5-4285F4?logo=google)](https://aistudio.google.com/)
-[![ABDM / FHIR R4](https://img.shields.io/badge/ABDM-HL7_FHIR_R4-blue)](https://abdm.gov.in/)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdat1aryan%2Fteam_bread)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/dat1aryan/team_bread)
 
 ---
 

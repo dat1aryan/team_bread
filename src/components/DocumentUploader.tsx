@@ -135,9 +135,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
         createdAt: new Date().toISOString()
       };
 
-      // 5. Persist to Supabase Database
-      HealthStorageService.addDocument(newDoc);
-
       setProcessingPercent(100);
       setTimeout(() => {
         setIsProcessing(false);

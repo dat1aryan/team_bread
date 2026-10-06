@@ -22,12 +22,14 @@ interface HealthTimelineProps {
   events: TimelineEvent[];
   documents: MedicalDocument[];
   onSelectDocument: (doc: MedicalDocument) => void;
+  onNavigateToUpload?: () => void;
 }
 
 export const HealthTimeline: React.FC<HealthTimelineProps> = ({
   events,
   documents,
-  onSelectDocument
+  onSelectDocument,
+  onNavigateToUpload
 }) => {
   const [filterType, setFilterType] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -109,7 +111,30 @@ export const HealthTimeline: React.FC<HealthTimelineProps> = ({
       </div>
 
       {/* Timeline Feed */}
-      {filteredEvents.length === 0 ? (
+      {events.length === 0 ? (
+        <div className="bg-white rounded-3xl p-10 sm:p-14 text-center border border-slate-200/90 shadow-sm space-y-4 max-w-2xl mx-auto">
+          <div className="w-16 h-16 rounded-2xl bg-teal-50 border border-teal-200 text-teal-600 mx-auto flex items-center justify-center shadow-2xs">
+            <Calendar className="w-8 h-8" />
+          </div>
+          <div>
+            <h4 className="text-lg font-bold text-slate-900">Your Health Journey Timeline is Ready</h4>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-lg mx-auto leading-relaxed">
+              No health records have been saved to your timeline yet. Scan or analyze a clinical document (or try a sample record) and save it to your health profile to view your chronological journey, AI summaries, and flagged biomarkers here.
+            </p>
+          </div>
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            {onNavigateToUpload && (
+              <button
+                onClick={onNavigateToUpload}
+                className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs sm:text-sm font-semibold transition-all shadow-sm flex items-center gap-2"
+              >
+                <FileText className="w-4 h-4" />
+                <span>Scan or Upload Medical Record</span>
+              </button>
+            )}
+          </div>
+        </div>
+      ) : filteredEvents.length === 0 ? (
         <div className="bg-white rounded-2xl p-12 text-center border border-slate-200">
           <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <h4 className="text-base font-bold text-slate-800">No matching health records found</h4>

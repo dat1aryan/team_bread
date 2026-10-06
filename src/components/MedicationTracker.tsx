@@ -27,13 +27,17 @@ interface MedicationTrackerProps {
   onToggleStatus?: (id: string) => void;
   onAddCustomMedication?: (med: Omit<ExtractedMedication, 'id'>) => void;
   onToggleTakenToday?: (id: string) => void;
+  onNavigateToUpload?: () => void;
+  onNavigateToCopilot?: () => void;
 }
 
 export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
   medications,
   onToggleStatus,
   onAddCustomMedication,
-  onToggleTakenToday
+  onToggleTakenToday,
+  onNavigateToUpload,
+  onNavigateToCopilot
 }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newMedName, setNewMedName] = useState('');
@@ -44,7 +48,7 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
 
   const takenCount = medications.filter(m => m.isTakenToday).length;
   const totalMeds = medications.length;
-  const adherenceRate = totalMeds > 0 ? Math.round((takenCount / totalMeds) * 100) : 100;
+  const adherenceRate = totalMeds > 0 ? Math.round((takenCount / totalMeds) * 100) : 0;
 
   // Time slots for schedule categorization
   const timeSlots = [
@@ -146,7 +150,7 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
             </div>
             <div className="flex items-center gap-1 text-[11px] text-amber-700 font-semibold mt-1">
               <Flame className="w-3.5 h-3.5 text-amber-500" />
-              <span>Active Streak: 6 Days</span>
+              <span>Active Streak: {totalMeds > 0 ? '6 Days' : '0 Days'}</span>
             </div>
           </div>
 
@@ -161,8 +165,47 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
         </div>
       </div>
 
-      {/* Time-of-Day Categorized Schedule */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Empty State or Time-of-Day Categorized Schedule */}
+      {medications.length === 0 ? (
+        <div className="bg-white rounded-3xl p-10 sm:p-14 text-center border border-slate-200/90 shadow-sm space-y-4 max-w-2xl mx-auto">
+          <div className="w-16 h-16 rounded-2xl bg-teal-50 border border-teal-200 text-teal-600 mx-auto flex items-center justify-center shadow-2xs">
+            <Pill className="w-8 h-8" />
+          </div>
+          <div>
+            <h4 className="text-lg font-bold text-slate-900">No Active Medications Scheduled</h4>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-lg mx-auto leading-relaxed">
+              Your medication schedule automatically updates whenever you scan and save a doctor prescription or discharge summary. You can also add medicines manually or ask the SetuHealth AI Copilot to log your prescribed medicines.
+            </p>
+          </div>
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            {onNavigateToUpload && (
+              <button
+                onClick={onNavigateToUpload}
+                className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs sm:text-sm font-semibold transition-all shadow-sm flex items-center gap-2"
+              >
+                <Pill className="w-4 h-4" />
+                <span>Scan Prescription</span>
+              </button>
+            )}
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold transition-all shadow-sm flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Medication Manually</span>
+            </button>
+            {onNavigateToCopilot && (
+              <button
+                onClick={onNavigateToCopilot}
+                className="px-5 py-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-xs sm:text-sm font-semibold transition-all shadow-sm flex items-center gap-2"
+              >
+                <span>Ask AI Copilot →</span>
+              </button>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {timeSlots.map((slot) => {
           const slotMeds = medications.filter((m) => 
             m.timeOfDay && m.timeOfDay.includes(slot.id as any)
@@ -253,6 +296,7 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
           );
         })}
       </div>
+      )}
 
       {/* Add Medication Modal */}
       {showAddModal && (

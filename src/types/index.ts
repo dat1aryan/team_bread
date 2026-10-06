@@ -150,8 +150,8 @@ export interface VitalTrendSeries {
   category: string;
   unit: string;
   normalRange: string;
-  targetMin: number;
-  targetMax: number;
+  targetMin?: number;
+  targetMax?: number;
   currentValue: number;
   currentStatus: TestStatus;
   trendDirection: 'improving' | 'worsening' | 'stable';

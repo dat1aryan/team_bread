@@ -376,6 +376,7 @@ export default function HomePage() {
               currentLanguage={currentLanguage}
               onSaveToTimeline={handleSaveToTimeline}
               onBack={() => setActiveDocument(null)}
+              onViewTimeline={() => { setActiveTab('timeline'); setActiveDocument(null); }}
             />
           ) : activeTab === 'copilot' ? (
             /* View 2: Interactive AI Health Copilot Chatbot */
@@ -384,6 +385,8 @@ export default function HomePage() {
               profile={patient}
               medications={activeMeds}
               recentObservations={allLabObservations}
+              onAddMedication={handleAddCustomMedication}
+              onNavigateTab={(tab) => setActiveTab(tab as any)}
             />
           ) : activeTab === 'upload' ? (
             /* View 3: Upload Dropzone & Instant File Scanner */
@@ -397,12 +400,14 @@ export default function HomePage() {
               events={timelineEvents}
               documents={documents}
               onSelectDocument={handleSelectFromTimeline}
+              onNavigateToUpload={() => setActiveTab('upload')}
             />
           ) : activeTab === 'trends' ? (
             /* View 5: Longitudinal Vital Trends & Recharts Analytics with Logger */
             <VitalTrendsChart 
               seriesList={vitalTrends} 
               onLogVital={handleLogVital}
+              onNavigateToUpload={() => setActiveTab('upload')}
             />
           ) : activeTab === 'meds' ? (
             /* View 6: Medication Timetable & Safety Guardrails */
@@ -411,6 +416,8 @@ export default function HomePage() {
               onToggleStatus={handleToggleMedStatus}
               onAddCustomMedication={handleAddCustomMedication}
               onToggleTakenToday={handleToggleMedicationTaken}
+              onNavigateToUpload={() => setActiveTab('upload')}
+              onNavigateToCopilot={() => setActiveTab('copilot')}
             />
           ) : activeTab === 'abdm' ? (
             /* View 7: ABDM & ABHA Interoperability Hub */

@@ -11,6 +11,22 @@ const STORAGE_KEYS = {
   CUSTOM_MEDS: 'setu_custom_medications',
 };
 
+// Ensure v3 clean initialization: No mock data pre-injected into profile, timeline, vitals, or meds
+if (typeof window !== 'undefined' && !localStorage.getItem('setu_v3_clean_init')) {
+  try {
+    localStorage.removeItem(STORAGE_KEYS.DOCUMENTS);
+    localStorage.removeItem(STORAGE_KEYS.TRENDS);
+    localStorage.removeItem(STORAGE_KEYS.CUSTOM_MEDS);
+    const storedP = localStorage.getItem(STORAGE_KEYS.PATIENT);
+    if (storedP) {
+      const parsed = JSON.parse(storedP);
+      parsed.isAbhaVerified = false;
+      localStorage.setItem(STORAGE_KEYS.PATIENT, JSON.stringify(parsed));
+    }
+    localStorage.setItem('setu_v3_clean_init', 'true');
+  } catch (e) {}
+}
+
 export class HealthStorageService {
   /**
    * Uploads raw medical image/PDF to Supabase Storage bucket 'medical-records'
@@ -95,17 +111,17 @@ export class HealthStorageService {
   }
 
   /**
-   * Loads all medical documents
+   * Loads all medical documents. Returns empty array by default unless ingested/saved by user.
    */
   static getDocuments(): MedicalDocument[] {
-    if (typeof window === 'undefined') return SAMPLE_DOCUMENTS;
+    if (typeof window === 'undefined') return [];
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.DOCUMENTS);
       if (stored) return JSON.parse(stored);
     } catch (e) {
       console.warn('Storage read failed', e);
     }
-    return SAMPLE_DOCUMENTS;
+    return [];
   }
 
   /**
@@ -337,17 +353,17 @@ export class HealthStorageService {
   }
 
   /**
-   * Retrieves vital trends series
+   * Retrieves vital trends series. Returns empty array by default unless populated from scanned reports or logs.
    */
   static getVitalTrends(): VitalTrendSeries[] {
-    if (typeof window === 'undefined') return VITAL_TRENDS_SERIES;
+    if (typeof window === 'undefined') return [];
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.TRENDS);
       if (stored) return JSON.parse(stored);
     } catch (e) {
       console.warn('Storage read failed', e);
     }
-    return VITAL_TRENDS_SERIES;
+    return [];
   }
 
   /**
@@ -374,6 +390,45 @@ export class HealthStorageService {
       }
     });
 
+    if (!matched) {
+      let targetMin = 0;
+      let targetMax = 100;
+      if (testName.toLowerCase().includes('hba1c')) {
+        targetMin = 4.0;
+        targetMax = 5.6;
+      } else if (testName.toLowerCase().includes('fasting') || testName.toLowerCase().includes('glucose')) {
+        targetMin = 70;
+        targetMax = 99;
+      } else if (testName.toLowerCase().includes('pressure') || testName.toLowerCase().includes('bp')) {
+        targetMin = 90;
+        targetMax = 120;
+      } else if (testName.toLowerCase().includes('hemoglobin')) {
+        targetMin = 13.0;
+        targetMax = 17.5;
+      }
+
+      trends.push({
+        testName,
+        category: 'Self-Monitored',
+        unit,
+        normalRange: `Target: ${targetMin} - ${targetMax} ${unit}`,
+        targetMin,
+        targetMax,
+        currentValue: value,
+        currentStatus: status,
+        trendDirection: status === 'NORMAL' ? 'stable' : 'worsening',
+        aiInsight: `Manual daily reading recorded for ${testName}.`,
+        points: [{
+          date: today,
+          timestamp: Date.now(),
+          value,
+          unit,
+          status,
+          facility: 'Home Self-Monitoring'
+        }]
+      });
+    }
+
     if (typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_KEYS.TRENDS, JSON.stringify(trends));
 
@@ -396,11 +451,10 @@ export class HealthStorageService {
   }
 
   /**
-   * Updates vital trends series with newly uploaded lab observations
+   * Updates vital trends series dynamically with newly uploaded lab observations
    */
   private static updateTrendsWithObservations(doc: MedicalDocument): void {
     const trends = this.getVitalTrends();
-    let modified = false;
 
     doc.labObservations.forEach((obs) => {
       const match = trends.find((t) => 
@@ -409,7 +463,6 @@ export class HealthStorageService {
       );
 
       if (match) {
-        modified = true;
         match.points.push({
           date: doc.date,
           timestamp: new Date(doc.date).getTime(),
@@ -420,10 +473,31 @@ export class HealthStorageService {
         });
         match.currentValue = obs.value;
         match.currentStatus = obs.status;
+      } else {
+        trends.push({
+          testName: obs.testName,
+          category: obs.category || 'Laboratory',
+          unit: obs.unit,
+          normalRange: obs.referenceRangeString || `${obs.referenceLow || ''} - ${obs.referenceHigh || ''} ${obs.unit}`,
+          targetMin: obs.referenceLow,
+          targetMax: obs.referenceHigh,
+          currentValue: obs.value,
+          currentStatus: obs.status,
+          trendDirection: obs.status === 'NORMAL' ? 'stable' : 'worsening',
+          aiInsight: obs.clinicalMeaning || `Extracted from ${doc.title}`,
+          points: [{
+            date: doc.date,
+            timestamp: new Date(doc.date).getTime(),
+            value: obs.value,
+            unit: obs.unit,
+            status: obs.status,
+            facility: doc.facilityName || 'Diagnostic Lab'
+          }]
+        });
       }
     });
 
-    if (modified && typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_KEYS.TRENDS, JSON.stringify(trends));
     }
   }
@@ -434,8 +508,9 @@ export class HealthStorageService {
   static resetToDefault(): void {
     if (typeof window === 'undefined') return;
     localStorage.removeItem(STORAGE_KEYS.DOCUMENTS);
-    localStorage.removeItem(STORAGE_KEYS.PATIENT);
     localStorage.removeItem(STORAGE_KEYS.TRENDS);
     localStorage.removeItem(STORAGE_KEYS.CUSTOM_MEDS);
+    const defaultPat = { ...DEFAULT_PATIENT, isAbhaVerified: false };
+    localStorage.setItem(STORAGE_KEYS.PATIENT, JSON.stringify(defaultPat));
   }
 }

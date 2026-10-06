@@ -13,7 +13,7 @@ export const DEFAULT_PATIENT: PatientProfile = {
   preferredLanguage: 'en',
   abhaId: '91-2048-5892-1144',
   abhaAddress: 'rajesh.kumar@abdm',
-  isAbhaVerified: true,
+  isAbhaVerified: false,
 };
 
 export const SAMPLE_DOCUMENTS: MedicalDocument[] = [

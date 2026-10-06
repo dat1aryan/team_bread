@@ -20,6 +20,7 @@ import { extractTextWithTesseract, enhanceImageForOcr } from '@/lib/ocr-service'
 import { analyzeMedicalDocumentOnline } from '@/lib/medical-ai';
 import { UI_TRANSLATIONS } from '@/lib/multilingual';
 import { HealthStorageService } from '@/lib/storage';
+import { WebcamScannerModal } from './WebcamScannerModal';
 
 interface DocumentUploaderProps {
   currentLanguage: LanguageCode;
@@ -36,6 +37,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingStage, setProcessingStage] = useState<string>('');
   const [processingPercent, setProcessingPercent] = useState<number>(0);
+  const [isWebcamOpen, setIsWebcamOpen] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const t = UI_TRANSLATIONS[currentLanguage] || UI_TRANSLATIONS.en;
@@ -272,7 +274,8 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
                 Browse Files
               </button>
               <button
-                onClick={() => fileInputRef.current?.click()}
+                type="button"
+                onClick={() => setIsWebcamOpen(true)}
                 className="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 text-sm font-medium transition-colors flex items-center gap-2"
               >
                 <Camera className="w-4 h-4 text-slate-500" />
@@ -402,6 +405,15 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
         </div>
       </div>
 
+      {/* Live Webcam Scanner Modal */}
+      <WebcamScannerModal
+        isOpen={isWebcamOpen}
+        onClose={() => setIsWebcamOpen(false)}
+        onCapture={(file, dataUrl) => {
+          setSelectedFile(file);
+          setFilePreview(dataUrl);
+        }}
+      />
     </div>
   );
 };

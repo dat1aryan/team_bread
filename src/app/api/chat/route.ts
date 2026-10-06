@@ -38,6 +38,7 @@ GUIDELINES:
 5. Provide actionable diet, hydration, and sleep tips appropriate for Indian dietary habits (e.g. roti/rice balance, green veggies, dal, avoiding midnight carbs).
 6. Always include a brief clinical disclaimer reminding the patient to confirm dosage adjustments with their treating physician.
 7. ${langInstruction}
+8. FORMATTING: Structure responses with clean section titles on their own line. Do NOT prefix headings with markdown hashtags (### or ##). Use clean bullet points or numbered steps with bold titles. Keep it visually clean and easy to read.
 `;
 
     const failoverResult = await callGeminiWithFailover(

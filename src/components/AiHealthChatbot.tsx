@@ -19,6 +19,150 @@ import {
 import { ChatMessage, LanguageCode, PatientProfile, ExtractedMedication, ExtractedLabObservation } from '@/types';
 import { speakText, stopSpeaking } from '@/lib/multilingual';
 
+/**
+ * Parses and formats clinical AI responses cleanly.
+ * Replaces raw markdown symbols (###, **, *, etc.) with polished typography, styled badges, and cards.
+ */
+function renderClinicalMessageContent(text: string): React.ReactNode {
+  const lines = text.split('\n');
+  const elements: React.ReactNode[] = [];
+
+  let currentList: React.ReactNode[] = [];
+  let isNumbered = false;
+
+  const flushList = () => {
+    if (currentList.length > 0) {
+      if (isNumbered) {
+        elements.push(
+          <ol key={`ol-${elements.length}`} className="space-y-2 my-2 pl-0.5">
+            {currentList}
+          </ol>
+        );
+      } else {
+        elements.push(
+          <ul key={`ul-${elements.length}`} className="space-y-2 my-2 pl-0.5">
+            {currentList}
+          </ul>
+        );
+      }
+      currentList = [];
+    }
+  };
+
+  const formatInline = (str: string) => {
+    const parts = str.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, idx) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return (
+          <strong key={idx} className="font-semibold text-slate-900">
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
+        return (
+          <em key={idx} className="italic text-slate-700">
+            {part.slice(1, -1)}
+          </em>
+        );
+      }
+      return part;
+    });
+  };
+
+  lines.forEach((line, lineIdx) => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      flushList();
+      elements.push(<div key={`br-${lineIdx}`} className="h-1.5" />);
+      return;
+    }
+
+    // Horizontal Rule
+    if (trimmed === '---' || trimmed === '***') {
+      flushList();
+      elements.push(<hr key={`hr-${lineIdx}`} className="my-2.5 border-slate-200" />);
+      return;
+    }
+
+    // Headings (### or ## or #)
+    if (/^#{1,4}\s+/.test(trimmed)) {
+      flushList();
+      const headingText = trimmed.replace(/^#{1,4}\s+/, '');
+      elements.push(
+        <h4
+          key={`h-${lineIdx}`}
+          className="text-sm sm:text-base font-bold text-slate-900 mt-3 mb-1.5 tracking-tight flex items-center gap-1.5"
+        >
+          {formatInline(headingText)}
+        </h4>
+      );
+      return;
+    }
+
+    // Unordered Bullet List (* or -)
+    if (/^[\*\-]\s+/.test(trimmed)) {
+      if (isNumbered) flushList();
+      isNumbered = false;
+      const bulletText = trimmed.replace(/^[\*\-]\s+/, '');
+      currentList.push(
+        <li key={`li-${lineIdx}`} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 leading-relaxed">
+          <span className="w-1.5 h-1.5 rounded-full bg-teal-600 mt-2 shrink-0" />
+          <span className="flex-1">{formatInline(bulletText)}</span>
+        </li>
+      );
+      return;
+    }
+
+    // Numbered List (1. or 2.)
+    const numMatch = trimmed.match(/^(\d+)\.\s+(.*)/);
+    if (numMatch) {
+      if (!isNumbered) flushList();
+      isNumbered = true;
+      const num = numMatch[1];
+      const listText = numMatch[2];
+      currentList.push(
+        <li key={`li-${lineIdx}`} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 leading-relaxed">
+          <span className="w-5 h-5 rounded-full bg-teal-100/90 text-teal-800 font-bold text-[11px] flex items-center justify-center shrink-0 border border-teal-300/60 mt-0.5 shadow-2xs">
+            {num}
+          </span>
+          <span className="flex-1">{formatInline(listText)}</span>
+        </li>
+      );
+      return;
+    }
+
+    // Regular text paragraph
+    flushList();
+
+    // Clinical disclaimer/reminder callout
+    if (
+      trimmed.toLowerCase().includes('clinical disclaimer') || 
+      trimmed.toLowerCase().includes('important clinical reminder') || 
+      trimmed.toLowerCase().includes('disclaimer:')
+    ) {
+      elements.push(
+        <div key={`p-${lineIdx}`} className="p-3 my-2.5 rounded-xl bg-amber-50/90 border border-amber-200/80 text-[11px] text-amber-900 leading-relaxed shadow-2xs">
+          <div className="font-bold text-amber-950 mb-0.5 flex items-center gap-1">
+            <span>⚕️</span>
+            <span>Important Medical Note</span>
+          </div>
+          {formatInline(trimmed.replace(/^(\*+|#+|\s*⚕️\s*)+/g, '').replace(/\*+$/g, ''))}
+        </div>
+      );
+    } else {
+      elements.push(
+        <p key={`p-${lineIdx}`} className="text-xs sm:text-sm text-slate-700 leading-relaxed my-0.5">
+          {formatInline(trimmed)}
+        </p>
+      );
+    }
+  });
+
+  flushList();
+  return elements;
+}
+
 interface AiHealthChatbotProps {
   currentLanguage: LanguageCode;
   profile: PatientProfile;
@@ -150,7 +294,13 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
       setIsSpeaking(false);
     } else {
       setIsSpeaking(true);
-      speakText(text, currentLanguage, () => setIsSpeaking(false));
+      const cleanText = text
+        .replace(/#{1,6}\s*/g, '')
+        .replace(/\*\*/g, '')
+        .replace(/\*/g, '')
+        .replace(/[-_]{3,}/g, ' ')
+        .trim();
+      speakText(cleanText, currentLanguage, () => setIsSpeaking(false));
     }
   };
 
@@ -166,7 +316,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
             <div className="flex items-center gap-2">
               <h3 className="font-bold text-base tracking-tight">SetuHealth Clinical Copilot</h3>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
-                Gemini 1.5 Flash Vision
+                Gemini Multi-Key Failover
               </span>
             </div>
             <p className="text-xs text-teal-200/80">Context-Grounded in your medical records & prescriptions</p>
@@ -231,14 +381,20 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
                 {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
               </div>
 
-              <div className={`max-w-[80%] rounded-2xl p-4 shadow-2xs transition-all ${
+              <div className={`max-w-[85%] rounded-2xl p-4 shadow-2xs transition-all ${
                 isUser 
                   ? 'bg-teal-600 text-white rounded-tr-none' 
                   : 'bg-white border border-slate-200/90 text-slate-800 rounded-tl-none'
               }`}>
-                <div className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">
-                  {msg.content}
-                </div>
+                {isUser ? (
+                  <div className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">
+                    {msg.content}
+                  </div>
+                ) : (
+                  <div className="text-xs sm:text-sm leading-relaxed space-y-1">
+                    {renderClinicalMessageContent(msg.content)}
+                  </div>
+                )}
 
                 <div className={`flex items-center justify-between gap-4 mt-2 pt-2 border-t text-[10px] ${
                   isUser ? 'border-teal-500/50 text-teal-100' : 'border-slate-100 text-slate-400'

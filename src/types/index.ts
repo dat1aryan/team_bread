@@ -50,6 +50,9 @@ export interface ExtractedMedication {
   instructions?: string;
   timeOfDay: ('Morning' | 'Afternoon' | 'Evening' | 'Night')[];
   isActive: boolean;
+  isTakenToday?: boolean;
+  lastTakenDate?: string;
+  streakDays?: number;
 }
 
 export interface ExtractedLabObservation {
@@ -169,4 +172,12 @@ export interface AbhaProfileData {
     type: 'HOSPITAL' | 'DIAGNOSTIC_LAB' | 'CLINIC';
     recordsCount: number;
   }[];
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  createdAt: string;
+  sources?: string[];
 }

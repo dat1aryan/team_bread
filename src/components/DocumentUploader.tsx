@@ -19,6 +19,7 @@ import { MedicalDocument, LanguageCode } from '@/types';
 import { extractTextWithTesseract, enhanceImageForOcr } from '@/lib/ocr-service';
 import { analyzeMedicalDocumentOnline } from '@/lib/medical-ai';
 import { UI_TRANSLATIONS } from '@/lib/multilingual';
+import { HealthStorageService } from '@/lib/storage';
 
 interface DocumentUploaderProps {
   currentLanguage: LanguageCode;
@@ -88,9 +89,21 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
         });
       }
 
-      // 2. Call Medical AI Engine
-      setProcessingPercent(70);
-      setProcessingStage('Analyzing with Medical AI & extracting structured clinical entities...');
+      // 2. Upload file to Supabase Storage bucket
+      setProcessingPercent(55);
+      setProcessingStage('Uploading document securely to Supabase Storage...');
+      let storageUrl = filePreview || '';
+      if (selectedFile) {
+        try {
+          storageUrl = await HealthStorageService.uploadFileToStorage(selectedFile, 'pat-rajesh-001');
+        } catch (e) {
+          console.warn('Storage upload error, using preview URL', e);
+        }
+      }
+
+      // 3. Call Medical AI Engine
+      setProcessingPercent(75);
+      setProcessingStage('Analyzing with Gemini 1.5 Flash Vision & extracting clinical entities...');
       
       const analysis = await analyzeMedicalDocumentOnline(
         filePreview || undefined,
@@ -101,13 +114,13 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
       setProcessingPercent(95);
       setProcessingStage('Generating plain-language explanation and clinical triage review...');
 
-      // 3. Assemble document
+      // 4. Assemble document
       const newDoc: MedicalDocument = {
         id: `doc-${Date.now()}`,
         userId: 'pat-rajesh-001',
         title: analysis.title || selectedFile?.name?.replace(/\.[^/.]+$/, '') || 'Analyzed Medical Document',
         fileName: selectedFile?.name || 'medical_scan.jpg',
-        fileUrl: filePreview || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800',
+        fileUrl: storageUrl || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800',
         documentType: analysis.documentType,
         date: analysis.documentDate || new Date().toISOString().split('T')[0],
         doctorName: analysis.doctorName,
@@ -120,6 +133,9 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
         createdAt: new Date().toISOString()
       };
 
+      // 5. Persist to Supabase Database
+      HealthStorageService.addDocument(newDoc);
+
       setProcessingPercent(100);
       setTimeout(() => {
         setIsProcessing(false);
@@ -129,7 +145,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
     } catch (err) {
       console.error('Error during OCR processing:', err);
       setIsProcessing(false);
-      // Fallback to sample 1
       onAnalysisComplete(SAMPLE_DOCUMENTS[0]);
     }
   };

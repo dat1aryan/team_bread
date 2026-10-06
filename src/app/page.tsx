@@ -16,7 +16,9 @@ import {
   CheckCircle2,
   Presentation,
   Network,
-  RotateCcw
+  RotateCcw,
+  Bot,
+  MessageSquare
 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { DocumentUploader } from '@/components/DocumentUploader';
@@ -25,14 +27,16 @@ import { HealthTimeline } from '@/components/HealthTimeline';
 import { VitalTrendsChart } from '@/components/VitalTrendsChart';
 import { MedicationTracker } from '@/components/MedicationTracker';
 import { AbdmAbhaHub } from '@/components/AbdmAbhaHub';
+import { AiHealthChatbot } from '@/components/AiHealthChatbot';
 import { PresentationDeckModal } from '@/components/PresentationDeckModal';
 import { ArchitectureDiagramModal } from '@/components/ArchitectureDiagramModal';
 import { AuthModal } from '@/components/AuthModal';
 
-import { MedicalDocument, PatientProfile, LanguageCode, TimelineEvent, VitalTrendSeries, ExtractedMedication } from '@/types';
+import { MedicalDocument, PatientProfile, LanguageCode, TimelineEvent, VitalTrendSeries, ExtractedMedication, TestStatus } from '@/types';
 import { HealthStorageService } from '@/lib/storage';
 import { UI_TRANSLATIONS } from '@/lib/multilingual';
 import { SAMPLE_DOCUMENTS } from '@/lib/sample-data';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export default function HomePage() {
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
@@ -43,7 +47,7 @@ export default function HomePage() {
   const [activeMeds, setActiveMeds] = useState<ExtractedMedication[]>(HealthStorageService.getActiveMedications());
 
   // Active navigation tab
-  const [activeTab, setActiveTab] = useState<'upload' | 'timeline' | 'trends' | 'meds' | 'abdm'>('upload');
+  const [activeTab, setActiveTab] = useState<'upload' | 'timeline' | 'trends' | 'meds' | 'abdm' | 'copilot'>('upload');
   
   // Selected analyzed document (if viewing extraction view)
   const [activeDocument, setActiveDocument] = useState<MedicalDocument | null>(null);
@@ -65,6 +69,54 @@ export default function HomePage() {
 
   useEffect(() => {
     reloadData();
+
+    // Listen for live Supabase Auth sessions
+    const client = supabase;
+    if (isSupabaseConfigured && client) {
+      client.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user) {
+          client
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single()
+            .then(({ data }) => {
+              if (data) {
+                setPatient(prev => ({
+                  ...prev,
+                  id: data.id,
+                  fullName: data.full_name,
+                  email: data.email || session.user.email,
+                  phone: data.phone_number || prev.phone,
+                  bloodGroup: data.blood_group || prev.bloodGroup
+                }));
+              }
+            });
+        }
+      });
+
+      const { data: { subscription } } = client.auth.onAuthStateChange((_event, session) => {
+        if (session?.user) {
+          client
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single()
+            .then(({ data }) => {
+              if (data) {
+                setPatient(prev => ({
+                  ...prev,
+                  id: data.id,
+                  fullName: data.full_name,
+                  email: data.email || session.user.email
+                }));
+              }
+            });
+        }
+      });
+
+      return () => subscription.unsubscribe();
+    }
   }, []);
 
   const t = UI_TRANSLATIONS[currentLanguage] || UI_TRANSLATIONS.en;
@@ -104,6 +156,24 @@ export default function HomePage() {
     reloadData();
   };
 
+  // Toggle Medication Taken Today
+  const handleToggleMedicationTaken = (medId: string) => {
+    HealthStorageService.toggleMedicationTakenToday(medId);
+    reloadData();
+  };
+
+  // Add Custom Medication
+  const handleAddCustomMedication = (med: Omit<ExtractedMedication, 'id'>) => {
+    HealthStorageService.addCustomMedication(med);
+    reloadData();
+  };
+
+  // Log Manual Vital
+  const handleLogVital = (testName: string, value: number, unit: string, status: TestStatus) => {
+    HealthStorageService.logManualVital(testName, value, unit, status);
+    reloadData();
+  };
+
   // Reset demo
   const handleResetDemo = () => {
     HealthStorageService.resetToDefault();
@@ -118,6 +188,8 @@ export default function HomePage() {
     (acc, d) => acc + d.labObservations.filter((o) => o.status !== 'NORMAL').length,
     0
   );
+
+  const allLabObservations = documents.flatMap(d => d.labObservations);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
@@ -164,7 +236,7 @@ export default function HomePage() {
             </div>
 
             {/* Metric Highlights Pill Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               
               {/* Digitized Documents */}
               <div 
@@ -195,7 +267,7 @@ export default function HomePage() {
               {/* Flagged Biomarkers */}
               <div 
                 onClick={() => { setActiveTab('trends'); setActiveDocument(null); }}
-                className="col-span-2 sm:col-span-1 p-3.5 rounded-2xl bg-slate-50 hover:bg-rose-50/50 border border-slate-200/80 cursor-pointer transition-colors"
+                className="p-3.5 rounded-2xl bg-slate-50 hover:bg-rose-50/50 border border-slate-200/80 cursor-pointer transition-colors"
               >
                 <div className="flex items-center justify-between text-slate-400 mb-1">
                   <span className="text-[11px] font-bold uppercase tracking-wider">Flagged</span>
@@ -203,6 +275,22 @@ export default function HomePage() {
                 </div>
                 <div className="text-xl font-extrabold text-rose-600">{flaggedCount}</div>
                 <div className="text-[10px] text-rose-700 font-medium mt-0.5">Biomarkers Under Watch</div>
+              </div>
+
+              {/* AI Copilot Direct Launch */}
+              <div 
+                onClick={() => { setActiveTab('copilot'); setActiveDocument(null); }}
+                className="p-3.5 rounded-2xl bg-gradient-to-br from-teal-50 to-emerald-50 hover:from-teal-100/60 hover:to-emerald-100/60 border border-teal-200/80 cursor-pointer transition-all"
+              >
+                <div className="flex items-center justify-between text-teal-600 mb-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wider">AI Copilot</span>
+                  <Bot className="w-4 h-4 text-teal-700" />
+                </div>
+                <div className="text-base font-extrabold text-teal-950 flex items-center gap-1.5">
+                  <span>Chat Assistant</span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                </div>
+                <div className="text-[10px] text-teal-800 font-medium mt-0.5">Clinical Inquiries</div>
               </div>
 
             </div>
@@ -222,6 +310,19 @@ export default function HomePage() {
           >
             <UploadCloud className="w-4 h-4" />
             <span>{t.tabUpload}</span>
+          </button>
+
+          <button
+            onClick={() => { setActiveTab('copilot'); setActiveDocument(null); }}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+              activeTab === 'copilot'
+                ? 'bg-gradient-to-r from-teal-700 to-emerald-700 text-white shadow-sm'
+                : 'text-slate-700 hover:bg-teal-50 hover:text-teal-900'
+            }`}
+          >
+            <Bot className="w-4 h-4 text-teal-500" />
+            <span>AI Health Copilot</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-md bg-teal-100 text-teal-800">Gemini</span>
           </button>
 
           <button
@@ -284,30 +385,43 @@ export default function HomePage() {
               onSaveToTimeline={handleSaveToTimeline}
               onBack={() => setActiveDocument(null)}
             />
+          ) : activeTab === 'copilot' ? (
+            /* View 2: Interactive AI Health Copilot Chatbot */
+            <AiHealthChatbot
+              currentLanguage={currentLanguage}
+              profile={patient}
+              medications={activeMeds}
+              recentObservations={allLabObservations}
+            />
           ) : activeTab === 'upload' ? (
-            /* View 2: Upload Dropzone & 1-Click Sample Preloads */
+            /* View 3: Upload Dropzone & Instant File Scanner */
             <DocumentUploader
               currentLanguage={currentLanguage}
               onAnalysisComplete={handleAnalysisComplete}
             />
           ) : activeTab === 'timeline' ? (
-            /* View 3: Chronological Health Journey Timeline */
+            /* View 4: Chronological Health Journey Timeline */
             <HealthTimeline
               events={timelineEvents}
               documents={documents}
               onSelectDocument={handleSelectFromTimeline}
             />
           ) : activeTab === 'trends' ? (
-            /* View 4: Longitudinal Vital Trends & Recharts Analytics */
-            <VitalTrendsChart seriesList={vitalTrends} />
+            /* View 5: Longitudinal Vital Trends & Recharts Analytics with Logger */
+            <VitalTrendsChart 
+              seriesList={vitalTrends} 
+              onLogVital={handleLogVital}
+            />
           ) : activeTab === 'meds' ? (
-            /* View 5: Medication Timetable & Safety Guardrails */
+            /* View 6: Medication Timetable & Safety Guardrails */
             <MedicationTracker
               medications={activeMeds}
               onToggleStatus={handleToggleMedStatus}
+              onAddCustomMedication={handleAddCustomMedication}
+              onToggleTakenToday={handleToggleMedicationTaken}
             />
           ) : activeTab === 'abdm' ? (
-            /* View 6: ABDM & ABHA Interoperability Hub */
+            /* View 7: ABDM & ABHA Interoperability Hub */
             <AbdmAbhaHub
               patient={patient}
               documents={documents}
@@ -319,7 +433,19 @@ export default function HomePage() {
 
       </main>
 
-      {/* Global Clinical & Hackathon Footer */}
+      {/* Floating Action Button for AI Copilot */}
+      {activeTab !== 'copilot' && !activeDocument && (
+        <button
+          onClick={() => { setActiveTab('copilot'); setActiveDocument(null); }}
+          className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4.5 py-3 rounded-2xl bg-gradient-to-r from-teal-700 via-emerald-700 to-teal-800 hover:from-teal-800 hover:to-emerald-800 text-white font-bold text-sm shadow-xl shadow-teal-900/20 transition-all hover:scale-105 group cursor-pointer"
+        >
+          <Bot className="w-5 h-5 text-teal-200 group-hover:rotate-12 transition-transform" />
+          <span>Ask AI Copilot</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
+        </button>
+      )}
+
+      {/* Global Clinical Footer */}
       <footer className="mt-auto border-t border-slate-200 bg-white py-6 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">

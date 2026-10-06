@@ -1,6 +1,6 @@
-// Syncs with Supabase PostgreSQL with transparent localStorage fallback
+// Syncs with Supabase PostgreSQL & Storage with resilient local fallback
 
-import { MedicalDocument, PatientProfile, TimelineEvent, VitalTrendSeries, ExtractedMedication, LanguageCode } from '@/types';
+import { MedicalDocument, PatientProfile, TimelineEvent, VitalTrendSeries, ExtractedMedication, TestStatus } from '@/types';
 import { DEFAULT_PATIENT, SAMPLE_DOCUMENTS, VITAL_TRENDS_SERIES } from './sample-data';
 import { supabase, isSupabaseConfigured } from './supabase';
 
@@ -8,10 +8,46 @@ const STORAGE_KEYS = {
   PATIENT: 'setu_patient_profile',
   DOCUMENTS: 'setu_medical_documents',
   TRENDS: 'setu_vital_trends',
-  LANGUAGE: 'setu_preferred_language',
+  CUSTOM_MEDS: 'setu_custom_medications',
 };
 
 export class HealthStorageService {
+  /**
+   * Uploads raw medical image/PDF to Supabase Storage bucket 'medical-records'
+   */
+  static async uploadFileToStorage(file: File, userId: string): Promise<string> {
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const fileExt = file.name.split('.').pop() || 'jpg';
+        const cleanUserId = userId || 'anonymous';
+        const filePath = `${cleanUserId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+        const { data, error } = await supabase.storage
+          .from('medical-records')
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
+
+        if (!error && data) {
+          const { data: publicData } = supabase.storage
+            .from('medical-records')
+            .getPublicUrl(data.path);
+          return publicData.publicUrl;
+        }
+      } catch (err) {
+        console.warn('Supabase storage upload error, falling back to data URL:', err);
+      }
+    }
+
+    // Fallback: create object URL or base64
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(file);
+    });
+  }
+
   /**
    * Loads patient profile
    */
@@ -27,20 +63,20 @@ export class HealthStorageService {
   }
 
   /**
-   * Saves patient profile
+   * Saves patient profile and syncs to Supabase
    */
   static savePatientProfile(profile: PatientProfile): void {
     if (typeof window === 'undefined') return;
     try {
       localStorage.setItem(STORAGE_KEYS.PATIENT, JSON.stringify(profile));
       
-      // Sync to Supabase if available
       if (isSupabaseConfigured && supabase) {
         supabase
           .from('profiles')
           .upsert({
             id: profile.id,
             full_name: profile.fullName,
+            email: profile.email,
             date_of_birth: profile.dateOfBirth,
             gender: profile.gender,
             blood_group: profile.bloodGroup,
@@ -73,7 +109,7 @@ export class HealthStorageService {
   }
 
   /**
-   * Adds a newly ingested medical document and updates timeline + vitals
+   * Adds a newly ingested medical document and updates timeline + vitals + Supabase
    */
   static addDocument(doc: MedicalDocument): void {
     if (typeof window === 'undefined') return;
@@ -82,12 +118,12 @@ export class HealthStorageService {
       const updated = [doc, ...existing];
       localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(updated));
 
-      // Also update vital trends if lab observations are present
+      // Update vital trends if lab observations are present
       if (doc.labObservations && doc.labObservations.length > 0) {
         this.updateTrendsWithObservations(doc);
       }
 
-      // Sync with Supabase
+      // Sync with Supabase tables: documents, medications, lab_observations, timeline_events
       if (isSupabaseConfigured && supabase) {
         supabase
           .from('documents')
@@ -108,6 +144,51 @@ export class HealthStorageService {
           .then(({ error }) => {
             if (error) console.warn('Supabase document sync error:', error.message);
           });
+
+        // Sync extracted medications
+        if (doc.medications?.length > 0) {
+          const medPayloads = doc.medications.map(m => ({
+            id: m.id,
+            user_id: doc.userId,
+            document_id: doc.id,
+            drug_name: m.name,
+            generic_name: m.genericName,
+            dosage: m.dosage,
+            frequency: m.frequency,
+            route: m.route || 'Oral',
+            timing: m.timing || 'After Food',
+            instructions: m.instructions,
+            is_active: m.isActive !== false
+          }));
+
+          supabase.from('medications').insert(medPayloads).then(({ error }) => {
+            if (error) console.warn('Supabase medications sync error:', error.message);
+          });
+        }
+
+        // Sync extracted lab observations
+        if (doc.labObservations?.length > 0) {
+          const obsPayloads = doc.labObservations.map(o => ({
+            id: o.id,
+            user_id: doc.userId,
+            document_id: doc.id,
+            test_name: o.testName,
+            category: o.category,
+            measured_value: o.value,
+            unit: o.unit,
+            reference_low: o.referenceLow,
+            reference_high: o.referenceHigh,
+            reference_range_string: o.referenceRangeString,
+            status: o.status,
+            loinc_code: o.loincCode,
+            clinical_interpretation: o.clinicalMeaning,
+            observation_date: doc.date
+          }));
+
+          supabase.from('lab_observations').insert(obsPayloads).then(({ error }) => {
+            if (error) console.warn('Supabase lab_observations sync error:', error.message);
+          });
+        }
       }
     } catch (e) {
       console.warn('Failed to add document', e);
@@ -141,7 +222,7 @@ export class HealthStorageService {
   }
 
   /**
-   * Retrieves all active medications across stored prescriptions
+   * Retrieves all medications across stored prescriptions and custom additions
    */
   static getActiveMedications(): ExtractedMedication[] {
     const docs = this.getDocuments();
@@ -150,10 +231,24 @@ export class HealthStorageService {
     docs.forEach((doc) => {
       doc.medications.forEach((med) => {
         if (!map.has(med.name.toLowerCase())) {
-          map.set(med.name.toLowerCase(), med);
+          map.set(med.name.toLowerCase(), { ...med });
         }
       });
     });
+
+    // Merge custom medications
+    if (typeof window !== 'undefined') {
+      try {
+        const customMeds: ExtractedMedication[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOM_MEDS) || '[]');
+        customMeds.forEach(m => {
+          if (!map.has(m.name.toLowerCase())) {
+            map.set(m.name.toLowerCase(), m);
+          }
+        });
+      } catch (e) {
+        console.warn('Error reading custom meds', e);
+      }
+    }
 
     return Array.from(map.values());
   }
@@ -180,6 +275,68 @@ export class HealthStorageService {
   }
 
   /**
+   * Toggles medication taken today (daily adherence tracker)
+   */
+  static toggleMedicationTakenToday(medId: string): void {
+    const today = new Date().toISOString().split('T')[0];
+    const docs = this.getDocuments();
+    let updated = false;
+
+    docs.forEach((doc) => {
+      doc.medications.forEach((med) => {
+        if (med.id === medId) {
+          const wasTaken = med.isTakenToday && med.lastTakenDate === today;
+          med.isTakenToday = !wasTaken;
+          med.lastTakenDate = !wasTaken ? today : undefined;
+          med.streakDays = !wasTaken ? (med.streakDays || 0) + 1 : Math.max(0, (med.streakDays || 1) - 1);
+          updated = true;
+        }
+      });
+    });
+
+    if (updated && typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(docs));
+    }
+  }
+
+  /**
+   * Adds a manual custom medication
+   */
+  static addCustomMedication(med: Omit<ExtractedMedication, 'id'>): void {
+    if (typeof window === 'undefined') return;
+    const newMed: ExtractedMedication = {
+      ...med,
+      id: `med-custom-${Date.now()}`
+    };
+
+    try {
+      const customMeds: ExtractedMedication[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOM_MEDS) || '[]');
+      customMeds.push(newMed);
+      localStorage.setItem(STORAGE_KEYS.CUSTOM_MEDS, JSON.stringify(customMeds));
+
+      if (isSupabaseConfigured && supabase) {
+        const profile = this.getPatientProfile();
+        supabase.from('medications').insert({
+          id: newMed.id,
+          user_id: profile.id,
+          drug_name: newMed.name,
+          generic_name: newMed.genericName,
+          dosage: newMed.dosage,
+          frequency: newMed.frequency,
+          timing: newMed.timing,
+          route: newMed.route,
+          instructions: newMed.instructions,
+          is_active: true
+        }).then(({ error }) => {
+          if (error) console.warn('Supabase custom medication sync error:', error.message);
+        });
+      }
+    } catch (e) {
+      console.warn('Error saving custom medication', e);
+    }
+  }
+
+  /**
    * Retrieves vital trends series
    */
   static getVitalTrends(): VitalTrendSeries[] {
@@ -191,6 +348,51 @@ export class HealthStorageService {
       console.warn('Storage read failed', e);
     }
     return VITAL_TRENDS_SERIES;
+  }
+
+  /**
+   * Logs a manual vital reading (e.g. today's blood glucose or BP)
+   */
+  static logManualVital(testName: string, value: number, unit: string, status: TestStatus): void {
+    const trends = this.getVitalTrends();
+    const today = new Date().toISOString().split('T')[0];
+    let matched = false;
+
+    trends.forEach((t) => {
+      if (t.testName.toLowerCase().includes(testName.toLowerCase()) || testName.toLowerCase().includes(t.testName.toLowerCase())) {
+        matched = true;
+        t.points.push({
+          date: today,
+          timestamp: Date.now(),
+          value,
+          unit,
+          status,
+          facility: 'Home Self-Monitoring'
+        });
+        t.currentValue = value;
+        t.currentStatus = status;
+      }
+    });
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEYS.TRENDS, JSON.stringify(trends));
+
+      if (isSupabaseConfigured && supabase) {
+        const profile = this.getPatientProfile();
+        supabase.from('lab_observations').insert({
+          id: `obs-manual-${Date.now()}`,
+          user_id: profile.id,
+          test_name: testName,
+          measured_value: value,
+          unit,
+          status,
+          observation_date: today,
+          clinical_interpretation: 'Home Self-Monitoring Log'
+        }).then(({ error }) => {
+          if (error) console.warn('Supabase manual observation sync error:', error.message);
+        });
+      }
+    }
   }
 
   /**
@@ -234,5 +436,6 @@ export class HealthStorageService {
     localStorage.removeItem(STORAGE_KEYS.DOCUMENTS);
     localStorage.removeItem(STORAGE_KEYS.PATIENT);
     localStorage.removeItem(STORAGE_KEYS.TRENDS);
+    localStorage.removeItem(STORAGE_KEYS.CUSTOM_MEDS);
   }
 }

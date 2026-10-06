@@ -1,9 +1,5 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - Unified Chronological Health Journey Timeline
-// ========================================================================
-
 import React, { useState } from 'react';
 import { 
   Calendar, 

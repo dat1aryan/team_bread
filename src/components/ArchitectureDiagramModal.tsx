@@ -1,10 +1,5 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - System Architecture Visualizer Modal
-// High-fidelity interactive diagram covering data pipeline, AI, & ABDM schema
-// ========================================================================
-
 import React, { useState } from 'react';
 import { 
   X, 

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     'FHIR R4',
     'Prescription Reader',
     'Lab Report Explainer',
-    'HacXLerate 2026',
+    'Health Tech',
     'Altrix Labs'
   ],
   authors: [{ name: 'SetuHealth Team' }],

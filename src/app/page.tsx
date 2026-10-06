@@ -1,10 +1,5 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - Main Application Dashboard
-// HacXLerate 2026 byteXL Altrix Labs Hackathon — Round 1 Winning Solution
-// ========================================================================
-
 import React, { useState, useEffect } from 'react';
 import { 
   HeartPulse, 
@@ -331,14 +326,14 @@ export default function HomePage() {
             <HeartPulse className="w-4 h-4 text-teal-600" />
             <span className="font-bold text-slate-800">SetuHealth AI Copilot</span>
             <span>•</span>
-            <span>HacXLerate 2026 Campus Hackathon (byteXL & Altrix Labs)</span>
+            <span>Personal Health Intelligence Platform</span>
           </div>
           <div className="flex items-center gap-4 text-xs font-semibold">
             <button onClick={() => setIsArchitectureOpen(true)} className="hover:text-teal-700">
               Architecture Blueprint
             </button>
             <button onClick={() => setIsDeckOpen(true)} className="hover:text-teal-700">
-              Judges Presentation
+              Overview Slides
             </button>
             <button onClick={() => setIsAuthOpen(true)} className="hover:text-teal-700">
               Database & Auth

@@ -1,10 +1,5 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - Interactive Hackathon Pitch Deck Modal
-// 8-Slide Presentation Deck for HacXLerate Evaluators & Altrix Labs
-// ========================================================================
-
 import React, { useState } from 'react';
 import { 
   X, 
@@ -40,7 +35,7 @@ export const PresentationDeckModal: React.FC<PresentationDeckModalProps> = ({
     {
       badge: 'PROBLEM STATEMENT & CONTEXT',
       title: 'Bridging Fragmented Medical Records to Actionable Health Intelligence',
-      subtitle: 'HacXLerate 2026 byteXL Altrix Labs Hackathon — Round 1',
+      subtitle: 'Personal Health Intelligence & ABDM Platform',
       icon: <HeartPulse className="w-8 h-8 text-rose-500" />,
       content: (
         <div className="space-y-4">
@@ -231,7 +226,7 @@ export const PresentationDeckModal: React.FC<PresentationDeckModalProps> = ({
             </div>
           </div>
           <p className="text-xs text-slate-500 pt-2 text-center">
-            Built for HacXLerate 2026. Empowering millions to own, understand, and act upon their healthcare journey.
+            Empowering individuals to own, understand, and act upon their healthcare journey.
           </p>
         </div>
       )

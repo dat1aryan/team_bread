@@ -1,8 +1,5 @@
 "use strict";
-// ========================================================================
-// SetuHealth Backend API - Render Web Service Entrypoint
 // Express server with Gemini Vision OCR, ABDM FHIR, and Clinical AI endpoints
-// ========================================================================
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };

@@ -1,7 +1,4 @@
-// ========================================================================
-// SetuHealth Backend API - Render Web Service Entrypoint
 // Express server with Gemini Vision OCR, ABDM FHIR, and Clinical AI endpoints
-// ========================================================================
 
 import express, { Request, Response } from 'express';
 import cors from 'cors';

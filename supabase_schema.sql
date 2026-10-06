@@ -1,7 +1,3 @@
--- ========================================================================
--- SetuHealth AI Copilot (सेतु हेल्थ) - Supabase PostgreSQL Database Schema
--- Aligned with India ABDM (Ayushman Bharat Digital Mission) & HL7 FHIR R4
--- ========================================================================
 
 -- 1. Enable UUID Extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -104,9 +100,7 @@ CREATE TABLE IF NOT EXISTS public.timeline_events (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- ========================================================================
 -- Row Level Security (RLS) Setup
--- ========================================================================
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.abha_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.documents ENABLE ROW LEVEL SECURITY;

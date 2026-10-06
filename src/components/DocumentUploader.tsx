@@ -1,9 +1,5 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - Document Ingestion & Multi-Modal OCR Component
-// ========================================================================
-
 import React, { useState, useRef } from 'react';
 import { 
   UploadCloud, 
@@ -282,7 +278,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-teal-600" />
             <h4 className="text-sm font-bold text-slate-900">
-              Instant 1-Click Test Bench for Evaluators & Judges
+              Sample Clinical Records for Quick Preview
             </h4>
           </div>
           <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-teal-100 text-teal-800">

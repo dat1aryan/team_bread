@@ -1,7 +1,4 @@
-// ========================================================================
-// SetuHealth AI Copilot - Unified Data Persistence Service
 // Syncs with Supabase PostgreSQL with transparent localStorage fallback
-// ========================================================================
 
 import { MedicalDocument, PatientProfile, TimelineEvent, VitalTrendSeries, ExtractedMedication, LanguageCode } from '@/types';
 import { DEFAULT_PATIENT, SAMPLE_DOCUMENTS, VITAL_TRENDS_SERIES } from './sample-data';

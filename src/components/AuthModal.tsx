@@ -1,9 +1,5 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - Supabase Auth & Instant Demo Access Modal
-// ========================================================================
-
 import React, { useState } from 'react';
 import { 
   X, 
@@ -97,7 +93,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-teal-700" />
             <span className="text-xs font-bold text-teal-900 uppercase">
-              1-Click Evaluator & Demo Access
+              Quick Demo Access
             </span>
           </div>
           <p className="text-xs text-teal-800">

@@ -1,9 +1,6 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - Active Medication Schedule & Safety Guardrail
 // Morning/Afternoon/Night timetable, food timing, and drug interaction alerts
-// ========================================================================
 
 import React, { useState } from 'react';
 import { 

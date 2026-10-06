@@ -1,10 +1,5 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - Longitudinal Vital Trends & Biomarker Analytics
-// Recharts visualization with target threshold bands & AI insights
-// ========================================================================
-
 import React, { useState } from 'react';
 import { 
   LineChart, 

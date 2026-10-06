@@ -1,7 +1,4 @@
-// ========================================================================
-// SetuHealth AI Copilot - Multi-Modal OCR Preprocessing Service
 // Uses Tesseract.js client OCR with Canvas image enhancement
-// ========================================================================
 
 export interface OcrProgress {
   status: string;

@@ -1,9 +1,5 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - Navigation Header Component
-// ========================================================================
-
 import React, { useState } from 'react';
 import { 
   HeartPulse, 
@@ -124,10 +120,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenDeck}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white text-xs sm:text-sm font-semibold shadow-sm transition-all"
-            title="Presentation Slides for Judges"
+            title="Product Presentation"
           >
             <Presentation className="w-4 h-4" />
-            <span className="hidden sm:inline">Judges Deck</span>
+            <span className="hidden sm:inline">Product Deck</span>
           </button>
 
           {/* Quick Demo Reset / Auth Trigger */}

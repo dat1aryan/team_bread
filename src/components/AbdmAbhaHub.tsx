@@ -1,9 +1,6 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - ABDM & ABHA National Health Stack Hub
 // Mock ABHA ID verification, ABDM Health Card QR, & HL7 FHIR R4 Inspector
-// ========================================================================
 
 import React, { useState } from 'react';
 import { 

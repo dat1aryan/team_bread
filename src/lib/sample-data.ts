@@ -1,7 +1,3 @@
-// ========================================================================
-// SetuHealth AI Copilot - Realistic Clinical Sample Records
-// Designed for instant 1-click evaluation by judges and doctors
-// ========================================================================
 
 import { MedicalDocument, PatientProfile, VitalTrendSeries } from '@/types';
 

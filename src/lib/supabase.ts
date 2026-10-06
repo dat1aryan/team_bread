@@ -1,7 +1,4 @@
-// ========================================================================
-// SetuHealth AI Copilot - Supabase Client & Resilience Layer
 // Provides live Supabase connectivity with transparent mock fallback
-// ========================================================================
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 

@@ -1,7 +1,4 @@
-// ========================================================================
-// SetuHealth Backend - Google Gemini 1.5 Vision & Multimodal AI Engine
 // Extracts structured clinical data and generates plain-language summaries
-// ========================================================================
 
 import dotenv from 'dotenv';
 dotenv.config();

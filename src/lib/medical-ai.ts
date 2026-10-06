@@ -1,7 +1,4 @@
-// ========================================================================
-// SetuHealth AI Copilot - Frontend Clinical AI & Gemini Integration Layer
 // Communicates with Render backend, direct Gemini API, or fallback rule engine
-// ========================================================================
 
 import { MedicalDocument, PlainLanguageSummary, ExtractedMedication, ExtractedLabObservation, ClinicalDiagnosis } from '@/types';
 import { generateFhirR4Bundle } from './abdm-fhir';

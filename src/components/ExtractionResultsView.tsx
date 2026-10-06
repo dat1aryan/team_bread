@@ -1,9 +1,5 @@
 'use client';
 
-// ========================================================================
-// SetuHealth AI Copilot - Structured Extraction & Plain AI Summary View
-// ========================================================================
-
 import React, { useState } from 'react';
 import { 
   FileText, 

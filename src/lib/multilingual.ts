@@ -1,7 +1,3 @@
-// ========================================================================
-// SetuHealth AI Copilot - Multi-Language Translation & Speech Synthesis
-// Empowers multilingual Indian & global users with native health clarity
-// ========================================================================
 
 import { LanguageCode, LanguageOption } from '@/types';
 

@@ -1,7 +1,3 @@
-// ========================================================================
-// SetuHealth AI Copilot - ABDM & HL7 FHIR R4 Interoperability Engine
-// Full compliance with Ayushman Bharat Digital Mission (ABDM) M4 Milestones
-// ========================================================================
 
 import { MedicalDocument, PatientProfile, ExtractedLabObservation, ExtractedMedication, AbhaProfileData } from '@/types';
 

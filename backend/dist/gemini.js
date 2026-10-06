@@ -1,8 +1,5 @@
 "use strict";
-// ========================================================================
-// SetuHealth Backend - Google Gemini 1.5 Vision & Multimodal AI Engine
 // Extracts structured clinical data and generates plain-language summaries
-// ========================================================================
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };

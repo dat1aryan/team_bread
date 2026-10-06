@@ -1,7 +1,4 @@
-// ========================================================================
-// SetuHealth AI Copilot (सेतु हेल्थ) - Core TypeScript Definitions
 // Aligned with ABDM (Ayushman Bharat Digital Mission) & HL7 FHIR R4
-// ========================================================================
 
 export type LanguageCode = 'en' | 'hi' | 'te' | 'ta' | 'bn' | 'mr' | 'es';
 

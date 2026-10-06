@@ -20,7 +20,8 @@ import {
   Activity,
   User,
   Calendar,
-  Building
+  Building,
+  Trash2
 } from 'lucide-react';
 import { MedicalDocument, LanguageCode, TestStatus, ClinicalUrgency } from '@/types';
 import { speakText, stopSpeaking, UI_TRANSLATIONS } from '@/lib/multilingual';
@@ -34,13 +35,15 @@ interface ExtractionResultsViewProps {
   onSaveToTimeline?: (doc: MedicalDocument) => void;
   onBack: () => void;
   onViewTimeline?: () => void;
+  onDeleteDocument?: (docId: string) => void;
 }
 
 export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
   document,
   currentLanguage,
   onBack,
-  onViewTimeline
+  onViewTimeline,
+  onDeleteDocument
 }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [activeTab, setActiveTab] = useState<'summary' | 'labs' | 'meds' | 'questions'>('summary');
@@ -149,11 +152,6 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Auto-Saved to Timeline</span>
-          </div>
-
           <button
             onClick={handleDownloadFhir}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-200 transition-colors cursor-pointer"
@@ -162,6 +160,22 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
             <Download className="w-4 h-4 text-teal-600" />
             <span>FHIR R4 JSON</span>
           </button>
+
+          {onDeleteDocument && (
+            <button
+              onClick={() => {
+                if (confirm(`Delete "${document.title}" from your health records?`)) {
+                  onDeleteDocument(document.id);
+                  onBack();
+                }
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-700 text-xs sm:text-sm font-semibold border border-slate-200 hover:border-rose-200 transition-colors cursor-pointer"
+              title="Delete this record"
+            >
+              <Trash2 className="w-4 h-4 text-slate-400 hover:text-rose-600" />
+              <span>Delete Record</span>
+            </button>
+          )}
         </div>
       </div>
 

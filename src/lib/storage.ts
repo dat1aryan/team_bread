@@ -212,6 +212,82 @@ export class HealthStorageService {
   }
 
   /**
+   * Deletes a medical document and its associated records from timeline and storage
+   */
+  static deleteDocument(docOrEventId: string): void {
+    if (typeof window === 'undefined') return;
+    try {
+      const existing = this.getDocuments();
+      const cleanId = docOrEventId.startsWith('evt-') ? docOrEventId.replace('evt-', '') : docOrEventId;
+      const updated = existing.filter((d) => d.id !== cleanId && d.id !== docOrEventId);
+      localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(updated));
+
+      // Rebuild vital trends from remaining documents
+      const remainingTrends: VitalTrendSeries[] = [];
+      updated.forEach((doc) => {
+        if (doc.labObservations && doc.labObservations.length > 0) {
+          doc.labObservations.forEach((obs) => {
+            const match = remainingTrends.find((t) => 
+              t.testName.toLowerCase().includes(obs.testName.toLowerCase()) || 
+              obs.testName.toLowerCase().includes(t.testName.toLowerCase())
+            );
+
+            if (match) {
+              match.points.push({
+                date: doc.date,
+                timestamp: new Date(doc.date).getTime(),
+                value: obs.value,
+                unit: obs.unit,
+                status: obs.status,
+                facility: doc.facilityName || 'Diagnostic Lab'
+              });
+              match.currentValue = obs.value;
+              match.currentStatus = obs.status;
+            } else {
+              remainingTrends.push({
+                testName: obs.testName,
+                category: obs.category || 'Laboratory',
+                unit: obs.unit,
+                normalRange: obs.referenceRangeString || `${obs.referenceLow || ''} - ${obs.referenceHigh || ''} ${obs.unit}`,
+                targetMin: obs.referenceLow,
+                targetMax: obs.referenceHigh,
+                currentValue: obs.value,
+                currentStatus: obs.status,
+                trendDirection: obs.status === 'NORMAL' ? 'stable' : 'worsening',
+                aiInsight: obs.clinicalMeaning || `Extracted from ${doc.title}`,
+                points: [{
+                  date: doc.date,
+                  timestamp: new Date(doc.date).getTime(),
+                  value: obs.value,
+                  unit: obs.unit,
+                  status: obs.status,
+                  facility: doc.facilityName || 'Diagnostic Lab'
+                }]
+              });
+            }
+          });
+        }
+      });
+      localStorage.setItem(STORAGE_KEYS.TRENDS, JSON.stringify(remainingTrends));
+
+      // Sync delete with Supabase if configured
+      if (isSupabaseConfigured && supabase) {
+        supabase.from('documents').delete().eq('id', cleanId).then(({ error }) => {
+          if (error) console.warn('Supabase document delete error:', error.message);
+        });
+        supabase.from('medications').delete().eq('document_id', cleanId).then(({ error }) => {
+          if (error) console.warn('Supabase medications delete error:', error.message);
+        });
+        supabase.from('lab_observations').delete().eq('document_id', cleanId).then(({ error }) => {
+          if (error) console.warn('Supabase lab_observations delete error:', error.message);
+        });
+      }
+    } catch (e) {
+      console.warn('Failed to delete document', e);
+    }
+  }
+
+  /**
    * Generates chronological timeline events from stored documents
    */
   static getTimelineEvents(): TimelineEvent[] {

@@ -14,7 +14,8 @@ import {
   AlertCircle,
   CheckCircle2,
   AlertTriangle,
-  Clock
+  Clock,
+  Trash2
 } from 'lucide-react';
 import { TimelineEvent, MedicalDocument, ClinicalUrgency } from '@/types';
 
@@ -23,13 +24,15 @@ interface HealthTimelineProps {
   documents: MedicalDocument[];
   onSelectDocument: (doc: MedicalDocument) => void;
   onNavigateToUpload?: () => void;
+  onDeleteEvent?: (documentId: string) => void;
 }
 
 export const HealthTimeline: React.FC<HealthTimelineProps> = ({
   events,
   documents,
   onSelectDocument,
-  onNavigateToUpload
+  onNavigateToUpload,
+  onDeleteEvent
 }) => {
   const [filterType, setFilterType] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -209,15 +212,32 @@ export const HealthTimeline: React.FC<HealthTimelineProps> = ({
                       )}
                     </div>
 
-                    {correspondingDoc && (
+                    <div className="flex items-center gap-2">
+                      {correspondingDoc && (
+                        <button
+                          onClick={() => onSelectDocument(correspondingDoc)}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-teal-700 hover:text-teal-900 hover:bg-teal-50 rounded-lg border border-teal-200 transition-colors cursor-pointer"
+                          title="View clinical analysis and breakdown"
+                        >
+                          <span>View Analysis</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+
                       <button
-                        onClick={() => onSelectDocument(correspondingDoc)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-teal-600 hover:text-teal-800 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm(`Delete "${evt.title}" from your timeline?`)) {
+                            onDeleteEvent?.(evt.documentId || evt.id.replace('evt-', ''));
+                          }
+                        }}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-slate-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg border border-slate-200 hover:border-rose-200 transition-colors cursor-pointer"
+                        title="Delete record from health journey timeline"
                       >
-                        <span>View Analysis</span>
-                        <ChevronRight className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5 text-slate-400 hover:text-rose-600" />
+                        <span>Delete</span>
                       </button>
-                    )}
+                    </div>
                   </div>
 
                 </div>

@@ -128,6 +128,15 @@ export default function HomePage() {
     setActiveTab('upload');
   };
 
+  // Delete document / timeline record callback
+  const handleDeleteDocument = (documentId: string) => {
+    HealthStorageService.deleteDocument(documentId);
+    if (activeDocument?.id === documentId) {
+      setActiveDocument(null);
+    }
+    reloadData();
+  };
+
   // ABHA verified callback
   const handleAbhaVerified = (abhaNum: string, abhaAddr: string) => {
     const updated: PatientProfile = {
@@ -367,6 +376,7 @@ export default function HomePage() {
               currentLanguage={currentLanguage}
               onBack={() => setActiveDocument(null)}
               onViewTimeline={() => { setActiveTab('timeline'); setActiveDocument(null); }}
+              onDeleteDocument={handleDeleteDocument}
             />
           ) : activeTab === 'copilot' ? (
             /* View 2: Interactive AI Health Copilot Chatbot */
@@ -391,6 +401,7 @@ export default function HomePage() {
               documents={documents}
               onSelectDocument={handleSelectFromTimeline}
               onNavigateToUpload={() => setActiveTab('upload')}
+              onDeleteEvent={handleDeleteDocument}
             />
           ) : activeTab === 'trends' ? (
             /* View 5: Longitudinal Vital Trends & Recharts Analytics with Logger */

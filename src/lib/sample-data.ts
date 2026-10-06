@@ -271,7 +271,15 @@ Advice:
         'What should I do if my home blood pressure drops below 110/70 mmHg?',
         'Are there any mild muscle aches I should watch out for with Atorvastatin?'
       ],
-      flaggedAbnormalities: []
+      flaggedAbnormalities: [
+        {
+          testName: 'Systolic Blood Pressure',
+          value: '142 mmHg',
+          status: 'HIGH',
+          plainExplanation: 'Recorded at 142/88 mmHg. Optimal systolic is under 120 mmHg.',
+          advice: 'Take prescribed Telmisartan daily and keep dietary salt under 1 teaspoon.'
+        }
+      ]
     },
     medications: [
       {
@@ -327,7 +335,36 @@ Advice:
         isActive: true
       }
     ],
-    labObservations: [],
+    labObservations: [
+      {
+        id: 'obs-rx-bp-sys',
+        testName: 'Systolic Blood Pressure',
+        category: 'Cardiovascular',
+        value: 142,
+        unit: 'mmHg',
+        referenceLow: 90,
+        referenceHigh: 120,
+        referenceRangeString: '110 - 130 mmHg',
+        status: 'HIGH',
+        loincCode: '8480-6',
+        clinicalMeaning: 'Stage 1 Hypertension recorded at clinic visit. Antihypertensive therapy (Telmisartan) prescribed.',
+        date: '2026-10-05'
+      },
+      {
+        id: 'obs-rx-pulse',
+        testName: 'Heart Rate (Pulse)',
+        category: 'Cardiovascular',
+        value: 76,
+        unit: 'bpm',
+        referenceLow: 60,
+        referenceHigh: 100,
+        referenceRangeString: '60 - 100 bpm',
+        status: 'NORMAL',
+        loincCode: '8867-4',
+        clinicalMeaning: 'Normal resting sinus heart rate.',
+        date: '2026-10-05'
+      }
+    ],
     diagnoses: [
       {
         id: 'diag-rx-01',
@@ -393,8 +430,92 @@ Discharge Medications:
       ],
       flaggedAbnormalities: []
     },
-    medications: [],
-    labObservations: [],
+    medications: [
+      {
+        id: 'med-oflox-01',
+        name: 'Ofloxacin-Ornidazole',
+        genericName: 'Ofloxacin + Ornidazole 200/500mg',
+        dosage: '1 Tab',
+        frequency: 'Twice Daily (1-0-1)',
+        route: 'Oral',
+        timing: 'After Food',
+        duration: '3 days',
+        instructions: 'Take 1 tablet after meals for 3 days to clear residual bacterial infection.',
+        timeOfDay: ['Morning', 'Night'],
+        isActive: true
+      },
+      {
+        id: 'med-sporlac-01',
+        name: 'Sporlac Probiotic Sachet',
+        genericName: 'Lactic Acid Bacillus (Probiotic)',
+        dosage: '1 Sachet',
+        frequency: 'Twice Daily (1-0-1)',
+        route: 'Oral',
+        timing: 'After Food',
+        duration: '5 days',
+        instructions: 'Mix 1 sachet in water after meals to restore healthy gut flora.',
+        timeOfDay: ['Morning', 'Night'],
+        isActive: true
+      }
+    ],
+    labObservations: [
+      {
+        id: 'obs-dis-bp-sys',
+        testName: 'Systolic Blood Pressure',
+        category: 'Cardiovascular',
+        value: 124,
+        unit: 'mmHg',
+        referenceLow: 90,
+        referenceHigh: 120,
+        referenceRangeString: '110 - 130 mmHg',
+        status: 'NORMAL',
+        loincCode: '8480-6',
+        clinicalMeaning: 'Normalized discharge blood pressure following IV rehydration.',
+        date: '2026-08-18'
+      },
+      {
+        id: 'obs-dis-pulse',
+        testName: 'Heart Rate (Pulse)',
+        category: 'Cardiovascular',
+        value: 72,
+        unit: 'bpm',
+        referenceLow: 60,
+        referenceHigh: 100,
+        referenceRangeString: '60 - 100 bpm',
+        status: 'NORMAL',
+        loincCode: '8867-4',
+        clinicalMeaning: 'Stable resting pulse upon hospital discharge.',
+        date: '2026-08-18'
+      },
+      {
+        id: 'obs-dis-na',
+        testName: 'Serum Sodium (Electrolytes)',
+        category: 'Electrolytes',
+        value: 138,
+        unit: 'mEq/L',
+        referenceLow: 135,
+        referenceHigh: 145,
+        referenceRangeString: '135 - 145 mEq/L',
+        status: 'NORMAL',
+        loincCode: '2951-2',
+        clinicalMeaning: 'Electrolyte balance fully restored after gastroenteritis.',
+        date: '2026-08-18'
+      },
+      {
+        id: 'obs-dis-k',
+        testName: 'Serum Potassium (Electrolytes)',
+        category: 'Electrolytes',
+        value: 4.1,
+        unit: 'mEq/L',
+        referenceLow: 3.5,
+        referenceHigh: 5.0,
+        referenceRangeString: '3.5 - 5.0 mEq/L',
+        status: 'NORMAL',
+        loincCode: '2823-3',
+        clinicalMeaning: 'Normal potassium level supporting heart muscle conductivity.',
+        date: '2026-08-18'
+      }
+    ],
     diagnoses: [
       {
         id: 'diag-dis-01',

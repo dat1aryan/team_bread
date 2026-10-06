@@ -442,24 +442,18 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
   return (
     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[650px] transition-all">
       {/* Header */}
-      <div className="px-6 py-4 bg-gradient-to-r from-teal-700 via-teal-800 to-emerald-800 text-white flex items-center justify-between">
+      <div className="px-6 py-4 bg-slate-900 border-b border-slate-800 text-white flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-teal-200 shadow-inner">
-            <Bot className="w-6 h-6 animate-pulse" />
+          <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-teal-400">
+            <Bot className="w-5 h-5" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-bold text-base tracking-tight">SetuHealth Clinical Copilot</h3>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
-                Gemini Multi-Key Failover
-              </span>
-            </div>
-            <p className="text-xs text-teal-200/80">{i18n.subtitle}</p>
+            <h3 className="font-bold text-base tracking-tight text-white">SetuHealth Clinical Copilot</h3>
+            <p className="text-xs text-slate-400">{i18n.subtitle}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-
           <button 
             onClick={() => {
               stopSpeaking();
@@ -473,7 +467,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
                 }
               ]);
             }}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-teal-100 transition-colors"
+            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer"
             title="Reset conversation"
           >
             <RefreshCw className="w-4 h-4" />
@@ -493,7 +487,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
               key={idx}
               onClick={() => handleSend(qp.prompt)}
               disabled={isLoading}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-teal-50 border border-slate-200/90 hover:border-teal-300 text-slate-700 text-xs font-medium whitespace-nowrap shadow-2xs transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-medium whitespace-nowrap shadow-2xs transition-colors cursor-pointer"
             >
               <Icon className="w-3 h-3 text-teal-600" />
               <span>{qp.label}</span>
@@ -560,7 +554,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
               <Bot className="w-4 h-4 animate-spin" />
             </div>
             <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-none p-4 shadow-2xs flex items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium">Analyzing clinical context with Gemini...</span>
+              <span className="text-xs text-slate-500 font-medium">Analyzing clinical context...</span>
               <div className="flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-bounce"></span>
                 <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-bounce [animation-delay:0.2s]"></span>
@@ -595,7 +589,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
         <button
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="p-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 disabled:opacity-50 text-white font-medium shadow-sm transition-all"
+          className="p-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 disabled:opacity-50 text-white font-medium shadow-xs transition-colors cursor-pointer"
           title="Send message"
         >
           <Send className="w-4 h-4" />

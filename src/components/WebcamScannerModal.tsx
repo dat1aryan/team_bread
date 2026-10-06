@@ -169,18 +169,18 @@ export const WebcamScannerModal: React.FC<WebcamScannerModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 animate-in fade-in duration-200">
       <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-slate-800 text-teal-400 flex items-center justify-center font-bold">
               <Camera className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-base font-bold text-white flex items-center gap-2">
                 Live Webcam Document Scanner
-                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-teal-900/50 text-teal-300 border border-teal-500/30">
+                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
                   PC & Mobile
                 </span>
               </h3>
@@ -220,7 +220,7 @@ export const WebcamScannerModal: React.FC<WebcamScannerModalProps> = ({
               </div>
               <button
                 onClick={() => startCamera(selectedDeviceId)}
-                className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-semibold text-sm transition shadow-lg shadow-teal-600/30"
+                className="px-5 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-semibold text-sm transition shadow-xs"
               >
                 Try Again
               </button>
@@ -260,7 +260,7 @@ export const WebcamScannerModal: React.FC<WebcamScannerModalProps> = ({
           {hasPermission && !capturedPreview && (
             <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center p-6">
               {/* Document Target Border */}
-              <div className="relative w-full max-w-md aspect-[4/3] border-2 border-dashed border-teal-400/60 rounded-2xl shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]">
+              <div className="relative w-full max-w-md aspect-[4/3] border-2 border-dashed border-teal-500/60 rounded-2xl shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]">
                 {/* Corner markers */}
                 <div className="absolute -top-1.5 -left-1.5 w-6 h-6 border-t-4 border-l-4 border-teal-400 rounded-tl-lg" />
                 <div className="absolute -top-1.5 -right-1.5 w-6 h-6 border-t-4 border-r-4 border-teal-400 rounded-tr-lg" />
@@ -269,7 +269,7 @@ export const WebcamScannerModal: React.FC<WebcamScannerModalProps> = ({
 
                 {/* Central guide watermark */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-xs font-semibold px-3 py-1 bg-black/60 backdrop-blur-sm text-teal-300 rounded-full border border-teal-500/30">
+                  <span className="text-xs font-semibold px-3 py-1 bg-slate-900 text-teal-300 rounded-full border border-slate-700">
                     Align Document Here
                   </span>
                 </div>
@@ -305,7 +305,7 @@ export const WebcamScannerModal: React.FC<WebcamScannerModalProps> = ({
               </button>
               <button
                 onClick={handleConfirmCapture}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white text-sm font-semibold flex items-center gap-2 shadow-lg shadow-teal-500/20 transition"
+                className="px-6 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold flex items-center gap-2 shadow-xs transition"
               >
                 <CheckCircle className="w-4 h-4" />
                 Use Document
@@ -322,7 +322,7 @@ export const WebcamScannerModal: React.FC<WebcamScannerModalProps> = ({
               <button
                 onClick={handleSnap}
                 disabled={!hasPermission || isCapturing}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 disabled:opacity-50 text-white text-sm font-bold flex items-center gap-2 shadow-lg shadow-teal-500/20 transition"
+                className="px-6 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 disabled:opacity-50 text-white text-sm font-bold flex items-center gap-2 shadow-xs transition"
               >
                 <Camera className="w-4 h-4" />
                 Snap Photo

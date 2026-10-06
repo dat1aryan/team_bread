@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { PatientProfile, MedicalDocument } from '@/types';
 import { MOCK_ABHA_PROFILE, generateFhirR4Bundle, verifyAbhaOtp } from '@/lib/abdm-fhir';
+import { SAMPLE_DOCUMENTS } from '@/lib/sample-data';
 import confetti from 'canvas-confetti';
 
 interface AbdmAbhaHubProps {
@@ -117,14 +118,20 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
   };
 
   const handleDownloadFhir = () => {
-    if (!fhirBundle) return;
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(fhirBundle, null, 2));
+    const docToExport = (documents && documents.length > 0) ? documents[0] : SAMPLE_DOCUMENTS[0];
+    const bundleToDownload = fhirBundle || generateFhirR4Bundle(docToExport, patient);
+    const jsonString = JSON.stringify(bundleToDownload, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
     const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `ABDM_FHIR_Bundle_${patient.id}.json`);
+    downloadAnchor.href = url;
+    downloadAnchor.download = `ABDM_FHIR_Bundle_${patient.abhaId ? patient.abhaId.replace(/[^a-zA-Z0-9]/g, '_') : 'Patient'}.json`;
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
-    downloadAnchor.remove();
+    document.body.removeChild(downloadAnchor);
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 1500);
   };
 
   const isVerified = patient.isAbhaVerified;
@@ -133,17 +140,13 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
     <div className="space-y-6">
       
       {/* ABDM Overview Header Banner */}
-      <div className="bg-gradient-to-r from-teal-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-md relative overflow-hidden">
-        <div className="relative z-10 max-w-2xl space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/20 border border-teal-400/30 text-teal-300 text-xs font-semibold">
-            <ShieldCheck className="w-4 h-4 text-teal-400" />
-            <span>Ayushman Bharat Digital Mission (ABDM) M4 Ready</span>
-          </div>
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-800">
+        <div className="max-w-2xl space-y-2">
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             ABDM & ABHA Digital Health Stack
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Seamlessly linked to India's national health interoperability network. Records are converted to HL7 FHIR R4 standard bundles ready for exchange across ABDM Health Information Providers (HIPs).
+            Linked to India's national health interoperability network. Records are converted to HL7 FHIR R4 standard bundles ready for exchange across ABDM Health Information Providers (HIPs).
           </p>
         </div>
       </div>
@@ -152,34 +155,34 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* ABHA Digital Health Card */}
-        <div className="lg:col-span-1 bg-gradient-to-br from-teal-600 to-emerald-700 text-white rounded-3xl p-6 shadow-md flex flex-col justify-between relative overflow-hidden">
+        <div className="lg:col-span-1 bg-slate-900 text-white rounded-3xl p-6 shadow-sm border border-slate-800 flex flex-col justify-between relative overflow-hidden">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-teal-200">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400">
                   NATIONAL HEALTH AUTHORITY
                 </span>
                 <h4 className="text-lg font-extrabold tracking-tight">ABHA Digital Health Card</h4>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
-                <ShieldCheck className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6 text-teal-400" />
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 space-y-2">
+            <div className="bg-slate-950 rounded-2xl p-4 border border-slate-800 space-y-2">
               <div>
-                <span className="text-[10px] text-teal-100 uppercase font-semibold">ABHA Number</span>
-                <div className="text-lg font-mono font-bold tracking-wider flex items-center justify-between">
+                <span className="text-[10px] text-slate-400 uppercase font-semibold">ABHA Number</span>
+                <div className="text-lg font-mono font-bold tracking-wider flex items-center justify-between text-white">
                   <span>{patient.abhaId || '91-2048-5892-1144'}</span>
-                  <button onClick={handleCopyAbha} className="p-1 hover:bg-white/20 rounded transition-colors" title="Copy ABHA">
-                    <Copy className="w-4 h-4 text-teal-200" />
+                  <button onClick={handleCopyAbha} className="p-1 hover:bg-slate-800 rounded transition-colors" title="Copy ABHA">
+                    <Copy className="w-4 h-4 text-slate-400 hover:text-white" />
                   </button>
                 </div>
               </div>
 
               <div>
-                <span className="text-[10px] text-teal-100 uppercase font-semibold">ABHA Address (PHR)</span>
-                <div className="text-xs font-mono font-semibold text-white">
+                <span className="text-[10px] text-slate-400 uppercase font-semibold">ABHA Address (PHR)</span>
+                <div className="text-xs font-mono font-semibold text-teal-300">
                   {patient.abhaAddress || 'rajesh.kumar@abdm'}
                 </div>
               </div>
@@ -187,31 +190,31 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
 
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div>
-                <span className="text-teal-200 text-[10px]">Name</span>
-                <p className="font-bold">{patient.fullName}</p>
+                <span className="text-slate-400 text-[10px]">Name</span>
+                <p className="font-bold text-white">{patient.fullName}</p>
               </div>
               <div>
-                <span className="text-teal-200 text-[10px]">DOB / Gender</span>
-                <p className="font-bold">{patient.dateOfBirth} / M</p>
+                <span className="text-slate-400 text-[10px]">DOB / Gender</span>
+                <p className="font-bold text-white">{patient.dateOfBirth} / M</p>
               </div>
             </div>
           </div>
 
-          <div className="pt-6 flex flex-col gap-3 border-t border-white/20 mt-4">
+          <div className="pt-6 flex flex-col gap-3 border-t border-slate-800 mt-4">
             <div className="flex items-center justify-between">
               {isVerified ? (
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-300 animate-ping" />
-                  <span className="text-xs font-bold text-white flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                  <span className="text-xs font-bold text-slate-200 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                     KYC Verified & Active
                   </span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-300" />
-                  <span className="text-xs font-bold text-amber-200 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 text-amber-300" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                  <span className="text-xs font-bold text-amber-300 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
                     KYC Verification Pending
                   </span>
                 </div>
@@ -227,9 +230,9 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
             {!isVerified && (
               <button
                 onClick={handleStartVerification}
-                className="w-full py-2.5 px-3 rounded-xl bg-white text-teal-900 hover:bg-teal-50 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full py-2.5 px-3 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <KeyRound className="w-3.5 h-3.5 text-teal-700" />
+                <KeyRound className="w-3.5 h-3.5 text-teal-200" />
                 <span>Verify KYC & Confirm Aadhaar</span>
               </button>
             )}
@@ -253,7 +256,7 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
               className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors ${
                 isVerified 
                   ? 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200' 
-                  : 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-200 animate-pulse'
+                  : 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-200'
               }`}
             >
               {isVerified ? 'Re-Verify KYC' : 'Complete KYC Verification'}
@@ -261,10 +264,10 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
           </div>
 
           {/* Dropdown Menu of Mock Hospitals to Select From */}
-          <div className="p-4 rounded-2xl bg-teal-50/70 border border-teal-200/80 space-y-3">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
             <div className="flex items-center gap-2">
               <Building2 className="w-4 h-4 text-teal-700" />
-              <label className="text-xs font-bold text-teal-950 uppercase tracking-wide">
+              <label className="text-xs font-bold text-slate-900 uppercase tracking-wide">
                 Select Hospital / Diagnostic Network to Link
               </label>
             </div>
@@ -274,11 +277,11 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
                 <select
                   value={selectedHospitalId}
                   onChange={(e) => setSelectedHospitalId(e.target.value)}
-                  className="w-full appearance-none px-3.5 py-2.5 pr-8 rounded-xl bg-white border border-teal-300 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                  className="w-full appearance-none px-3.5 py-2.5 pr-8 rounded-xl bg-white border border-slate-300 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 >
                   {MOCK_HOSPITALS.map((hosp) => (
                     <option key={hosp.id} value={hosp.id}>
-                      {hosp.name} — {hosp.city} [{hosp.hipId}]
+                      {hosp.name} ({hosp.city}) [{hosp.hipId}]
                     </option>
                   ))}
                 </select>
@@ -353,11 +356,11 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
       <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <FileCode2 className="w-5 h-5 text-indigo-600" />
+            <FileCode2 className="w-5 h-5 text-teal-700" />
             <h3 className="text-base sm:text-lg font-bold text-slate-900">
               HL7 FHIR R4 Standard Data Bundle Inspector
             </h3>
-            <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+            <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
               NHA ABDM M4 Profile
             </span>
           </div>
@@ -368,7 +371,7 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
 
         <button
           onClick={handleDownloadFhir}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer shrink-0"
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer shrink-0"
         >
           <Download className="w-4 h-4 text-teal-400" />
           <span>Download JSON</span>
@@ -377,7 +380,7 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
 
       {/* Mock Aadhaar / ABDM KYC Verification Modal */}
       {showKycModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-950/75 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5 animate-in fade-in zoom-in-95">
             <div className="text-center space-y-2">
               <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-700 mx-auto flex items-center justify-center">

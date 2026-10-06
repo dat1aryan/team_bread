@@ -33,13 +33,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   const t = UI_TRANSLATIONS[currentLanguage] || UI_TRANSLATIONS.en;
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
+    <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-200 shadow-xs transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Brand Logo & Title */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-teal-500/20">
-            <HeartPulse className="w-6 h-6 animate-pulse" />
+          <div className="w-10 h-10 rounded-xl bg-teal-700 flex items-center justify-center text-white shadow-xs">
+            <HeartPulse className="w-5 h-5 text-teal-100" />
           </div>
           <div>
             <div className="flex items-center gap-2">

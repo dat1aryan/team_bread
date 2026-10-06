@@ -53,7 +53,7 @@ export const HealthTimeline: React.FC<HealthTimelineProps> = ({
       case 'DISCHARGE':
         return <Building2 className="w-5 h-5 text-amber-600" />;
       default:
-        return <Sparkles className="w-5 h-5 text-purple-600" />;
+        return <FileText className="w-5 h-5 text-teal-700" />;
     }
   };
 
@@ -130,7 +130,7 @@ export const HealthTimeline: React.FC<HealthTimelineProps> = ({
           <p className="text-xs text-slate-500 mt-1">Try resetting your search query or filter</p>
         </div>
       ) : (
-        <div className="relative pl-6 sm:pl-8 space-y-6 before:content-[''] before:absolute before:left-3.5 sm:before:left-4.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-teal-500 before:via-indigo-500 before:to-slate-300">
+        <div className="relative pl-6 sm:pl-8 space-y-6 before:content-[''] before:absolute before:left-3.5 sm:before:left-4.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">
           
           {filteredEvents.map((evt) => {
             const correspondingDoc = documents.find((d) => d.id === evt.documentId);

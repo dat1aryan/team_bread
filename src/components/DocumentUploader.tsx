@@ -105,7 +105,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
 
       // 3. Call Medical AI Engine
       setProcessingPercent(75);
-      setProcessingStage('Analyzing with Gemini 1.5 Flash Vision & extracting clinical entities...');
+      setProcessingStage('Analyzing clinical entities & extracting biomarkers...');
       
       const analysis = await analyzeMedicalDocumentOnline(
         filePreview || undefined,
@@ -206,7 +206,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
             {/* Progress Bar */}
             <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
               <div 
-                className="bg-gradient-to-r from-teal-500 to-emerald-500 h-2.5 rounded-full transition-all duration-300"
+                className="bg-teal-600 h-2.5 rounded-full transition-all duration-300"
                 style={{ width: `${processingPercent}%` }}
               ></div>
             </div>
@@ -217,13 +217,13 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
         ) : filePreview ? (
           /* File Preview Ready for Analysis */
           <div className="py-2 space-y-4 max-w-lg mx-auto">
-            <div className="relative inline-block rounded-xl overflow-hidden shadow-lg border border-slate-200 max-h-56">
+            <div className="relative inline-block rounded-xl overflow-hidden shadow-xs border border-slate-200 max-h-56">
               <img 
                 src={filePreview} 
                 alt="Selected report preview" 
                 className="w-full h-auto object-cover max-h-56"
               />
-              <div className="absolute top-2 right-2 bg-slate-900/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-md text-xs font-medium">
+              <div className="absolute top-2 right-2 bg-slate-900/90 text-white px-2.5 py-1 rounded-md text-xs font-medium">
                 {selectedFile?.name || 'Document Ready'}
               </div>
             </div>
@@ -240,10 +240,10 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               </button>
               <button
                 onClick={handleProcessFile}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white text-sm font-semibold shadow-md shadow-teal-600/20 flex items-center gap-2 transition-all"
+                className="px-6 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold shadow-xs flex items-center gap-2 transition-colors cursor-pointer"
               >
                 <Sparkles className="w-4 h-4" />
-                Analyze with AI Copilot
+                Analyze Record
               </button>
             </div>
           </div>
@@ -310,7 +310,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           {/* Sample 1: Diabetic & Lipid Panel */}
           <button
             onClick={() => handleSelectSample(SAMPLE_DOCUMENTS[0])}
-            className="text-left p-3.5 rounded-xl bg-white hover:bg-teal-50/50 border border-slate-200 hover:border-teal-300 shadow-sm transition-all group flex flex-col justify-between"
+            className="text-left p-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 shadow-xs transition-colors group flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center gap-2 text-teal-700 mb-1.5">
@@ -333,7 +333,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           {/* Sample 2: Cardiology Prescription */}
           <button
             onClick={() => handleSelectSample(SAMPLE_DOCUMENTS[1])}
-            className="text-left p-3.5 rounded-xl bg-white hover:bg-teal-50/50 border border-slate-200 hover:border-teal-300 shadow-sm transition-all group flex flex-col justify-between"
+            className="text-left p-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 shadow-xs transition-colors group flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center gap-2 text-indigo-700 mb-1.5">
@@ -356,7 +356,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           {/* Sample 3: Hospital Discharge Summary */}
           <button
             onClick={() => handleSelectSample(SAMPLE_DOCUMENTS[2])}
-            className="text-left p-3.5 rounded-xl bg-white hover:bg-teal-50/50 border border-slate-200 hover:border-teal-300 shadow-sm transition-all group flex flex-col justify-between"
+            className="text-left p-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 shadow-xs transition-colors group flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center gap-2 text-amber-700 mb-1.5">
@@ -379,7 +379,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           {/* Sample 4: CBC Hematology Panel */}
           <button
             onClick={() => handleSelectSample(SAMPLE_DOCUMENTS[3])}
-            className="text-left p-3.5 rounded-xl bg-white hover:bg-teal-50/50 border border-slate-200 hover:border-teal-300 shadow-sm transition-all group flex flex-col justify-between"
+            className="text-left p-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 shadow-xs transition-colors group flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center gap-2 text-rose-700 mb-1.5">

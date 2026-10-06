@@ -63,13 +63,18 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
   // Download FHIR R4 Bundle
   const handleDownloadFhir = () => {
     const fhirBundle = generateFhirR4Bundle(document, DEFAULT_PATIENT);
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(fhirBundle, null, 2));
+    const jsonString = JSON.stringify(fhirBundle, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
     const downloadAnchor = window.document.createElement('a');
-    downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `ABDM_FHIR_${document.id}.json`);
+    downloadAnchor.href = url;
+    downloadAnchor.download = `ABDM_FHIR_${document.id}.json`;
     window.document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
-    downloadAnchor.remove();
+    window.document.body.removeChild(downloadAnchor);
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 1500);
   };
 
   // Urgency color helper
@@ -161,7 +166,7 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
       </div>
 
       {/* Primary Plain-Language Health Summary Card (Gold Standard for Patients) */}
-      <div className="bg-gradient-to-br from-teal-500/10 via-emerald-500/5 to-white border border-teal-200 rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+      <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
         
         {/* Urgency Badge & Voice Playback Header */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
@@ -181,7 +186,7 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border ${
               isSpeaking
                 ? 'bg-rose-500 text-white border-rose-600 animate-pulse'
-                : 'bg-white hover:bg-teal-50 text-teal-700 border-teal-300 shadow-sm'
+                : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-300 shadow-2xs'
             }`}
             title="Listen to summary in your chosen regional language"
           >
@@ -210,9 +215,9 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
         </p>
 
         {/* "Why This Matters" Insight Box */}
-        <div className="bg-white/80 backdrop-blur-sm border border-teal-100 rounded-2xl p-4 mb-6">
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 mb-6">
           <div className="flex items-start gap-2.5">
-            <Sparkles className="w-5 h-5 text-teal-600 mt-0.5 shrink-0" />
+            <Sparkles className="w-5 h-5 text-teal-700 mt-0.5 shrink-0" />
             <div>
               <h4 className="text-xs font-bold text-teal-900 uppercase tracking-wider">
                 {t.whyItMatters}

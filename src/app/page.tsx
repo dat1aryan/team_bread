@@ -202,7 +202,7 @@ export default function HomePage() {
             
             {/* Patient Identity Brief */}
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-400 text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-teal-500/20">
+              <div className="w-14 h-14 rounded-2xl bg-teal-700 text-white flex items-center justify-center font-extrabold text-xl shadow-xs">
                 {patient.fullName.split(' ').map((n) => n[0]).join('')}
               </div>
               <div>
@@ -212,9 +212,6 @@ export default function HomePage() {
                   </h1>
                   <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
                     52 Y / M
-                  </span>
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 hidden sm:inline">
-                    ABHA Verified
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-1">
@@ -268,15 +265,14 @@ export default function HomePage() {
               {/* AI Copilot Direct Launch */}
               <div 
                 onClick={() => { setActiveTab('copilot'); setActiveDocument(null); }}
-                className="p-3.5 rounded-2xl bg-gradient-to-br from-teal-50 to-emerald-50 hover:from-teal-100/60 hover:to-emerald-100/60 border border-teal-200/80 cursor-pointer transition-all"
+                className="p-3.5 rounded-2xl bg-slate-50 hover:bg-teal-50/60 border border-slate-200/80 cursor-pointer transition-colors"
               >
-                <div className="flex items-center justify-between text-teal-600 mb-1">
+                <div className="flex items-center justify-between text-teal-700 mb-1">
                   <span className="text-[11px] font-bold uppercase tracking-wider">AI Copilot</span>
                   <Bot className="w-4 h-4 text-teal-700" />
                 </div>
-                <div className="text-base font-extrabold text-teal-950 flex items-center gap-1.5">
-                  <span>Chat Assistant</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                <div className="text-base font-extrabold text-slate-900">
+                  Chat Assistant
                 </div>
                 <div className="text-[10px] text-teal-800 font-medium mt-0.5">Clinical Inquiries</div>
               </div>
@@ -292,7 +288,7 @@ export default function HomePage() {
             onClick={() => { setActiveTab('upload'); setActiveDocument(null); }}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
               activeTab === 'upload' && !activeDocument
-                ? 'bg-teal-600 text-white shadow-sm'
+                ? 'bg-teal-700 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
@@ -304,13 +300,12 @@ export default function HomePage() {
             onClick={() => { setActiveTab('copilot'); setActiveDocument(null); }}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
               activeTab === 'copilot'
-                ? 'bg-gradient-to-r from-teal-700 to-emerald-700 text-white shadow-sm'
+                ? 'bg-teal-700 text-white shadow-xs'
                 : 'text-slate-700 hover:bg-teal-50 hover:text-teal-900'
             }`}
           >
-            <Bot className="w-4 h-4 text-teal-500" />
+            <Bot className="w-4 h-4 text-teal-600" />
             <span>AI Health Copilot</span>
-            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-md bg-teal-100 text-teal-800">Gemini</span>
           </button>
 
           <button
@@ -427,18 +422,6 @@ export default function HomePage() {
 
       </main>
 
-      {/* Floating Action Button for AI Copilot */}
-      {activeTab !== 'copilot' && !activeDocument && (
-        <button
-          onClick={() => { setActiveTab('copilot'); setActiveDocument(null); }}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4.5 py-3 rounded-2xl bg-gradient-to-r from-teal-700 via-emerald-700 to-teal-800 hover:from-teal-800 hover:to-emerald-800 text-white font-bold text-sm shadow-xl shadow-teal-900/20 transition-all hover:scale-105 group cursor-pointer"
-        >
-          <Bot className="w-5 h-5 text-teal-200 group-hover:rotate-12 transition-transform" />
-          <span>Ask AI Copilot</span>
-          <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
-        </button>
-      )}
-
       {/* Global Clinical Footer */}
       <footer className="mt-auto border-t border-slate-200 bg-white py-6 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -448,9 +431,13 @@ export default function HomePage() {
             <span>•</span>
             <span>Personal Health Intelligence Platform</span>
           </div>
-          <div className="flex items-center gap-4 text-xs font-semibold">
-            <button onClick={() => setIsAuthOpen(true)} className="hover:text-teal-700">
-              Database & Auth
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => { setActiveTab('copilot'); setActiveDocument(null); }}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            >
+              <Bot className="w-3.5 h-3.5 text-teal-200" />
+              <span>Ask AI Copilot</span>
             </button>
           </div>
         </div>

@@ -94,7 +94,7 @@ Key Focus Targets & Recommendations:
       reply = `Here is your current medication regimen review:
 - **Metformin 500mg**: Take twice daily after meals with water to reduce digestive upset.
 - **Telmisartan 40mg**: Take once daily in the morning after breakfast for 24-hour blood pressure control (**Target BP < 130/80 mmHg**).
-- **Atorvastatin 10mg**: Take once daily at bedtime — liver cholesterol synthesis peaks overnight, making night-time dosing most effective (**Target LDL < 100 mg/dL**).`;
+- **Atorvastatin 10mg**: Take once daily at bedtime (liver cholesterol synthesis peaks overnight, making night-time dosing most effective; **Target LDL < 100 mg/dL**).`;
     } else if (lower.includes('diet') || lower.includes('food') || lower.includes('eat') || lower.includes('nutrition')) {
       reply = `Based on your metabolic profile (**HbA1c: 7.4%**, **LDL: 148 mg/dL**), here are primary nutritional targets:
 - **Target LDL Reduction**: Switch from vanaspati and deep-fried foods to cold-pressed mustard or olive oil (limit to 2-3 tsp daily).

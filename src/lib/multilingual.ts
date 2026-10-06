@@ -14,7 +14,7 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
 export const UI_TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   en: {
     appTitle: 'SetuHealth AI Copilot',
-    appSubtitle: 'Bridging Medical Jargon to Human Understanding',
+    appSubtitle: 'Clinical Records, Biomarker Analytics & ABDM Platform',
     tabOverview: 'Dashboard Overview',
     tabUpload: 'Scan & Analyze Record',
     tabTimeline: 'Health Journey Timeline',
@@ -47,7 +47,7 @@ export const UI_TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   },
   hi: {
     appTitle: 'SetuHealth AI Copilot',
-    appSubtitle: 'जटिल मेडिकल रिपोर्ट को आसान हिंदी भाषा में समझें',
+    appSubtitle: 'क्लीनिकल रिकॉर्ड, बायोमार्कर विश्लेषण एवं ABDM प्लेटफॉर्म',
     tabOverview: 'Dashboard Overview',
     tabUpload: 'Scan & Analyze Record',
     tabTimeline: 'Health Journey Timeline',
@@ -80,7 +80,7 @@ export const UI_TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   },
   te: {
     appTitle: 'SetuHealth AI Copilot',
-    appSubtitle: 'క్లిష్టమైన వైద్య నివేదికలను సులభమైన తెలుగులో అర్థం చేసుకోండి',
+    appSubtitle: 'క్లినికల్ రికార్డులు, బయోమార్కర్ విశ్లేషణ మరియు ABDM ప్లాట్‌ఫారమ్',
     tabOverview: 'Dashboard Overview',
     tabUpload: 'Scan & Analyze Record',
     tabTimeline: 'Health Journey Timeline',
@@ -113,7 +113,7 @@ export const UI_TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   },
   ta: {
     appTitle: 'SetuHealth AI Copilot',
-    appSubtitle: 'சிக்கலான மருத்துவ அறிக்கைகளை எளிய தமிழில் புரிந்து கொள்ளுங்கள்',
+    appSubtitle: 'மருத்துவ அறிக்கைகள், ஆய்வக பகுப்பாய்வு மற்றும் ABDM தளம்',
     tabOverview: 'Dashboard Overview',
     tabUpload: 'Scan & Analyze Record',
     tabTimeline: 'Health Journey Timeline',
@@ -146,7 +146,7 @@ export const UI_TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   },
   bn: {
     appTitle: 'SetuHealth AI Copilot',
-    appSubtitle: 'জটিল মেডিকেল রিপোর্ট সহজ বাংলায় বুঝুন',
+    appSubtitle: 'ক্লিনিকাল রেকর্ড, বায়োমার্কার বিশ্লেষণ এবং ABDM প্ল্যাটফর্ম',
     tabOverview: 'Dashboard Overview',
     tabUpload: 'Scan & Analyze Record',
     tabTimeline: 'Health Journey Timeline',
@@ -179,7 +179,7 @@ export const UI_TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   },
   mr: {
     appTitle: 'SetuHealth AI Copilot',
-    appSubtitle: 'वैद्यकीय अहवाल सोप्या मराठी भाषेत समजून घ्या',
+    appSubtitle: 'वैद्यकीय नोंदी, बायोमार्कर विश्लेषण आणि ABDM प्लॅटफॉर्म',
     tabOverview: 'Dashboard Overview',
     tabUpload: 'Scan & Analyze Record',
     tabTimeline: 'Health Journey Timeline',
@@ -212,7 +212,7 @@ export const UI_TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   },
   es: {
     appTitle: 'SetuHealth AI Copilot',
-    appSubtitle: 'Traduciendo jerga médica a claridad humana',
+    appSubtitle: 'Registros Clínicos, Análisis de Biomarcadores y Plataforma ABDM',
     tabOverview: 'Dashboard Overview',
     tabUpload: 'Scan & Analyze Record',
     tabTimeline: 'Health Journey Timeline',

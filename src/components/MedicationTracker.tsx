@@ -221,7 +221,7 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
                         className={`p-3.5 rounded-xl border transition-all flex items-start justify-between gap-3 ${
                           isTaken 
                             ? 'bg-emerald-50/50 border-emerald-200/80' 
-                            : 'bg-slate-50/70 border-slate-200 hover:border-teal-300'
+                            : 'bg-slate-50/70 border-slate-200 hover:border-slate-300'
                         }`}
                       >
                         <div className="space-y-1">
@@ -274,7 +274,7 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
 
       {/* Add Medication Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-5 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">

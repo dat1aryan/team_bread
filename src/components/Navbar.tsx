@@ -5,8 +5,6 @@ import {
   HeartPulse, 
   Languages, 
   ShieldCheck, 
-  Presentation, 
-  Network, 
   UserCheck, 
   RotateCcw,
   Sparkles,
@@ -19,8 +17,6 @@ import { HealthStorageService } from '@/lib/storage';
 interface NavbarProps {
   currentLanguage: LanguageCode;
   onLanguageChange: (lang: LanguageCode) => void;
-  onOpenDeck: () => void;
-  onOpenArchitecture: () => void;
   onOpenAuth: () => void;
   isAbhaVerified: boolean;
   onResetDemo: () => void;
@@ -29,8 +25,6 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   currentLanguage,
   onLanguageChange,
-  onOpenDeck,
-  onOpenArchitecture,
   onOpenAuth,
   isAbhaVerified,
   onResetDemo
@@ -105,26 +99,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             )}
           </div>
-
-          {/* Architecture Diagram Trigger */}
-          <button
-            onClick={onOpenArchitecture}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs sm:text-sm font-medium transition-colors border border-indigo-200"
-            title="System Architecture Blueprint"
-          >
-            <Network className="w-4 h-4 text-indigo-600" />
-            <span className="hidden md:inline">Architecture</span>
-          </button>
-
-          {/* Hackathon Presentation Slides Trigger */}
-          <button
-            onClick={onOpenDeck}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white text-xs sm:text-sm font-semibold shadow-sm transition-all"
-            title="Product Presentation"
-          >
-            <Presentation className="w-4 h-4" />
-            <span className="hidden sm:inline">Product Deck</span>
-          </button>
 
           {/* Quick Demo Reset / Auth Trigger */}
           <button

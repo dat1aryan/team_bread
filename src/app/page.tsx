@@ -14,8 +14,6 @@ import {
   AlertTriangle,
   ArrowRight,
   CheckCircle2,
-  Presentation,
-  Network,
   RotateCcw,
   Bot,
   MessageSquare
@@ -28,8 +26,6 @@ import { VitalTrendsChart } from '@/components/VitalTrendsChart';
 import { MedicationTracker } from '@/components/MedicationTracker';
 import { AbdmAbhaHub } from '@/components/AbdmAbhaHub';
 import { AiHealthChatbot } from '@/components/AiHealthChatbot';
-import { PresentationDeckModal } from '@/components/PresentationDeckModal';
-import { ArchitectureDiagramModal } from '@/components/ArchitectureDiagramModal';
 import { AuthModal } from '@/components/AuthModal';
 
 import { MedicalDocument, PatientProfile, LanguageCode, TimelineEvent, VitalTrendSeries, ExtractedMedication, TestStatus } from '@/types';
@@ -53,8 +49,6 @@ export default function HomePage() {
   const [activeDocument, setActiveDocument] = useState<MedicalDocument | null>(null);
 
   // Modals
-  const [isDeckOpen, setIsDeckOpen] = useState(false);
-  const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   // Synchronize state from storage
@@ -198,8 +192,6 @@ export default function HomePage() {
       <Navbar
         currentLanguage={currentLanguage}
         onLanguageChange={setCurrentLanguage}
-        onOpenDeck={() => setIsDeckOpen(true)}
-        onOpenArchitecture={() => setIsArchitectureOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
         isAbhaVerified={patient.isAbhaVerified}
         onResetDemo={handleResetDemo}
@@ -455,12 +447,6 @@ export default function HomePage() {
             <span>Personal Health Intelligence Platform</span>
           </div>
           <div className="flex items-center gap-4 text-xs font-semibold">
-            <button onClick={() => setIsArchitectureOpen(true)} className="hover:text-teal-700">
-              Architecture Blueprint
-            </button>
-            <button onClick={() => setIsDeckOpen(true)} className="hover:text-teal-700">
-              Overview Slides
-            </button>
             <button onClick={() => setIsAuthOpen(true)} className="hover:text-teal-700">
               Database & Auth
             </button>
@@ -469,16 +455,6 @@ export default function HomePage() {
       </footer>
 
       {/* Modals */}
-      <PresentationDeckModal
-        isOpen={isDeckOpen}
-        onClose={() => setIsDeckOpen(false)}
-      />
-
-      <ArchitectureDiagramModal
-        isOpen={isArchitectureOpen}
-        onClose={() => setIsArchitectureOpen(false)}
-      />
-
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}

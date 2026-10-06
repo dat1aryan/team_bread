@@ -1,0 +1,488 @@
+PARTICIPANT RULE BOOK – ROUND 1
+Round 1: 24-Hour Campus Hackathon
+Round 1 Window: October 5–11, 2026
+Platform: byteXL Hackathon Platform
+1. ABOUT HACXLERATE 2026
+HacXLerate is byteXL's flagship national hackathon designed to bring students closer to real-world industry
+challenges.
+Participants will work on problem statements presented by industry partners and use technology, creativity and
+problem-solving skills to build working solutions within a defined time limit.
+HacXLerate 2026 follows a multi-stage journey:
+Round 1 → Top 50 → Round 2 → Top 7 → Grand Finale
+Round 1 will be conducted physically across participating partner colleges during the October 5–11, 2026 window.
+2. ROUND 1 – AT A GLANCE
+Particular Details
+Format 24-hour physical campus hackathon
+Round 1 Window October 5–11, 2026
+Venue Participating partner college campus
+Team Size 3–5 members
+Team Composition Same college for the campus track
+Problem Statements Industry-backed real-world challenges
+Problem Selection First 2 hoursProblem Lock Mandatory
+Development Time Remaining 22 hours
+AI Usage Allowed
+Submission Deployed solution + GitHub repository + project information + challenge-specific
+requirements
+Evaluation Automated evaluation followed by human evaluation
+College Recognition Top 3 teams
+National Top 50 teams overall
+Qualification
+3. ELIGIBILITY
+HacXLerate 2026 Round 1 is open to eligible undergraduate engineering students.
+Participants must:
+• Be currently enrolled undergraduate engineering students.
+• Have a valid college ID.
+• Participate through their registered team.
+• Follow all HacXLerate rules and instructions.
+• Be physically present at the designated college venue for the campus Round 1.
+Students from different colleges cannot form a team for the on-campus Round 1.
+Students outside the byteXL partner-college network may participate through the designated External Track, which
+has separate participation instructions.
+4. TEAM RULES
+4.1 Team Size
+Each team must consist of 3–5 members.
+4.2 Team Composition
+For the physical campus Round 1:
+• All team members must belong to the same college.
+• Only registered team members may participate.
+• A student can participate in only one team.
+• Team members must use their registered identities/details.
+4.3 Team Changes
+Once registration is completed, the team structure cannot be changed unless explicitly permitted by the HacXLerate
+organizing team.Adding, removing or replacing members without authorization may lead to disqualification.
+4.4 Team Lead
+Every team must have a designated Team Lead.
+The Team Lead is responsible for:
+• Coordinating the team.
+• Accessing team-level actions on the platform.
+• Selecting and locking the problem statement.
+• Coordinating communication with the organizers when required.
+5. HACKATHON PLATFORM ACCESS
+Participants will receive access to the byteXL Hackathon Platform approximately 2–3 hours before the scheduled
+start of their Round 1 hackathon.
+Access details will be sent to the registered email address associated with the participant/team.
+Participants are responsible for:
+• Checking their registered email before the event.
+• Checking Spam/Junk/Promotions folders if required.
+• Logging in and verifying access before the hackathon begins.
+• Informing the organizers immediately if they face an access issue.
+Important
+Receiving platform access before the event does not mean that the challenge can be started before the official
+hackathon start time.
+The relevant HacXLerate Round 1 challenge will become accessible as per the official start time communicated for
+the participating college.
+6. PHYSICAL PARTICIPATION
+Round 1 is a physical, on-campus hackathon for partner-college participants.
+Participants are expected to:
+• Report to the designated college venue before the scheduled start.
+• Remain available at the venue during the hackathon as instructed by the college/organizing team.
+• Carry their own laptops and required accessories.
+• Ensure their devices are sufficiently charged.
+• Carry chargers and other required development equipment.
+• Follow the instructions of the college and byteXL organizing teams.
+Participants are responsible for their own devices and personal belongings.7. PRE-HACKATHON BRIEFING
+Participants must assemble at the designated venue at least 30 minutes before the official hackathon start time.
+A pre-hackathon briefing will cover:
+• Hackathon format
+• Platform access
+• Problem statement selection
+• Problem lock mechanism
+• Submission process
+• Evaluation process
+• AI usage
+• Code of conduct
+• Support and escalation process
+• Important deadlines
+If the college conducts a formal inauguration before the hackathon, participants must follow the schedule
+communicated by the college and organizers.
+8. 24-HOUR HACKATHON FORMAT
+The 24-hour Round 1 is divided into two key phases.
+Phase 1 – Problem Selection & Lock
+First 2 hours
+Teams will:
+1. Review the available problem statements.
+2. Understand the challenge requirements.
+3. Review the required functionalities and acceptance criteria.
+4. Discuss internally.
+5. Select one problem statement.
+6. Lock the selected problem statement.
+Phase 2 – Build & Submit
+Remaining 22 hours
+Teams will:
+• Design the solution.
+• Develop the required functionalities.• Test the solution.
+• Deploy the solution.
+• Prepare the GitHub repository.
+• Complete all required project information.
+• Submit the final solution.
+9. PROBLEM STATEMENT SELECTION
+Each team must select ONE problem statement from the challenges made available to them.
+Who Can Select?
+Only the Team Lead is authorized to select and lock the problem statement.
+Team members may discuss and decide which challenge to work on, but the final selection and lock action must be
+completed by the Team Lead on the platform.
+Selection Deadline
+The problem statement must be selected and locked within the first 2 hours of the hackathon.
+Failure to select a problem statement within the stipulated period may result in disqualification.
+10. PROBLEM STATEMENT LOCK
+This is one of the most important rules of HacXLerate 2026.
+Once a problem statement is selected and locked:
+It cannot be changed.
+The selected problem statement will remain the team's problem statement throughout the entire HacXLerate
+journey:
+Round 1 → Round 2 → Grand Finale
+Therefore, teams are strongly advised to carefully understand the problem statement, required functionalities and
+evaluation expectations before locking their choice.
+A team cannot request a change of problem statement after it has been locked.
+11. PROBLEM STATEMENT REQUIREMENTS
+Each challenge will provide the information required for teams to understand and build the solution.
+This may include:
+• Problem context
+• Business/user problem
+• Required functionalities
+• Minimum feature requirements• Acceptance criteria
+• Technical expectations, where applicable
+• Submission requirements
+• Evaluation parameters
+• Challenge-specific instructions
+The exact evaluation weightage may differ between problem statements.
+Teams are responsible for reading and understanding the complete challenge before beginning development.
+12. USE OF AI
+AI tools are allowed.
+Participants may use AI tools during the hackathon for:
+• Coding
+• Debugging
+• Research
+• Ideation
+• Architecture
+• Design
+• Testing
+• Documentation
+• Development assistance
+• Other legitimate aspects of solution development
+There is no restriction on the use of AI tools.
+However, AI usage does not reduce the team's responsibility for its solution.
+Teams are expected to:
+• Understand what they build.
+• Be able to explain their solution.
+• Demonstrate ownership of their implementation.
+• Apply their own creativity and problem-solving ability.
+• Ensure that the submitted solution meets the challenge requirements.
+AI assistance is allowed. Blind dependence is not a substitute for understanding, innovation or technical
+execution.13. SOLUTION DEVELOPMENT
+Teams may use technologies, frameworks, programming languages, libraries and development tools of their choice
+unless a specific challenge states otherwise.
+Teams should focus on:
+• Solving the actual problem.
+• Building the required functionalities.
+• Creating a usable solution.
+• Ensuring the solution works as intended.
+• Deploying the solution wherever required.
+• Demonstrating innovation and technical depth.
+Participants should prioritize a working and complete solution over unnecessary complexity.
+14. SUBMISSION REQUIREMENTS
+At the end of the 24-hour hackathon, each team must submit the required information through the byteXL
+Hackathon Platform.
+The submission will generally include:
+1. Project Information
+• Project title
+• Project summary
+• Solution description
+• Other information requested on the platform
+2. GitHub Repository
+Teams must provide the required GitHub repository information.
+The repository should:
+• Contain the project code.
+• Be accessible to the evaluation team.
+• Clearly represent the submitted solution.
+• Include appropriate documentation/README wherever required.
+• Clearly identify the technology stack and relevant implementation details.
+3. Deployment & Nimbus
+Teams are required to submit a working deployment link for their solution wherever specified as part of the
+challenge submission.
+Participants are free to use the development and deployment tools of their choice.However, Nimbus by byteXL provides the required development environment, tools and libraries needed to build and
+deploy hackathon solutions.
+Teams are therefore encouraged to explore and build their solutions on Nimbus.
+4. Challenge-Specific Information
+Teams must provide any additional information requested as part of their selected problem statement.
+15. WHO CAN SUBMIT?
+Unlike problem statement locking, submission is not restricted to the Team Lead.
+Any registered team member can submit the solution on behalf of the team.
+Teams should ensure that the submitting member has access to the required platform and submission information.
+16. MULTIPLE SUBMISSIONS & VERSION CONTROL
+Teams are allowed to submit their solution more than once during the active submission window.
+Important:
+After a team submits a solution, it can continue improving the project and submit a newer version until the official
+submission deadline.
+The system will accept the latest valid submission made before the deadline.
+Final Submission Consideration
+Once the submission deadline has passed:
+The latest valid submission available on the platform at the time of closure will be considered for evaluation.
+No new submission or replacement will be accepted after the deadline unless an official instruction is issued by the
+HacXLerate organizing team.
+Recommendation
+Teams are strongly advised not to wait until the final few minutes.
+Submit an initial working version early and continue improving it through the remaining hackathon period.
+17. SUBMISSION DEADLINE
+The exact submission deadline will be based on the official start time of the participating college.
+For example:
+Hackathon Start: 10:00 AM
+Submission Deadline: 10:00 AM the following day
+The 24-hour duration is calculated from the official start time communicated for the college.After the Deadline
+Once the submission deadline has passed:
+• Submissions will be closed.
+• The latest valid submission will be considered.
+• Late submissions will not be accepted.
+• Teams will not be allowed to replace their final submission unless officially authorized.
+18. AUTO EVALUATION
+HacXLerate Round 1 will use an automated evaluation layer before human evaluation.
+The purpose of automated evaluation is to verify whether the required functionalities of the selected challenge have
+been built and are working as required.
+For example, if a challenge specifies four mandatory functionalities, the platform's evaluation framework may check
+whether those required functionalities are implemented and functioning.
+Important Shortlisting Rule
+Only teams that satisfy the required functionality criteria through the automated evaluation will proceed to
+human evaluation.
+Teams that do not meet the required functionality threshold will not proceed to the human evaluation stage.
+Therefore, teams should prioritize building all mandatory functionalities specified in their selected problem
+statement.
+19. HUMAN EVALUATION
+Teams that successfully clear the automated functionality evaluation will be evaluated by designated evaluators.
+Human evaluation will focus on the qualitative and competitive aspects of the solution.
+The overall evaluation parameters may include:
+• Problem Understanding
+• Functionality
+• Technical Execution
+• Innovation & Creativity
+• User Experience
+• Overall Solution Quality
+• Deployment
+• Scalability/Potential
+Important
+The exact weightage assigned to each parameter may vary by problem statement.Teams should refer to the evaluation criteria provided with their specific challenge.
+20. LIVE DEMO / CLARIFICATION
+A live presentation or demo is not mandatory by default during Round 1.
+However, evaluators may request a team to:
+• Demonstrate the solution.
+• Explain a specific functionality.
+• Clarify an implementation.
+• Verify whether a feature is working.
+• Provide additional information in case of a close evaluation.
+Teams should therefore remain reachable and be prepared to explain their solution if requested.
+21. EVALUATION PRINCIPLES
+Participants should understand that completing a functional solution is the minimum requirement for progressing
+through the evaluation process.
+Beyond functionality, evaluators may consider:
+• How well the team understood the problem.
+• How effectively the solution addresses the problem.
+• Quality of implementation.
+• Originality and creativity.
+• User experience.
+• Technical depth.
+• Practical applicability.
+• Scalability and future potential.
+• Overall quality of execution.
+Teams should therefore avoid focusing only on building the minimum number of features.
+22. COLLEGE-LEVEL RECOGNITION
+The Top 3 teams from each participating college will be recognized at the college level.
+The college may conduct a local announcement or recognition ceremony.
+Important:
+College-level Top 3 recognition does not automatically mean qualification for Round 2.
+All eligible teams from participating colleges will be considered for the overall HacXLerate leaderboard.23. QUALIFICATION TO ROUND 2
+The Top 50 teams overall will qualify for Round 2.
+The leaderboard will consider eligible teams across participating Round 1 colleges and the applicable External Track.
+The tentative Top 50 announcement is scheduled after completion of all Round 1 events.
+Participants qualifying for Round 2 will receive further instructions regarding travel, accommodation, reporting and
+other arrangements.
+24. GRAND FINALE
+The Top 7 teams from Round 2 will advance to the Grand Finale.
+The Grand Finale will provide teams with an opportunity to present their solutions before the Grand Jury.
+Further presentation guidelines will be communicated to the shortlisted teams.
+25. CODE OF CONDUCT
+All participants are expected to maintain professional conduct throughout the hackathon.
+Participants must:
+• Respect fellow participants.
+• Respect college and byteXL staff.
+• Follow instructions from authorized organizers.
+• Maintain appropriate behaviour within the venue.
+• Use college facilities responsibly.
+• Avoid disruption to other participants.
+• Protect their own and others' equipment.
+• Maintain a professional and inclusive environment.
+Any form of harassment, intimidation, abuse, threatening behaviour, vandalism or misconduct may result in
+immediate removal from the hackathon.
+26. ORIGINALITY & PLAGIARISM
+Teams must take responsibility for the originality and integrity of their submitted solution.
+The following may result in disqualification:
+• Copying another team's solution.
+• Submitting another participant's work as one's own.
+• Misrepresenting contributions.• Using stolen or unauthorized source code.
+• Falsifying project information.
+• Manipulating submissions or evaluation systems.
+• Any other form of deliberate misrepresentation.
+Use of publicly available libraries, frameworks, APIs and legitimate development resources is permitted.
+Use of AI tools is permitted, but the final solution remains the team's responsibility.
+27. FAIR PLAY
+Participants must not attempt to:
+• Exploit the hackathon platform.
+• Manipulate automated evaluation.
+• Interfere with another team's submission.
+• Gain unauthorized access to another team's repository or solution.
+• Tamper with evaluation data.
+• Circumvent competition rules.
+Any deliberate attempt to manipulate the competition may result in immediate disqualification.
+28. VENUE RULES
+Since Round 1 is conducted physically at the participating college:
+Participants must:
+• Follow the college's campus rules.
+• Follow venue-specific instructions.
+• Use only designated spaces.
+• Maintain cleanliness.
+• Avoid damage to college property.
+• Follow security and access procedures.
+• Respect restrictions imposed by the college.
+The college and byteXL organizing teams reserve the right to take appropriate action in case of serious venue
+misconduct.
+29. PERSONAL DEVICES & INTERNET
+Participants are expected to bring their own:
+• Laptop• Charger
+• Required accessories
+• Development tools/software
+• Other equipment necessary to build their solution
+Internet access will be facilitated at the venue as per college arrangements.
+Participants are advised to keep required development tools, dependencies and resources ready before the
+hackathon begins.
+30. PARTICIPANT SUPPORT – ZOOM HELPLINE
+To support participants throughout the 24-hour hackathon, byteXL will provide a dedicated Zoom Helpline for
+participant queries and assistance.
+• The Zoom Helpline link will be shared with participants during the pre-hackathon briefing.
+• The helpline will be active during designated time windows throughout the hackathon.
+• The specific active timings will be communicated during the pre-hackathon briefing based on the
+participating college's hackathon schedule.
+• Participants can use the helpline to raise queries or seek clarification related to the hackathon, platform,
+submission process and other relevant aspects.
+• Participants are encouraged to raise issues as early as possible and not wait until the final submission
+window.
+• For issues that require further investigation, the support team may take the details and coordinate with the
+relevant HacXLerate team.
+Note: The Zoom Helpline is intended for guidance and clarification. The support team will not build, debug or develop
+solutions on behalf of participants.
+Official instructions from the HacXLerate organizing team will supersede informal information shared by participants.
+31. DEADLINES & OFFICIAL COMMUNICATION
+Participants are responsible for tracking all official deadlines communicated by the HacXLerate organizing team.
+Important deadlines include:
+• Platform access
+• Problem statement selection
+• Problem lock
+• Submission
+• Evaluation
+• Results
+• Round 2 qualification
+• Grand FinaleAny change to an official deadline or rule will be communicated through an authorized byteXL/HacXLerate
+communication channel.
+Participants should not rely on unofficial WhatsApp messages, social media posts or information from other
+participants in case of conflicting information.
+32. JUDGING DECISION
+The decisions of the designated evaluators/judging panel are final and binding.
+Participants may be asked to provide clarification where necessary, but there will be no appeal process against the
+final judging decision.
+byteXL reserves the right to:
+• Verify submissions.
+• Request clarification.
+• Review suspicious submissions.
+• Disqualify teams that violate the rules.
+• Make final decisions regarding eligibility, evaluation and progression.
+33. DISQUALIFICATION
+A team may be disqualified for:
+• Failure to select a problem statement within the stipulated time.
+• Attempting to change a locked problem statement.
+• Failure to meet mandatory challenge functionality requirements.
+• Plagiarism or copied work.
+• Misrepresentation of team members or contributions.
+• Unauthorized team-member changes.
+• Submission of inaccessible or invalid required links.
+• Manipulation of the platform or evaluation process.
+• Misconduct.
+• Violation of venue rules.
+• Violation of HacXLerate rules.
+• Any deliberate attempt to gain an unfair advantage.
+The organizing team reserves the right to disqualify a team where a serious violation is identified.
+34. IMPORTANT RULES – QUICK REFERENCE
+Before starting, every participant must understand these rules:01. Platform Access
+You will receive hackathon platform access on your registered email approximately 2–3 hours before the event.
+02. Physical Participation
+Round 1 is a 24-hour physical hackathon conducted at your college campus.
+03. Problem Selection
+You get the first 2 hours to understand and select your problem statement.
+04. Only Team Lead Can Lock
+Only the Team Lead can select and lock the team's problem statement.
+05. Problem Cannot Be Changed
+Once locked, the problem statement remains the same through:
+Round 1 → Round 2 → Grand Finale
+06. Build All Required Functionalities
+The platform will perform automated evaluation of the required functionalities.
+07. Auto Evaluation Comes First
+Only teams that successfully satisfy the required functionality criteria will proceed to human evaluation.
+08. Human Evaluation
+Human evaluators assess innovation, creativity, technical depth, problem-solving, UX and overall solution quality, as
+defined by the challenge rubric.
+09. Anyone on the Team Can Submit
+Any registered team member can submit the solution.
+10. You Can Resubmit
+Teams can submit improved versions multiple times until the deadline.
+11. Latest Submission Wins
+After the deadline, the latest valid submission on the platform will be considered final.
+12. No Late Submissions
+Once the deadline closes, late submissions or replacements will not be accepted unless officially authorized.
+13. AI Is Allowed
+AI tools can be used throughout the hackathon.
+14. Live Demo Is Not Mandatory
+A live demo is not required by default, but evaluators may request one for verification or clarification.
+15. Top 3 ≠ Round 2
+Top 3 teams at each college receive college-level recognition. The Top 50 overall teams qualify for Round 2.16. Judging Is Final
+The decision of the designated evaluators/judging panel is final and binding.
+35. PARTICIPANT CHECKLIST
+Before the hackathon:
+• Registered team confirmed
+• Team has 3–5 members
+• All members belong to the same college
+• Valid college ID available
+• Laptop ready
+• Charger ready
+• Required software/tools installed
+• Registered email accessible
+• Platform access checked
+• Team Lead identified
+• Team understands the 2-hour problem-lock window
+• Team understands the submission process
+During the hackathon:
+• Problem statement reviewed carefully
+• Team Lead locks the problem within 2 hours
+• All mandatory functionalities identified
+• Development completed
+• Solution tested
+• Solution deployed
+• GitHub repository ready
+• Required project information completed
+• Initial submission made before the deadline
+• Improvements submitted as required
+• Latest version verified before deadline
+Before submission closes:
+• Deployed link works
+• GitHub link works
+• Repository is accessible
+• Required features are functional• All required fields are completed
+• Latest version has been submitted
+• Team has verified the final submission
+36. FINAL MESSAGE TO PARTICIPANTS
+HacXLerate is not just about completing a hackathon.
+It is an opportunity to understand a real-world problem, make decisions under time pressure, build a working solution
+and demonstrate what you can do beyond the classroom.
+Use the 24 hours wisely.
+Understand the problem.
+Build with purpose.
+Use technology creatively.
+Complete every required functionality.
+Test your solution.
+Submit on time.
+CODE. CREATE. INNOVATE.

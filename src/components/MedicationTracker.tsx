@@ -16,7 +16,8 @@ import {
   Flame,
   CheckCircle2,
   X,
-  AlertCircle
+  AlertCircle,
+  Trash2
 } from 'lucide-react';
 import { ExtractedMedication } from '@/types';
 import { HealthStorageService } from '@/lib/storage';
@@ -27,6 +28,7 @@ interface MedicationTrackerProps {
   onToggleStatus?: (id: string) => void;
   onAddCustomMedication?: (med: Omit<ExtractedMedication, 'id'>) => void;
   onToggleTakenToday?: (id: string) => void;
+  onDeleteMedication?: (medNameOrId: string) => void;
   onNavigateToUpload?: () => void;
   onNavigateToCopilot?: () => void;
 }
@@ -36,6 +38,7 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
   onToggleStatus,
   onAddCustomMedication,
   onToggleTakenToday,
+  onDeleteMedication,
   onNavigateToUpload,
   onNavigateToCopilot
 }) => {
@@ -45,6 +48,7 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
   const [newFrequency, setNewFrequency] = useState('Once Daily (OD)');
   const [newTiming, setNewTiming] = useState<'After Food' | 'Before Food' | 'With Food'>('After Food');
   const [newInstructions, setNewInstructions] = useState('');
+  const [confirmDeleteMedId, setConfirmDeleteMedId] = useState<string | null>(null);
 
   const takenCount = medications.filter(m => m.isTakenToday).length;
   const totalMeds = medications.length;
@@ -101,6 +105,14 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
 
   // Drug-Drug Interaction Safety Watchdog
   const checkDrugInteractions = () => {
+    if (medications.length === 0) {
+      return {
+        safe: true,
+        title: 'No Active Medications in Schedule',
+        detail: 'Scan and analyze a prescription or ask AI Copilot to add your daily medications to run real-time drug collision checks.'
+      };
+    }
+
     const names = medications.map(m => m.name.toLowerCase());
     const hasMetformin = names.some(n => n.includes('metformin'));
     const hasTelmisartan = names.some(n => n.includes('telmisartan') || n.includes('losartan'));
@@ -128,16 +140,18 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
       {/* Top Banner & Adherence Score */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Drug Safety Guardrail Banner */}
-        <div className="md:col-span-2 bg-emerald-50 border border-emerald-200/90 rounded-2xl p-4.5 flex items-start gap-3.5 shadow-2xs">
-          <ShieldCheck className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
-          <div>
-            <h4 className="text-sm font-bold text-emerald-950">
+        <div className="md:col-span-2 bg-emerald-50/80 border border-emerald-200/90 rounded-2xl px-6 py-5 flex flex-col items-center justify-center text-center gap-2 shadow-2xs">
+          <div className="flex items-center justify-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-emerald-100 border border-emerald-200/80 flex items-center justify-center text-emerald-700 shrink-0">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <h4 className="text-sm font-bold text-emerald-950 tracking-tight text-center">
               {safetyInfo.title}
             </h4>
-            <p className="text-xs text-emerald-800 mt-0.5 leading-relaxed">
-              {safetyInfo.detail}
-            </p>
           </div>
+          <p className="text-xs text-emerald-800 leading-relaxed max-w-xl text-center">
+            {safetyInfo.detail}
+          </p>
         </div>
 
         {/* Adherence Card */}
@@ -250,17 +264,42 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
                           )}
                         </div>
 
-                        <button
-                          onClick={() => handleToggleTaken(med.id)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
-                            isTaken
-                              ? 'bg-emerald-600 text-white shadow-xs'
-                              : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs'
-                          }`}
-                        >
-                          <Check className="w-3.5 h-3.5" />
-                          <span>{isTaken ? 'Taken' : 'Mark Taken'}</span>
-                        </button>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            onClick={() => handleToggleTaken(med.id)}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                              isTaken
+                                ? 'bg-emerald-600 text-white shadow-xs'
+                                : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs'
+                            }`}
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                            <span>{isTaken ? 'Taken' : 'Mark Taken'}</span>
+                          </button>
+
+                          {onDeleteMedication && (
+                            <button
+                              onClick={() => {
+                                if (confirmDeleteMedId === med.id) {
+                                  onDeleteMedication(med.id);
+                                  setConfirmDeleteMedId(null);
+                                } else {
+                                  setConfirmDeleteMedId(med.id);
+                                  setTimeout(() => setConfirmDeleteMedId(prev => prev === med.id ? null : prev), 4000);
+                                }
+                              }}
+                              className={`p-1.5 rounded-xl border transition-colors cursor-pointer flex items-center gap-1 ${
+                                confirmDeleteMedId === med.id
+                                  ? 'bg-rose-600 text-white border-rose-700 animate-pulse text-[11px] font-bold px-2'
+                                  : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50 border-transparent hover:border-rose-200'
+                              }`}
+                              title={confirmDeleteMedId === med.id ? 'Click again to confirm delete' : 'Delete medication'}
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              {confirmDeleteMedId === med.id && <span>Confirm?</span>}
+                            </button>
+                          )}
+                        </div>
                       </div>
                     );
                   })}

@@ -37,17 +37,29 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Brand Logo & Title */}
-        <div className="flex items-center gap-3">
+        <div 
+          className="flex items-center gap-3 cursor-pointer group"
+          title="Setu | AI-Powered Personal Health Copilot"
+        >
           <img
-            src="/brand/logo.png"
+            src="/brand/favicon.png"
             alt="Setu Logo"
-            className="w-10 h-10 object-contain rounded-xl"
+            className="w-10 h-10 object-contain rounded-xl transition-transform group-hover:scale-105"
+            title="Setu | AI-Powered Personal Health Copilot"
           />
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl tracking-tight text-slate-900">Setu</span>
+              <span 
+                className="font-extrabold text-xl tracking-tight text-slate-900"
+                title="Setu | AI-Powered Personal Health Copilot"
+              >
+                Setu
+              </span>
             </div>
-            <p className="text-xs text-slate-500 hidden sm:block">
+            <p 
+              className="text-xs text-slate-500 hidden sm:block"
+              title="Setu | AI-Powered Personal Health Copilot"
+            >
               {t.appSubtitle}
             </p>
           </div>

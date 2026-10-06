@@ -44,6 +44,20 @@ GUIDELINES:
    - Always use bold markdown (**target value**, **medication name**, **biomarker**) to showcase the main clinical targets and numbers clearly (e.g., **Target: HbA1c < 7.0%**, **Fasting Blood Sugar: 162 mg/dL**, **Metformin 500mg**).
    - Structure responses with clean bold section titles on their own line. Do NOT prefix headings with markdown hashtags (### or ##).
    - Do NOT include any trailing clinical disclaimer or medical note block.
+9. ACTIVE APPLICATION READ & WRITE ACCESS (ACTIONS):
+   You have full READ and WRITE access to the user's application, tabs, medications, and vitals.
+   When the user asks you to navigate somewhere, add/remove/toggle a medication, or log a vital, ALWAYS include the appropriate action command tag at the very end of your response:
+   - Navigate to Medication Schedule: [[ACTION:NAVIGATE:meds]]
+   - Navigate to Vital Trends & Analytics: [[ACTION:NAVIGATE:trends]]
+   - Navigate to Health Journey Timeline: [[ACTION:NAVIGATE:timeline]]
+   - Navigate to Document Uploader: [[ACTION:NAVIGATE:upload]]
+   - Navigate to ABDM / ABHA Hub: [[ACTION:NAVIGATE:abdm]]
+   - Add a Medication: [[ACTION:ADD_MED:{"name":"Medicine Name","dosage":"500mg","frequency":"Once Daily (OD)","timing":"After Food","timeOfDay":["Morning"],"instructions":"Take after breakfast"}]]
+   - Mark Medication as Taken: [[ACTION:TOGGLE_TAKEN:{"medName":"Medicine Name"}]]
+   - Pause or Resume Medication: [[ACTION:TOGGLE_STATUS:{"medName":"Medicine Name"}]]
+   - Delete/Remove Medication: [[ACTION:DELETE_MED:{"medName":"Medicine Name"}]]
+   - Log a Vital Reading: [[ACTION:LOG_VITAL:{"testName":"Fasting Blood Sugar (FBS)","value":115,"unit":"mg/dL","status":"NORMAL"}]]
+   Always provide a natural, reassuring conversational reply explaining what action was performed!
 `;
 
     const failoverResult = await callGeminiWithFailover(
@@ -81,7 +95,32 @@ GUIDELINES:
     const lower = userMessage.toLowerCase();
     let reply = '';
 
-    if (lower.includes('hba1c') || lower.includes('sugar') || lower.includes('glucose') || lower.includes('diabetes')) {
+    if (lower.includes('medication schedule') || lower.includes('show meds') || lower.includes('go to meds') || lower.includes('my medications')) {
+      reply = `Opening your **Medication Schedule**. Here you can track your daily medication timings, dose adherence, and view clinical drug collision safety checks.\n\n[[ACTION:NAVIGATE:meds]]`;
+    } else if (lower.includes('vital trend') || lower.includes('show trends') || lower.includes('go to trends') || lower.includes('analytics') || lower.includes('charts')) {
+      reply = `Navigating you to **Vital Trends & Analytics**. You can observe your longitudinal trajectories for HbA1c, Blood Sugar, LDL Cholesterol, and Blood Pressure.\n\n[[ACTION:NAVIGATE:trends]]`;
+    } else if (lower.includes('timeline') || lower.includes('history') || lower.includes('show timeline')) {
+      reply = `Switching to your **Health Journey Timeline**. Here you can review all chronological lab reports, prescriptions, and hospital discharge events.\n\n[[ACTION:NAVIGATE:timeline]]`;
+    } else if (lower.includes('upload') || lower.includes('scan') || lower.includes('new document') || lower.includes('add record')) {
+      reply = `Opening the **Scan & Analyze Record** tab. You can drop or capture your prescriptions and pathology slips for instant OCR translation.\n\n[[ACTION:NAVIGATE:upload]]`;
+    } else if (lower.includes('abdm') || lower.includes('abha')) {
+      reply = `Opening the **ABDM / ABHA Digital Hub**. Here you can review your 14-digit ABHA card, link hospital records, and export FHIR R4 bundles.\n\n[[ACTION:NAVIGATE:abdm]]`;
+    } else if (lower.includes('add') && (lower.includes('medicine') || lower.includes('tablet') || lower.includes('pill') || lower.includes('medication') || lower.includes('paracetamol') || lower.includes('vitamin'))) {
+      const medName = lower.includes('paracetamol') ? 'Paracetamol' : lower.includes('vitamin') ? 'Vitamin D3' : lower.includes('aspirin') ? 'Aspirin' : 'New Medication';
+      const dosage = lower.includes('650') ? '650mg' : lower.includes('500') ? '500mg' : '500mg';
+      reply = `I have added **${medName} ${dosage}** to your daily schedule and updated your medication list.\n\n[[ACTION:ADD_MED:{"name":"${medName}","dosage":"${dosage}","frequency":"Once Daily (OD)","timing":"After Food","timeOfDay":["Morning"],"instructions":"Take with water after breakfast"}]]`;
+    } else if ((lower.includes('taken') || lower.includes('took') || lower.includes('mark')) && (lower.includes('med') || lower.includes('pill') || lower.includes('metformin') || lower.includes('telmisartan') || lower.includes('atorvastatin'))) {
+      const medName = lower.includes('metformin') ? 'Metformin' : lower.includes('telmisartan') ? 'Telmisartan' : lower.includes('atorvastatin') ? 'Atorvastatin' : 'Metformin';
+      reply = `I have marked **${medName}** as taken today in your medication schedule. Great job keeping your adherence streak!\n\n[[ACTION:TOGGLE_TAKEN:{"medName":"${medName}"}]]`;
+    } else if ((lower.includes('delete') || lower.includes('remove') || lower.includes('stop')) && (lower.includes('med') || lower.includes('medicine') || lower.includes('pill') || lower.includes('metformin') || lower.includes('telmisartan') || lower.includes('atorvastatin') || lower.includes('paracetamol'))) {
+      const medName = lower.includes('paracetamol') ? 'Paracetamol' : lower.includes('atorvastatin') ? 'Atorvastatin' : lower.includes('telmisartan') ? 'Telmisartan' : 'Metformin';
+      reply = `I have removed **${medName}** from your active medication schedule.\n\n[[ACTION:DELETE_MED:{"medName":"${medName}"}]]`;
+    } else if ((lower.includes('log') || lower.includes('record') || lower.includes('my reading') || lower.includes('sugar is') || lower.includes('glucose is')) && (lower.includes('sugar') || lower.includes('glucose') || lower.includes('vital') || lower.includes('bp'))) {
+      const numMatch = lower.match(/\b(\d{2,3})\b/);
+      const val = numMatch ? parseInt(numMatch[1], 10) : 110;
+      const isHigh = val > 140;
+      reply = `I have logged your **Fasting Blood Sugar** as **${val} mg/dL** (${isHigh ? 'ELEVATED' : 'NORMAL'}). Your vital trend charts have been updated.\n\n[[ACTION:LOG_VITAL:{"testName":"Fasting Blood Sugar (FBS)","value":${val},"unit":"mg/dL","status":"${isHigh ? 'HIGH' : 'NORMAL'}"}]]`;
+    } else if (lower.includes('hba1c') || lower.includes('sugar') || lower.includes('glucose') || lower.includes('diabetes')) {
       reply = `Your recent HbA1c is **7.4%** and Fasting Blood Sugar is **162 mg/dL**, both running above the healthy standard target (**HbA1c < 7.0%**, **Fasting Sugar < 100 mg/dL**).
 
 Key Focus Targets & Recommendations:

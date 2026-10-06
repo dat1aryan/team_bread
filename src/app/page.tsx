@@ -167,6 +167,12 @@ export default function HomePage() {
     reloadData();
   };
 
+  // Delete Medication
+  const handleDeleteMedication = (medNameOrId: string) => {
+    HealthStorageService.deleteMedication(medNameOrId);
+    reloadData();
+  };
+
   // Log Manual Vital
   const handleLogVital = (testName: string, value: number, unit: string, status: TestStatus) => {
     HealthStorageService.logManualVital(testName, value, unit, status);
@@ -385,8 +391,13 @@ export default function HomePage() {
               profile={patient}
               medications={activeMeds}
               recentObservations={allLabObservations}
+              activeTab={activeTab}
               onAddMedication={handleAddCustomMedication}
               onNavigateTab={(tab) => setActiveTab(tab as any)}
+              onToggleMedicationTaken={handleToggleMedicationTaken}
+              onToggleMedicationStatus={handleToggleMedStatus}
+              onDeleteMedication={handleDeleteMedication}
+              onLogVital={handleLogVital}
             />
           ) : activeTab === 'upload' ? (
             /* View 3: Upload Dropzone & Instant File Scanner */
@@ -417,6 +428,7 @@ export default function HomePage() {
               onToggleStatus={handleToggleMedStatus}
               onAddCustomMedication={handleAddCustomMedication}
               onToggleTakenToday={handleToggleMedicationTaken}
+              onDeleteMedication={handleDeleteMedication}
               onNavigateToUpload={() => setActiveTab('upload')}
               onNavigateToCopilot={() => setActiveTab('copilot')}
             />
@@ -436,8 +448,8 @@ export default function HomePage() {
       {/* Global Clinical Footer */}
       <footer className="mt-auto border-t border-slate-200 bg-white py-6 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <img src="/brand/logo.png" alt="Setu Logo" className="w-5 h-5 object-contain" />
+          <div className="flex items-center gap-2" title="Setu | AI-Powered Personal Health Copilot">
+            <img src="/brand/favicon.png" alt="Setu Logo" className="w-5 h-5 object-contain" title="Setu | AI-Powered Personal Health Copilot" />
             <span className="font-bold text-slate-800">Setu AI Copilot</span>
             <span>•</span>
             <span>Personal Health Intelligence Platform</span>

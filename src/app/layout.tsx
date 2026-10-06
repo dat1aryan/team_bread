@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Setu | Personal Health Intelligence & ABDM Platform',
+  title: 'Setu | AI-Powered Personal Health Copilot',
   description: 'AI-Powered Personal Health Copilot bridging medical prescriptions, lab reports, and discharge summaries to human understanding and ABDM FHIR standard.',
   keywords: [
     'Setu',

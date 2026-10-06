@@ -14,9 +14,11 @@ import {
   Stethoscope,
   Pill,
   Activity,
-  AlertTriangle
+  AlertTriangle,
+  Zap,
+  CheckCircle2
 } from 'lucide-react';
-import { ChatMessage, LanguageCode, PatientProfile, ExtractedMedication, ExtractedLabObservation } from '@/types';
+import { ChatMessage, LanguageCode, PatientProfile, ExtractedMedication, ExtractedLabObservation, TestStatus } from '@/types';
 import { speakText, stopSpeaking } from '@/lib/multilingual';
 
 /**
@@ -204,9 +206,9 @@ const COPILOT_I18N: Record<LanguageCode, {
     resetMsg: 'Chat session refreshed. How can I help you understand your health today?',
     getGreeting: (name, count) => `Hello ${name}! I am your Setu AI Copilot. I have analyzed your medical records, active medications (${count} meds), and recent lab results. How can I help you understand your health today?`,
     quickPrompts: [
+      { label: 'View Med Schedule', icon: Pill, prompt: 'Take me to my medication schedule and check my pill timings.' },
+      { label: 'Add Paracetamol', icon: Sparkles, prompt: 'Add Paracetamol 650mg to my daily medication schedule.' },
       { label: 'Abnormal Lab Results', icon: Activity, prompt: 'Explain my recent abnormal lab test results (HbA1c & LDL) in simple terms and what they mean.' },
-      { label: 'Medication Timings', icon: Pill, prompt: 'Review my current medicines and explain why some are before food and others after food.' },
-      { label: 'Dietary Guidance', icon: Sparkles, prompt: 'Suggest a healthy Indian diet and lifestyle plan tailored to my diabetic and cholesterol profile.' },
       { label: 'Doctor Questions', icon: Stethoscope, prompt: 'What key questions should I prepare to ask my doctor during my next clinic visit?' }
     ],
     listen: 'Listen',
@@ -303,8 +305,13 @@ interface AiHealthChatbotProps {
   profile: PatientProfile;
   medications: ExtractedMedication[];
   recentObservations: ExtractedLabObservation[];
+  activeTab?: 'upload' | 'timeline' | 'trends' | 'meds' | 'abdm' | 'copilot';
   onAddMedication?: (med: Omit<ExtractedMedication, 'id'>) => void;
   onNavigateTab?: (tab: 'upload' | 'timeline' | 'trends' | 'meds' | 'abdm' | 'copilot') => void;
+  onToggleMedicationTaken?: (medNameOrId: string) => void;
+  onToggleMedicationStatus?: (medNameOrId: string) => void;
+  onDeleteMedication?: (medNameOrId: string) => void;
+  onLogVital?: (testName: string, value: number, unit: string, status: TestStatus) => void;
 }
 
 export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
@@ -312,8 +319,13 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
   profile,
   medications,
   recentObservations,
+  activeTab,
   onAddMedication,
-  onNavigateTab
+  onNavigateTab,
+  onToggleMedicationTaken,
+  onToggleMedicationStatus,
+  onDeleteMedication,
+  onLogVital
 }) => {
   const i18n = COPILOT_I18N[currentLanguage] || COPILOT_I18N.en;
 
@@ -381,12 +393,16 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
             patientName: profile.fullName,
             age: 52,
             gender: profile.gender,
+            activeTab: activeTab || 'copilot',
             diagnoses: ['Type 2 Diabetes Mellitus', 'Essential Hypertension', 'Dyslipidemia'],
             medications: medications.map(m => ({
+              id: m.id,
               name: m.name,
               dosage: m.dosage,
               frequency: m.frequency,
-              timing: m.timing
+              timing: m.timing,
+              isActive: m.isActive,
+              isTakenToday: m.isTakenToday
             })),
             labObservations: recentObservations.map(o => ({
               testName: o.testName,
@@ -400,10 +416,92 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
 
       const data = await response.json();
       if (data.success && data.reply) {
+        let replyText: string = data.reply;
+        let actionBadgeText: string | undefined = undefined;
+
+        // Parse and execute embedded action commands
+        const actionRegex = /\[\[ACTION:([A-Z_]+)(?::([\s\S]*?))?\]\]/g;
+        let match: RegExpExecArray | null;
+
+        while ((match = actionRegex.exec(replyText)) !== null) {
+          const actionType = match[1];
+          const payloadRaw = match[2]?.trim();
+          let payload: any = null;
+          if (payloadRaw) {
+            try {
+              payload = JSON.parse(payloadRaw);
+            } catch {
+              payload = payloadRaw;
+            }
+          }
+
+          if (actionType === 'NAVIGATE' && onNavigateTab) {
+            const targetTab = typeof payload === 'string' ? payload : payload?.tab;
+            if (targetTab) {
+              onNavigateTab(targetTab as any);
+              const tabLabels: Record<string, string> = {
+                meds: 'Medication Schedule',
+                trends: 'Vital Trends & Analytics',
+                timeline: 'Health Journey Timeline',
+                upload: 'Scan & Analyze Record',
+                abdm: 'ABDM / ABHA Digital Hub',
+                copilot: 'AI Copilot'
+              };
+              actionBadgeText = `⚡ Navigated to ${tabLabels[targetTab] || targetTab}`;
+            }
+          } else if (actionType === 'ADD_MED' && onAddMedication) {
+            if (payload && typeof payload === 'object') {
+              onAddMedication({
+                name: payload.name || 'New Medication',
+                dosage: payload.dosage || '500mg',
+                frequency: payload.frequency || 'Once Daily (OD)',
+                route: payload.route || 'Oral',
+                timing: payload.timing || 'After Food',
+                timeOfDay: payload.timeOfDay || ['Morning'],
+                instructions: payload.instructions || 'Take as advised',
+                isActive: true
+              });
+              actionBadgeText = `⚡ Added ${payload.name || 'Medication'} to Daily Schedule`;
+            }
+          } else if (actionType === 'TOGGLE_TAKEN' && onToggleMedicationTaken) {
+            const medName = typeof payload === 'string' ? payload : payload?.medName || payload?.name;
+            if (medName) {
+              onToggleMedicationTaken(medName);
+              actionBadgeText = `⚡ Marked ${medName} as Taken Today`;
+            }
+          } else if (actionType === 'TOGGLE_STATUS' && onToggleMedicationStatus) {
+            const medName = typeof payload === 'string' ? payload : payload?.medName || payload?.name;
+            if (medName) {
+              onToggleMedicationStatus(medName);
+              actionBadgeText = `⚡ Updated Schedule Status for ${medName}`;
+            }
+          } else if (actionType === 'DELETE_MED' && onDeleteMedication) {
+            const medName = typeof payload === 'string' ? payload : payload?.medName || payload?.name;
+            if (medName) {
+              onDeleteMedication(medName);
+              actionBadgeText = `⚡ Removed ${medName} from Medication Schedule`;
+            }
+          } else if (actionType === 'LOG_VITAL' && onLogVital) {
+            if (payload && typeof payload === 'object') {
+              onLogVital(
+                payload.testName || 'Fasting Blood Sugar (FBS)',
+                Number(payload.value) || 110,
+                payload.unit || 'mg/dL',
+                payload.status || 'NORMAL'
+              );
+              actionBadgeText = `⚡ Logged ${payload.testName || 'Vital'} (${payload.value} ${payload.unit})`;
+            }
+          }
+        }
+
+        // Clean out raw action command tags from conversational display
+        replyText = replyText.replace(/\[\[ACTION:[^\]]+\]\]/g, '').trim();
+
         const botMsg: ChatMessage = {
           id: `bot-${Date.now()}`,
           role: 'assistant',
-          content: data.reply,
+          content: replyText,
+          actionBadge: actionBadgeText,
           createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         setMessages(prev => [...prev, botMsg]);
@@ -444,8 +542,16 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
       {/* Header */}
       <div className="px-6 py-4 bg-slate-900 border-b border-slate-800 text-white flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-teal-400">
-            <img src="/brand/logo.png" alt="Setu" className="w-6 h-6 object-contain" />
+          <div 
+            className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center p-1.5"
+            title="Setu | AI-Powered Personal Health Copilot"
+          >
+            <img 
+              src="/brand/favicon.png" 
+              alt="Setu" 
+              className="w-full h-full object-contain" 
+              title="Setu | AI-Powered Personal Health Copilot" 
+            />
           </div>
           <div>
             <h3 className="font-bold text-base tracking-tight text-white">Setu Clinical Copilot</h3>
@@ -525,6 +631,12 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
                 ) : (
                   <div className="text-xs sm:text-sm leading-relaxed space-y-1">
                     {renderClinicalMessageContent(msg.content)}
+                    {msg.actionBadge && (
+                      <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-teal-50 border border-teal-200/90 text-teal-800 text-[11px] font-semibold shadow-2xs">
+                        <Sparkles className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                        <span>{msg.actionBadge}</span>
+                      </div>
+                    )}
                   </div>
                 )}
 

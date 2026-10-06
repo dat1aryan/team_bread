@@ -219,8 +219,19 @@ export class HealthStorageService {
     try {
       const existing = this.getDocuments();
       const cleanId = docOrEventId.startsWith('evt-') ? docOrEventId.replace('evt-', '') : docOrEventId;
+      const targetDoc = existing.find((d) => d.id === cleanId || d.id === docOrEventId);
       const updated = existing.filter((d) => d.id !== cleanId && d.id !== docOrEventId);
       localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(updated));
+
+      // Remove corresponding medications from custom meds list if any match
+      if (targetDoc && targetDoc.medications && targetDoc.medications.length > 0) {
+        const medNamesToRemove = new Set(targetDoc.medications.map(m => m.name.toLowerCase()));
+        try {
+          const customMeds: ExtractedMedication[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOM_MEDS) || '[]');
+          const remainingCustomMeds = customMeds.filter(m => !medNamesToRemove.has(m.name.toLowerCase()));
+          localStorage.setItem(STORAGE_KEYS.CUSTOM_MEDS, JSON.stringify(remainingCustomMeds));
+        } catch (e) {}
+      }
 
       // Rebuild vital trends from remaining documents
       const remainingTrends: VitalTrendSeries[] = [];
@@ -363,6 +374,42 @@ export class HealthStorageService {
 
     if (updated && typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(docs));
+    }
+  }
+
+  /**
+   * Deletes a medication across stored documents and custom medications
+   */
+  static deleteMedication(medNameOrId: string): void {
+    if (typeof window === 'undefined') return;
+    try {
+      const lower = medNameOrId.toLowerCase();
+      // Remove from custom meds
+      const customMeds: ExtractedMedication[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOM_MEDS) || '[]');
+      const filteredCustom = customMeds.filter(m => m.id !== medNameOrId && m.name.toLowerCase() !== lower);
+      localStorage.setItem(STORAGE_KEYS.CUSTOM_MEDS, JSON.stringify(filteredCustom));
+
+      // Remove from document medications
+      const docs = this.getDocuments();
+      let changed = false;
+      docs.forEach(d => {
+        if (d.medications && d.medications.length > 0) {
+          const beforeLen = d.medications.length;
+          d.medications = d.medications.filter(m => m.id !== medNameOrId && m.name.toLowerCase() !== lower);
+          if (d.medications.length !== beforeLen) changed = true;
+        }
+      });
+      if (changed) {
+        localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(docs));
+      }
+
+      if (isSupabaseConfigured && supabase) {
+        supabase.from('medications').delete().or(`id.eq.${medNameOrId},drug_name.ilike.%${medNameOrId}%`).then(({ error }) => {
+          if (error) console.warn('Supabase medication delete error:', error.message);
+        });
+      }
+    } catch (e) {
+      console.warn('Failed to delete medication', e);
     }
   }
 

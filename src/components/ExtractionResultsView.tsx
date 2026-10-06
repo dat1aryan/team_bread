@@ -47,6 +47,7 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
 }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [activeTab, setActiveTab] = useState<'summary' | 'labs' | 'meds' | 'questions'>('summary');
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const t = UI_TRANSLATIONS[currentLanguage] || UI_TRANSLATIONS.en;
   const summary = document.aiSummary;
@@ -164,16 +165,23 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
           {onDeleteDocument && (
             <button
               onClick={() => {
-                if (confirm(`Delete "${document.title}" from your health records?`)) {
+                if (confirmDelete) {
                   onDeleteDocument(document.id);
                   onBack();
+                } else {
+                  setConfirmDelete(true);
+                  setTimeout(() => setConfirmDelete(false), 4000);
                 }
               }}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-700 text-xs sm:text-sm font-semibold border border-slate-200 hover:border-rose-200 transition-colors cursor-pointer"
-              title="Delete this record"
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-colors cursor-pointer ${
+                confirmDelete
+                  ? 'bg-rose-600 text-white border-rose-700 animate-pulse'
+                  : 'bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-700 border-slate-200 hover:border-rose-200'
+              }`}
+              title={confirmDelete ? 'Click again to permanently delete' : 'Delete this record'}
             >
-              <Trash2 className="w-4 h-4 text-slate-400 hover:text-rose-600" />
-              <span>Delete Record</span>
+              <Trash2 className={`w-4 h-4 ${confirmDelete ? 'text-white' : 'text-slate-400 hover:text-rose-600'}`} />
+              <span>{confirmDelete ? 'Confirm Delete?' : 'Delete Record'}</span>
             </button>
           )}
         </div>

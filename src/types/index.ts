@@ -180,4 +180,5 @@ export interface ChatMessage {
   content: string;
   createdAt: string;
   sources?: string[];
+  actionBadge?: string;
 }

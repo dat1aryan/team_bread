@@ -36,6 +36,7 @@ export const HealthTimeline: React.FC<HealthTimelineProps> = ({
 }) => {
   const [filterType, setFilterType] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   const filteredEvents = events.filter((evt) => {
     const matchesType = filterType === 'ALL' || evt.eventType === filterType;
@@ -227,15 +228,23 @@ export const HealthTimeline: React.FC<HealthTimelineProps> = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (confirm(`Delete "${evt.title}" from your timeline?`)) {
+                          if (confirmDeleteId === evt.id) {
                             onDeleteEvent?.(evt.documentId || evt.id.replace('evt-', ''));
+                            setConfirmDeleteId(null);
+                          } else {
+                            setConfirmDeleteId(evt.id);
+                            setTimeout(() => setConfirmDeleteId(prev => prev === evt.id ? null : prev), 4000);
                           }
                         }}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-slate-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg border border-slate-200 hover:border-rose-200 transition-colors cursor-pointer"
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-lg border transition-colors cursor-pointer ${
+                          confirmDeleteId === evt.id
+                            ? 'bg-rose-600 text-white border-rose-700 animate-pulse'
+                            : 'text-slate-500 hover:text-rose-700 hover:bg-rose-50 border-slate-200 hover:border-rose-200'
+                        }`}
                         title="Delete record from health journey timeline"
                       >
-                        <Trash2 className="w-3.5 h-3.5 text-slate-400 hover:text-rose-600" />
-                        <span>Delete</span>
+                        <Trash2 className={`w-3.5 h-3.5 ${confirmDeleteId === evt.id ? 'text-white' : 'text-slate-400 hover:text-rose-600'}`} />
+                        <span>{confirmDeleteId === evt.id ? 'Confirm?' : 'Delete'}</span>
                       </button>
                     </div>
                   </div>

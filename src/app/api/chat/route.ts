@@ -28,7 +28,7 @@ PATIENT CLINICAL CONTEXT:
 - Recent Lab Biomarkers: ${clinicalContext.labObservations?.map((o: any) => `${o.testName}: ${o.value} ${o.unit} (${o.status})`).join('; ') || 'HbA1c: 7.4% (HIGH), Fasting Glucose: 162 mg/dL (HIGH), LDL: 148 mg/dL (HIGH)'}
 ` : '';
 
-    const systemPrompt = `You are SetuHealth AI Copilot (सेतु हेल्थ), an empathetic, expert clinical health assistant designed to help patients understand and manage their healthcare journey.
+    const systemPrompt = `You are Setu AI Copilot (सेतु), an empathetic, expert clinical health assistant designed to help patients understand and manage their healthcare journey.
 ${contextSummary}
 
 GUIDELINES:

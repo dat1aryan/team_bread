@@ -202,7 +202,7 @@ const COPILOT_I18N: Record<LanguageCode, {
     subtitle: 'Context-Grounded in your medical records & prescriptions',
     placeholder: 'Ask about your lab results, diet, or medicines...',
     resetMsg: 'Chat session refreshed. How can I help you understand your health today?',
-    getGreeting: (name, count) => `Hello ${name}! I am your SetuHealth AI Copilot. I have analyzed your medical records, active medications (${count} meds), and recent lab results. How can I help you understand your health today?`,
+    getGreeting: (name, count) => `Hello ${name}! I am your Setu AI Copilot. I have analyzed your medical records, active medications (${count} meds), and recent lab results. How can I help you understand your health today?`,
     quickPrompts: [
       { label: 'Abnormal Lab Results', icon: Activity, prompt: 'Explain my recent abnormal lab test results (HbA1c & LDL) in simple terms and what they mean.' },
       { label: 'Medication Timings', icon: Pill, prompt: 'Review my current medicines and explain why some are before food and others after food.' },
@@ -286,7 +286,7 @@ const COPILOT_I18N: Record<LanguageCode, {
     subtitle: 'Basado en sus registros médicos y recetas',
     placeholder: 'Pregunte sobre sus resultados, dieta o medicamentos...',
     resetMsg: 'Sesión de chat actualizada. ¿Cómo puedo ayudarle hoy?',
-    getGreeting: (name, count) => `¡Hola ${name}! Soy su copiloto de IA SetuHealth. He analizado sus registros médicos, medicamentos activos (${count}) y resultados recientes. ¿Cómo puedo ayudarle hoy?`,
+    getGreeting: (name, count) => `¡Hola ${name}! Soy su copiloto de IA Setu. He analizado sus registros médicos, medicamentos activos (${count}) y resultados recientes. ¿Cómo puedo ayudarle hoy?`,
     quickPrompts: [
       { label: 'Resultados Anormales', icon: Activity, prompt: 'Explique mis resultados de laboratorio recientes (HbA1c y LDL) en términos sencillos.' },
       { label: 'Horarios de Medicamentos', icon: Pill, prompt: 'Revise mis medicamentos y explique por qué algunos son antes o después de comer.' },
@@ -445,10 +445,10 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
       <div className="px-6 py-4 bg-slate-900 border-b border-slate-800 text-white flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-teal-400">
-            <Bot className="w-5 h-5" />
+            <img src="/brand/logo.png" alt="Setu" className="w-6 h-6 object-contain" />
           </div>
           <div>
-            <h3 className="font-bold text-base tracking-tight text-white">SetuHealth Clinical Copilot</h3>
+            <h3 className="font-bold text-base tracking-tight text-white">Setu Clinical Copilot</h3>
             <p className="text-xs text-slate-400">{i18n.subtitle}</p>
           </div>
         </div>

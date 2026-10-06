@@ -1,4 +1,4 @@
-# SetuHealth AI Copilot (सेतु हेल्थ)
+# Setu AI Copilot (सेतु)
 ### AI-Powered Personal Health Copilot • Bridging Medical Jargon to Human Understanding
 **Hackathon**: HacXLerate 2026 (byteXL & Altrix Labs)  
 **Round**: Round 1 — 24-Hour Campus Hackathon  
@@ -12,7 +12,7 @@
 ## 🌟 Executive Overview
 Healthcare information is dangerously fragmented across handwritten doctor prescriptions, multi-page pathology lab slips, and discharge summaries. Over **78% of patients** cannot interpret cryptic lab reference ranges, missing vital windows for chronic disease intervention.
 
-**SetuHealth AI Copilot** is an intelligent, compassionate digital health companion that:
+**Setu AI Copilot** is an intelligent, compassionate digital health companion that:
 1. **Ingests & Scans Any Medical Record**: Prescriptions, blood tests, radiology reports, and hospital discharge summaries via multi-modal OCR.
 2. **Translates Jargon into 8th-Grade Plain Language**: Explains what test results mean, why abnormal values matter, and generates personalized questions to ask the doctor.
 3. **Unifies the Patient Health Journey**: Visual chronological timeline with interactive longitudinal vital trend tracking (HbA1c, Blood Sugar, LDL Cholesterol, Blood Pressure).
@@ -56,7 +56,7 @@ Healthcare information is dangerously fragmented across handwritten doctor presc
 
 ## 🎯 Hackathon Criteria Alignment (100 Points + Bonus)
 
-| Criterion | Weight | How SetuHealth Excels |
+| Criterion | Weight | How Setu Excels |
 | :--- | :---: | :--- |
 | **AI Utilization** | **35%** | Multi-modal OCR extraction of medicines, dosages, test values, and diagnoses. Plain-language summaries with "Why It Matters" physiological breakdown, abnormal value flagging, and doctor prep questions. |
 | **Technical Architecture** | **25%** | Clean microservice separation (Vercel frontend + Render backend + Supabase DB + Gemini AI), clean data pipeline, and ABDM HL7 FHIR R4 standard schema compliance. |
@@ -98,7 +98,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 GEMINI_API_KEY=your-gemini-key
 ```
 
-> **Note on Zero-Config Demo Mode**: Even without Supabase or Gemini keys populated, SetuHealth includes a **Built-in Resilient Clinical State Engine**. Evaluators can test 100% of the features immediately!
+> **Note on Zero-Config Demo Mode**: Even without Supabase or Gemini keys populated, Setu includes a **Built-in Resilient Clinical State Engine**. Evaluators can test 100% of the features immediately!
 
 ### 3. Start Frontend & Backend
 ```bash
@@ -149,4 +149,4 @@ Comprehensive documentation matching the hackathon rulebook and standard enginee
 ---
 
 ## 🛡️ Clinical & Safety Disclaimer
-*SetuHealth AI Copilot is an educational and digital interoperability assistant. It does not provide medical diagnoses or replace consultations with licensed healthcare practitioners.*
+*Setu AI Copilot is an educational and digital interoperability assistant. It does not provide medical diagnoses or replace consultations with licensed healthcare practitioners.*

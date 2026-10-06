@@ -437,8 +437,8 @@ export default function HomePage() {
       <footer className="mt-auto border-t border-slate-200 bg-white py-6 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <HeartPulse className="w-4 h-4 text-teal-600" />
-            <span className="font-bold text-slate-800">SetuHealth AI Copilot</span>
+            <img src="/brand/logo.png" alt="Setu Logo" className="w-5 h-5 object-contain" />
+            <span className="font-bold text-slate-800">Setu AI Copilot</span>
             <span>•</span>
             <span>Personal Health Intelligence Platform</span>
           </div>

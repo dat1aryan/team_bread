@@ -1,7 +1,7 @@
-# 🚀 SetuHealth AI Copilot - Full Deployment Guide
+# 🚀 Setu AI Copilot - Full Deployment Guide
 ## Deploying Frontend on Vercel • Backend on Render • Database on Supabase
 
-This guide provides step-by-step instructions to deploy the entire **SetuHealth AI Copilot** solution across **Vercel**, **Render**, and **Supabase**, powered by the **Google Gemini 1.5 Vision API**.
+This guide provides step-by-step instructions to deploy the entire **Setu AI Copilot** solution across **Vercel**, **Render**, and **Supabase**, powered by the **Google Gemini 1.5 Vision API**.
 
 ---
 
@@ -128,7 +128,7 @@ vercel --prod
    - Render Backend Environment: `GEMINI_API_KEY=AIzaSy...`
    - Vercel Frontend Environment: `GEMINI_API_KEY=AIzaSy...`
 
-> **Automatic Fallback Guarantee**: If the Gemini API key is missing or quota is exceeded, SetuHealth's built-in **Deterministic Clinical Intelligence Engine** activates automatically, ensuring judges and evaluators always receive accurate, medically sound summaries with 0% downtime.
+> **Automatic Fallback Guarantee**: If the Gemini API key is missing or quota is exceeded, Setu's built-in **Deterministic Clinical Intelligence Engine** activates automatically, ensuring judges and evaluators always receive accurate, medically sound summaries with 0% downtime.
 
 ---
 

@@ -10,7 +10,7 @@ export default function SentryExamplePage() {
   const triggerError = () => {
     try {
       setHasTested(true);
-      throw new Error('SetuHealth Sentry Test Error - Verification Successful!');
+      throw new Error('Setu Sentry Test Error - Verification Successful!');
     } catch (err) {
       Sentry.captureException(err);
       alert('Test exception captured and sent to Sentry!');
@@ -51,7 +51,7 @@ export default function SentryExamplePage() {
             href="/"
             className="text-sm text-slate-400 hover:text-white underline underline-offset-4"
           >
-            Back to SetuHealth Dashboard
+            Back to Setu Dashboard
           </Link>
         </div>
       </div>

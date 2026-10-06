@@ -1,4 +1,4 @@
-# Dockerfile for SetuHealth Backend on Render
+# Dockerfile for Setu Backend on Render
 FROM node:20-alpine AS builder
 
 WORKDIR /app

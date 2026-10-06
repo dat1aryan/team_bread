@@ -291,7 +291,7 @@ export function generateFhirR4Bundle(document: MedicalDocument, patient: Patient
       profile: ['https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle']
     },
     identifier: {
-      system: 'https://setuhealth.ai/fhir/bundles',
+      system: 'https://setu.ai/fhir/bundles',
       value: `BUNDLE-${document.id}`
     },
     type: 'document',

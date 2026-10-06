@@ -31,7 +31,7 @@ const upload = multer({
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'HEALTHY',
-    service: 'SetuHealth AI Copilot Backend',
+    service: 'Setu AI Copilot Backend',
     platform: 'Render Web Service',
     geminiEnabled: Boolean(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your-gemini-api-key'),
     timestamp: new Date().toISOString()
@@ -40,7 +40,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
-    message: 'SetuHealth AI Copilot Backend API is running on Render.',
+    message: 'Setu AI Copilot Backend API is running on Render.',
     endpoints: {
       health: 'GET /health',
       analyze: 'POST /api/ocr-analyze',
@@ -109,7 +109,7 @@ app.post('/api/abdm/verify-otp', (req: Request, res: Response) => {
 // Start Server
 app.listen(PORT, () => {
   console.log(`=======================================================`);
-  console.log(`SetuHealth AI Copilot Backend running on Port ${PORT}`);
+  console.log(`Setu AI Copilot Backend running on Port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'production'}`);
   console.log(`Gemini API: ${process.env.GEMINI_API_KEY ? 'Configured' : 'Using Rule Engine'}`);
   console.log(`=======================================================`);

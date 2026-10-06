@@ -1,7 +1,7 @@
 {
-  "name": "setu-health-backend",
+  "name": "setu-backend",
   "version": "1.0.0",
-  "description": "Render Backend Service for SetuHealth AI Copilot (Gemini OCR & Clinical AI)",
+  "description": "Render Backend Service for Setu AI Copilot (Gemini OCR & Clinical AI)",
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",

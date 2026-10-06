@@ -436,7 +436,7 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
                   className="mt-0.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
                 />
                 <span className="text-[11px] text-slate-600 leading-snug">
-                  I give consent to NHA and SetuHealth to verify my identity via Aadhaar OTP and link my health records under ABDM guidelines.
+                  I give consent to NHA and Setu to verify my identity via Aadhaar OTP and link my health records under ABDM guidelines.
                 </span>
               </label>
             </div>

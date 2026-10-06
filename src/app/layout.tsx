@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'SetuHealth AI Copilot | Personal Health Intelligence & ABDM Platform',
+  title: 'Setu | Personal Health Intelligence & ABDM Platform',
   description: 'AI-Powered Personal Health Copilot bridging medical prescriptions, lab reports, and discharge summaries to human understanding and ABDM FHIR standard.',
   keywords: [
+    'Setu',
     'AI Health Copilot',
     'Medical Record OCR',
     'ABDM',
@@ -12,10 +13,14 @@ export const metadata: Metadata = {
     'FHIR R4',
     'Prescription Reader',
     'Lab Report Explainer',
-    'Health Tech',
-    'Altrix Labs'
+    'Health Tech'
   ],
-  authors: [{ name: 'SetuHealth Team' }],
+  authors: [{ name: 'Setu Team' }],
+  icons: {
+    icon: '/brand/favicon.png',
+    shortcut: '/brand/favicon.png',
+    apple: '/brand/favicon.png',
+  },
 };
 
 export const viewport = {
@@ -32,6 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/brand/favicon.png" type="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link 

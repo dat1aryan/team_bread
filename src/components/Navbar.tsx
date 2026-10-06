@@ -38,15 +38,14 @@ export const Navbar: React.FC<NavbarProps> = ({
         
         {/* Brand Logo & Title */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-teal-700 flex items-center justify-center text-white shadow-xs">
-            <HeartPulse className="w-5 h-5 text-teal-100" />
-          </div>
+          <img
+            src="/brand/logo.png"
+            alt="Setu Logo"
+            className="w-10 h-10 object-contain rounded-xl"
+          />
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-xl tracking-tight text-slate-900">SetuHealth</span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800 border border-teal-200">
-                सेतु AI Copilot
-              </span>
+              <span className="font-extrabold text-xl tracking-tight text-slate-900">Setu</span>
             </div>
             <p className="text-xs text-slate-500 hidden sm:block">
               {t.appSubtitle}

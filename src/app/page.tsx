@@ -115,15 +115,11 @@ export default function HomePage() {
 
   const t = UI_TRANSLATIONS[currentLanguage] || UI_TRANSLATIONS.en;
 
-  // Document analysis finished callback
+  // Document analysis finished callback: automatically saves in parallel to health timeline, vitals, and meds
   const handleAnalysisComplete = (newDoc: MedicalDocument) => {
-    setActiveDocument(newDoc);
-  };
-
-  // Commit document to profile
-  const handleSaveToTimeline = (doc: MedicalDocument) => {
-    HealthStorageService.addDocument(doc);
+    HealthStorageService.addDocument(newDoc);
     reloadData();
+    setActiveDocument(newDoc);
   };
 
   // Select document from timeline
@@ -374,7 +370,6 @@ export default function HomePage() {
             <ExtractionResultsView
               document={activeDocument}
               currentLanguage={currentLanguage}
-              onSaveToTimeline={handleSaveToTimeline}
               onBack={() => setActiveDocument(null)}
               onViewTimeline={() => { setActiveTab('timeline'); setActiveDocument(null); }}
             />

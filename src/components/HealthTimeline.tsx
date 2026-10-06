@@ -119,19 +119,8 @@ export const HealthTimeline: React.FC<HealthTimelineProps> = ({
           <div>
             <h4 className="text-lg font-bold text-slate-900">Your Health Journey Timeline is Ready</h4>
             <p className="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-lg mx-auto leading-relaxed">
-              No health records have been saved to your timeline yet. Scan or analyze a clinical document (or try a sample record) and save it to your health profile to view your chronological journey, AI summaries, and flagged biomarkers here.
+              No health records available yet. Scan and analyze a medical document from the 'Scan & Analyze Record' tab to automatically generate your chronological health journey timeline.
             </p>
-          </div>
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-            {onNavigateToUpload && (
-              <button
-                onClick={onNavigateToUpload}
-                className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs sm:text-sm font-semibold transition-all shadow-sm flex items-center gap-2"
-              >
-                <FileText className="w-4 h-4" />
-                <span>Scan or Upload Medical Record</span>
-              </button>
-            )}
           </div>
         </div>
       ) : filteredEvents.length === 0 ? (

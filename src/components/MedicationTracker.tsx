@@ -50,12 +50,12 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
   const totalMeds = medications.length;
   const adherenceRate = totalMeds > 0 ? Math.round((takenCount / totalMeds) * 100) : 0;
 
-  // Time slots for schedule categorization
+  // Time slots for schedule categorization (English subtitles)
   const timeSlots = [
-    { id: 'Morning', label: 'Morning (सुबह)', icon: <Sunrise className="w-5 h-5 text-amber-500" />, time: '08:00 AM' },
-    { id: 'Afternoon', label: 'Afternoon (दोपहर)', icon: <Sun className="w-5 h-5 text-orange-500" />, time: '01:30 PM' },
-    { id: 'Evening', label: 'Evening (शाम)', icon: <Sunset className="w-5 h-5 text-indigo-400" />, time: '06:00 PM' },
-    { id: 'Night', label: 'Bedtime (रात)', icon: <Moon className="w-5 h-5 text-indigo-600" />, time: '09:30 PM' },
+    { id: 'Morning', label: 'Morning', icon: <Sunrise className="w-5 h-5 text-amber-500" />, time: '08:00 AM' },
+    { id: 'Afternoon', label: 'Afternoon', icon: <Sun className="w-5 h-5 text-orange-500" />, time: '01:30 PM' },
+    { id: 'Evening', label: 'Evening', icon: <Sunset className="w-5 h-5 text-indigo-400" />, time: '06:00 PM' },
+    { id: 'Night', label: 'Bedtime', icon: <Moon className="w-5 h-5 text-indigo-600" />, time: '09:30 PM' },
   ];
 
   const handleToggleTaken = (medId: string) => {
@@ -150,7 +150,7 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
             </div>
             <div className="flex items-center gap-1 text-[11px] text-amber-700 font-semibold mt-1">
               <Flame className="w-3.5 h-3.5 text-amber-500" />
-              <span>Active Streak: {totalMeds > 0 ? '6 Days' : '0 Days'}</span>
+              <span>Active Streak: {HealthStorageService.getMedicationStreak(medications)} {HealthStorageService.getMedicationStreak(medications) === 1 ? 'Day' : 'Days'}</span>
             </div>
           </div>
 
@@ -174,34 +174,8 @@ export const MedicationTracker: React.FC<MedicationTrackerProps> = ({
           <div>
             <h4 className="text-lg font-bold text-slate-900">No Active Medications Scheduled</h4>
             <p className="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-lg mx-auto leading-relaxed">
-              Your medication schedule automatically updates whenever you scan and save a doctor prescription or discharge summary. You can also add medicines manually or ask the SetuHealth AI Copilot to log your prescribed medicines.
+              Your medication schedule will automatically be generated in parallel when you scan and analyze a doctor prescription or hospital discharge summary from the 'Scan & Analyze Record' tab.
             </p>
-          </div>
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-            {onNavigateToUpload && (
-              <button
-                onClick={onNavigateToUpload}
-                className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs sm:text-sm font-semibold transition-all shadow-sm flex items-center gap-2"
-              >
-                <Pill className="w-4 h-4" />
-                <span>Scan Prescription</span>
-              </button>
-            )}
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold transition-all shadow-sm flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add Medication Manually</span>
-            </button>
-            {onNavigateToCopilot && (
-              <button
-                onClick={onNavigateToCopilot}
-                className="px-5 py-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-xs sm:text-sm font-semibold transition-all shadow-sm flex items-center gap-2"
-              >
-                <span>Ask AI Copilot →</span>
-              </button>
-            )}
           </div>
         </div>
       ) : (

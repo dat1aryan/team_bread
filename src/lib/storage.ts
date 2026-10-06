@@ -301,10 +301,10 @@ export class HealthStorageService {
     docs.forEach((doc) => {
       doc.medications.forEach((med) => {
         if (med.id === medId) {
-          const wasTaken = med.isTakenToday && med.lastTakenDate === today;
+          const wasTaken = Boolean(med.isTakenToday && med.lastTakenDate === today);
           med.isTakenToday = !wasTaken;
           med.lastTakenDate = !wasTaken ? today : undefined;
-          med.streakDays = !wasTaken ? (med.streakDays || 0) + 1 : Math.max(0, (med.streakDays || 1) - 1);
+          med.streakDays = !wasTaken ? (med.streakDays || 1) + 1 : Math.max(1, (med.streakDays || 2) - 1);
           updated = true;
         }
       });
@@ -312,6 +312,48 @@ export class HealthStorageService {
 
     if (updated && typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(docs));
+    }
+
+    // Also check custom medications
+    if (typeof window !== 'undefined') {
+      try {
+        const customMeds: ExtractedMedication[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOM_MEDS) || '[]');
+        let customUpdated = false;
+        customMeds.forEach((med) => {
+          if (med.id === medId) {
+            const wasTaken = Boolean(med.isTakenToday && med.lastTakenDate === today);
+            med.isTakenToday = !wasTaken;
+            med.lastTakenDate = !wasTaken ? today : undefined;
+            med.streakDays = !wasTaken ? (med.streakDays || 1) + 1 : Math.max(1, (med.streakDays || 2) - 1);
+            customUpdated = true;
+          }
+        });
+        if (customUpdated) {
+          localStorage.setItem(STORAGE_KEYS.CUSTOM_MEDS, JSON.stringify(customMeds));
+        }
+      } catch (e) {}
+    }
+  }
+
+  /**
+   * Calculates the real-time active streak for medication adherence.
+   */
+  static getMedicationStreak(meds?: ExtractedMedication[]): number {
+    const activeMeds = meds || this.getActiveMedications();
+    if (!activeMeds || activeMeds.length === 0) return 0;
+
+    const totalActive = activeMeds.filter(m => m.isActive !== false).length;
+    if (totalActive === 0) return 0;
+
+    const takenCount = activeMeds.filter(m => m.isActive !== false && m.isTakenToday).length;
+    const baseStreak = activeMeds.reduce((max, m) => Math.max(max, m.streakDays || 1), 1);
+
+    if (takenCount === totalActive) {
+      return baseStreak;
+    } else if (takenCount > 0) {
+      return Math.max(1, baseStreak - 1);
+    } else {
+      return Math.max(0, baseStreak - 1);
     }
   }
 

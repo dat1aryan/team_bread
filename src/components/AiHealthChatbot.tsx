@@ -161,25 +161,18 @@ function renderClinicalMessageContent(text: string): React.ReactNode {
       return;
     }
 
-    // Clinical disclaimer / note callout
+    // Clinical disclaimer / note callout: skip completely as UI provides permanent banner
     const lowerTrim = trimmed.toLowerCase();
     if (
       lowerTrim.includes('clinical disclaimer') || 
       lowerTrim.includes('important clinical reminder') || 
+      lowerTrim.includes('important medical note') ||
+      lowerTrim.includes('medical disclaimer') ||
       lowerTrim.includes('disclaimer:') ||
-      lowerTrim.startsWith('note:') ||
-      lowerTrim.startsWith('*note:')
+      (lowerTrim.startsWith('note:') && (lowerTrim.includes('doctor') || lowerTrim.includes('physician') || lowerTrim.includes('consult'))) ||
+      (lowerTrim.startsWith('*note:') && (lowerTrim.includes('doctor') || lowerTrim.includes('physician') || lowerTrim.includes('consult')))
     ) {
       flushList();
-      elements.push(
-        <div key={`p-${lineIdx}`} className="p-3 my-2.5 rounded-xl bg-amber-50/90 border border-amber-200/80 text-[11px] text-amber-900 leading-relaxed shadow-2xs">
-          <div className="font-bold text-amber-950 mb-0.5 flex items-center gap-1">
-            <span>⚕️</span>
-            <span>Important Medical Note</span>
-          </div>
-          {formatInline(trimmed.replace(/^(\*+|#+|\s*⚕️\s*)+/g, '').replace(/\*+$/g, ''))}
-        </div>
-      );
       return;
     }
 
@@ -195,6 +188,115 @@ function renderClinicalMessageContent(text: string): React.ReactNode {
   flushList();
   return elements;
 }
+
+const COPILOT_I18N: Record<LanguageCode, {
+  subtitle: string;
+  placeholder: string;
+  resetMsg: string;
+  getGreeting: (name: string, count: number) => string;
+  quickPrompts: Array<{ label: string; icon: any; prompt: string }>;
+  listen: string;
+  stopAudio: string;
+}> = {
+  en: {
+    subtitle: 'Context-Grounded in your medical records & prescriptions',
+    placeholder: 'Ask about your lab results, diet, or medicines...',
+    resetMsg: 'Chat session refreshed. How can I help you understand your health today?',
+    getGreeting: (name, count) => `Hello ${name}! I am your SetuHealth AI Copilot. I have analyzed your medical records, active medications (${count} meds), and recent lab results. How can I help you understand your health today?`,
+    quickPrompts: [
+      { label: 'Abnormal Lab Results', icon: Activity, prompt: 'Explain my recent abnormal lab test results (HbA1c & LDL) in simple terms and what they mean.' },
+      { label: 'Medication Timings', icon: Pill, prompt: 'Review my current medicines and explain why some are before food and others after food.' },
+      { label: 'Dietary Guidance', icon: Sparkles, prompt: 'Suggest a healthy Indian diet and lifestyle plan tailored to my diabetic and cholesterol profile.' },
+      { label: 'Doctor Questions', icon: Stethoscope, prompt: 'What key questions should I prepare to ask my doctor during my next clinic visit?' }
+    ],
+    listen: 'Listen',
+    stopAudio: 'Stop Audio'
+  },
+  hi: {
+    subtitle: 'आपकी मेडिकल रिपोर्ट और पर्चे के आधार पर तैयार',
+    placeholder: 'जांच रिपोर्ट, दवाइयों या खान-पान के बारे में पूछें...',
+    resetMsg: 'सत्र रीसेट किया गया। आज मैं आपकी सेहत को समझने में कैसे मदद कर सकता हूँ?',
+    getGreeting: (name, count) => `नमस्ते ${name}! मैं आपका सेतु हेल्थ AI Copilot हूँ। मैंने आपकी मेडिकल रिपोर्ट, सक्रिय दवाएं (${count} दवाएं) और हालिया जांच परिणाम देख लिए हैं। आज मैं आपकी सेहत को समझने में कैसे मदद कर सकता हूँ?`,
+    quickPrompts: [
+      { label: 'असामान्य जांच परिणाम', icon: Activity, prompt: 'मेरे हालिया असामान्य लैब टेस्ट (HbA1c और LDL) के परिणाम सरल भाषा में समझाएं।' },
+      { label: 'दवाओं का समय', icon: Pill, prompt: 'मेरी दवाएं कब और कैसे लेनी हैं (खाने से पहले या बाद में), इसका कारण समझाएं।' },
+      { label: 'आहार एवं जीवनशैली', icon: Sparkles, prompt: 'डायबिटीज और कोलेस्ट्रॉल को नियंत्रित रखने के लिए उपयुक्त भारतीय आहार बताएं।' },
+      { label: 'डॉक्टर से सवाल', icon: Stethoscope, prompt: 'अगली बार डॉक्टर से मिलने पर मुझे कौन से ज़रूरी सवाल पूछने चाहिए?' }
+    ],
+    listen: 'सुनें',
+    stopAudio: 'रोकें'
+  },
+  te: {
+    subtitle: 'మీ వైద్య రికార్డులు మరియు ప్రిస్క్రిప్షన్‌ల ఆధారంగా',
+    placeholder: 'మీ ల్యాబ్ ఫలితాలు, ఆహారం లేదా మందుల గురించి అడగండి...',
+    resetMsg: 'చాట్ రీసెట్ చేయబడింది. ఈరోజు మీ ఆరోగ్య విషయాలలో ఎలా సహాయపడగలను?',
+    getGreeting: (name, count) => `నమస్కారం ${name}! నేను మీ సేతు హెల్త్ AI Copilot. నేను మీ వైద్య రికార్డులు, మందులు (${count}) మరియు ల్యాబ్ ఫలితాలను విశ్లేషించాను. ఈరోజు మీ ఆరోగ్య విషయాలలో ఎలా సహాయపడగలను?`,
+    quickPrompts: [
+      { label: 'ల్యాబ్ ఫలితాలు', icon: Activity, prompt: 'నా అసాధారణ ల్యాబ్ పరీక్ష ఫలితాలను (HbA1c & LDL) సులభంగా వివరించండి.' },
+      { label: 'మందుల సమయాలు', icon: Pill, prompt: 'నా మందులను ఆహారానికి ముందు లేదా తర్వాత ఎందుకు తీసుకోవాలో వివరించండి.' },
+      { label: 'ఆహార సలహాలు', icon: Sparkles, prompt: 'నా డయాబెటిస్ మరియు కొలెస్ట్రాల్ నియంత్రణకు తగిన ఆహార సూచనలను ఇవ్వండి.' },
+      { label: 'డాక్టర్‌ను అడగవలసిన ప్రశ్నలు', icon: Stethoscope, prompt: 'తదుపరి డాక్టర్ సంప్రదింపులో నేను అడగవలసిన ముఖ్య ప్రశ్నలు ఏమిటి?' }
+    ],
+    listen: 'వినండి',
+    stopAudio: 'ఆపండి'
+  },
+  ta: {
+    subtitle: 'உங்கள் மருத்துவ அறிக்கைகள் மற்றும் மருந்துச்சீட்டுகளின் அடிப்படையில்',
+    placeholder: 'ஆய்வக முடிவுகள், உணவு அல்லது மருந்துகள் பற்றி கேட்கவும்...',
+    resetMsg: 'உரையாடல் புதுப்பிக்கப்பட்டது. இன்று உங்கள் உடல்நலம் பற்றி என்ன அறிய விரும்புகிறீர்கள்?',
+    getGreeting: (name, count) => `வணக்கம் ${name}! நான் உங்கள் சேது ஹெல்த் AI Copilot. உங்கள் மருத்துவ ஆவணங்கள், மருந்துகள் (${count}) மற்றும் ஆய்வக முடிவுகளை ஆய்வு செய்துள்ளேன். இன்று உங்கள் உடல்நலம் பற்றி என்ன அறிய விரும்புகிறீர்கள்?`,
+    quickPrompts: [
+      { label: 'ஆய்வக முடிவுகள்', icon: Activity, prompt: 'எனது சமீபத்திய ஆய்வக முடிவுகளை (HbA1c & LDL) எளிய முறையில் விளக்கவும்.' },
+      { label: 'மருந்து உட்கொள்ளும் நேரம்', icon: Pill, prompt: 'மருந்துகளை உணவுக்கு முன்னும் பின்னும் எடுத்துக்கொள்வதற்கான காரணத்தை விளக்குங்கள்.' },
+      { label: 'உணவு வழிகாட்டுதல்', icon: Sparkles, prompt: 'நீரிழிவு மற்றும் கொழுப்பைக் கட்டுப்படுத்த ஆரோக்கியமான உணவு முறையை பரிந்துரைக்கவும்.' },
+      { label: 'மருத்துவரிடம் கேட்க வேண்டியவை', icon: Stethoscope, prompt: 'அடுத்த சந்திப்பில் மருத்துவரிடம் கேட்க வேண்டிய முக்கியமான கேள்விகள் என்ன?' }
+    ],
+    listen: 'கேட்கவும்',
+    stopAudio: 'நிறுத்து'
+  },
+  bn: {
+    subtitle: 'আপনার মেডিকেল রেকর্ড ও প্রেসক্রিপশন ভিত্তিক',
+    placeholder: 'ল্যাব টেস্ট, ডায়েট বা ওষুধ সম্পর্কে জিজ্ঞাসা করুন...',
+    resetMsg: 'চ্যাট সেশন পুনরায় শুরু হয়েছে। আজ আপনাকে কীভাবে সাহায্য করতে পারি?',
+    getGreeting: (name, count) => `নমস্কার ${name}! আমি আপনার সেতু হেলথ এআই কোপাইলট। আমি আপনার মেডিকেল রেকর্ড, সক্রিয় ওষুধ (${count}) এবং ল্যাব ফলাফল বিশ্লেষণ করেছি। আজ আপনাকে কীভাবে সাহায্য করতে পারি?`,
+    quickPrompts: [
+      { label: 'ল্যাব টেস্ট ফলাফল', icon: Activity, prompt: 'আমার সাম্প্রতিক ল্যাব টেস্টের ফলাফল (HbA1c ও LDL) সহজ ভাষায় বুঝিয়ে বলুন।' },
+      { label: 'ওষুধের সময়সূচী', icon: Pill, prompt: 'ওষুধ খাওয়ার আগে বা পরে নেওয়ার কারণ ব্যাখ্যা করুন।' },
+      { label: 'খাদ্যতালিকা পরামর্শ', icon: Sparkles, prompt: 'ডায়াবেটিস এবং কোলেস্টেরল নিয়ন্ত্রণের জন্য স্বাস্থ্যকর ডায়েট প্ল্যান দিন।' },
+      { label: 'ডাক্তারকে জিজ্ঞাসা', icon: Stethoscope, prompt: 'পরের বার ডাক্তারকে আমার কী কী প্রশ্ন জিজ্ঞাসা করা উচিত?' }
+    ],
+    listen: 'শুনুন',
+    stopAudio: 'থামুন'
+  },
+  mr: {
+    subtitle: 'तुमच्या वैद्यकीय नोंदींवर आधारित',
+    placeholder: 'लॅब रिपोर्ट, आहार किंवा औषधांबद्दल विचारा...',
+    resetMsg: 'संभाषण रीसेट झाले. आज मी तुम्हाला कशी मदत करू शकतो?',
+    getGreeting: (name, count) => `नमस्कार ${name}! मी तुमचा सेतू हेल्थ एआय कोपायलट आहे. मी तुमचे वैद्यकीय अहवाल, औषधे (${count}) आणि तपासणीचे निकाल पाहिले आहेत. मी तुम्हाला कशी मदत करू शकतो?`,
+    quickPrompts: [
+      { label: 'लॅब अहवाल', icon: Activity, prompt: 'माझे अलीकडील लॅब निकाल (HbA1c आणि LDL) सोप्या भाषेत समजावून सांगा.' },
+      { label: 'औषधांची वेळ', icon: Pill, prompt: 'काही औषधे जेवणापूर्वी आणि काही जेवणानंतर का घ्यावीत ते सांगा.' },
+      { label: 'आहाराविषयी मार्गदर्शन', icon: Sparkles, prompt: 'मधुमेह आणि कोलेस्ट्रॉलसाठी योग्य आहार योजना सुचवा.' },
+      { label: 'डॉक्टरांना विचारायचे प्रश्न', icon: Stethoscope, prompt: 'पुढील भेटीत डॉक्टरांना कोणते महत्त्वाचे प्रश्न विचारावेत?' }
+    ],
+    listen: 'ऐका',
+    stopAudio: 'थांबवा'
+  },
+  es: {
+    subtitle: 'Basado en sus registros médicos y recetas',
+    placeholder: 'Pregunte sobre sus resultados, dieta o medicamentos...',
+    resetMsg: 'Sesión de chat actualizada. ¿Cómo puedo ayudarle hoy?',
+    getGreeting: (name, count) => `¡Hola ${name}! Soy su copiloto de IA SetuHealth. He analizado sus registros médicos, medicamentos activos (${count}) y resultados recientes. ¿Cómo puedo ayudarle hoy?`,
+    quickPrompts: [
+      { label: 'Resultados Anormales', icon: Activity, prompt: 'Explique mis resultados de laboratorio recientes (HbA1c y LDL) en términos sencillos.' },
+      { label: 'Horarios de Medicamentos', icon: Pill, prompt: 'Revise mis medicamentos y explique por qué algunos son antes o después de comer.' },
+      { label: 'Guía Dietética', icon: Sparkles, prompt: 'Sugiera un plan de alimentación y estilo de vida para mi perfil diabético.' },
+      { label: 'Preguntas al Médico', icon: Stethoscope, prompt: '¿Qué preguntas clave debo hacerle a mi médico en mi próxima visita?' }
+    ],
+    listen: 'Escuchar',
+    stopAudio: 'Detener'
+  }
+};
 
 interface AiHealthChatbotProps {
   currentLanguage: LanguageCode;
@@ -213,11 +315,13 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
   onAddMedication,
   onNavigateTab
 }) => {
+  const i18n = COPILOT_I18N[currentLanguage] || COPILOT_I18N.en;
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'init-1',
       role: 'assistant',
-      content: `Hello ${profile.fullName}! I am your SetuHealth AI Copilot. I have analyzed your medical records, active medications (${medications.length} meds), and recent lab results. How can I help you understand your health today?`,
+      content: i18n.getGreeting(profile.fullName, medications.length),
       createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -226,6 +330,23 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
   const [isSpeaking, setIsSpeaking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Adapt initial greeting when user switches language before asking queries
+  useEffect(() => {
+    setMessages(prev => {
+      if (prev.length <= 1 && prev[0]?.role === 'assistant') {
+        return [
+          {
+            id: 'init-1',
+            role: 'assistant',
+            content: i18n.getGreeting(profile.fullName, medications.length),
+            createdAt: prev[0]?.createdAt || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }
+        ];
+      }
+      return prev;
+    });
+  }, [currentLanguage, profile.fullName, medications.length, i18n]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -233,29 +354,6 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
-
-  const quickPrompts = [
-    {
-      label: 'Abnormal Lab Results',
-      icon: Activity,
-      prompt: 'Explain my recent abnormal lab test results (HbA1c & LDL) in simple terms and what they mean.'
-    },
-    {
-      label: 'Medication Timings',
-      icon: Pill,
-      prompt: 'Review my current medicines and explain why some are before food and others after food.'
-    },
-    {
-      label: 'Dietary Guidance',
-      icon: Sparkles,
-      prompt: 'Suggest a healthy Indian diet and lifestyle plan tailored to my diabetic and cholesterol profile.'
-    },
-    {
-      label: 'Doctor Questions',
-      icon: Stethoscope,
-      prompt: 'What key questions should I prepare to ask my doctor during my next clinic visit?'
-    }
-  ];
 
   const handleSend = async (messageText?: string) => {
     const textToSend = messageText || input.trim();
@@ -356,7 +454,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
                 Gemini Multi-Key Failover
               </span>
             </div>
-            <p className="text-xs text-teal-200/80">Context-Grounded in your medical records & prescriptions</p>
+            <p className="text-xs text-teal-200/80">{i18n.subtitle}</p>
           </div>
         </div>
 
@@ -370,7 +468,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
                 {
                   id: `reset-${Date.now()}`,
                   role: 'assistant',
-                  content: `Chat session refreshed. How can I help you understand your health today?`,
+                  content: i18n.resetMsg,
                   createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 }
               ]);
@@ -388,7 +486,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
         <span className="text-[11px] font-bold text-slate-500 whitespace-nowrap uppercase tracking-wider flex items-center gap-1">
           <Sparkles className="w-3 h-3 text-teal-600" /> Suggested:
         </span>
-        {quickPrompts.map((qp, idx) => {
+        {i18n.quickPrompts.map((qp, idx) => {
           const Icon = qp.icon;
           return (
             <button
@@ -447,7 +545,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
                       title="Read aloud"
                     >
                       {isSpeaking ? <VolumeX className="w-3 h-3 text-rose-500" /> : <Volume2 className="w-3 h-3" />}
-                      <span>{isSpeaking ? 'Stop Audio' : 'Listen'}</span>
+                      <span>{isSpeaking ? i18n.stopAudio : i18n.listen}</span>
                     </button>
                   )}
                 </div>
@@ -490,7 +588,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={`Ask about your lab results, diet, or medicines (${currentLanguage.toUpperCase()})...`}
+          placeholder={i18n.placeholder}
           disabled={isLoading}
           className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 text-sm text-slate-900 transition-all placeholder:text-slate-400"
         />

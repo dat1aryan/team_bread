@@ -31,7 +31,7 @@ import confetti from 'canvas-confetti';
 interface ExtractionResultsViewProps {
   document: MedicalDocument;
   currentLanguage: LanguageCode;
-  onSaveToTimeline: (doc: MedicalDocument) => void;
+  onSaveToTimeline?: (doc: MedicalDocument) => void;
   onBack: () => void;
   onViewTimeline?: () => void;
 }
@@ -39,12 +39,10 @@ interface ExtractionResultsViewProps {
 export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
   document,
   currentLanguage,
-  onSaveToTimeline,
   onBack,
   onViewTimeline
 }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
   const [activeTab, setActiveTab] = useState<'summary' | 'labs' | 'meds' | 'questions'>('summary');
 
   const t = UI_TRANSLATIONS[currentLanguage] || UI_TRANSLATIONS.en;
@@ -60,19 +58,6 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
       const started = speakText(speechText, currentLanguage, () => setIsSpeaking(false));
       if (started) setIsSpeaking(true);
     }
-  };
-
-  // Save to Profile / Timeline with Confetti
-  const handleSave = () => {
-    setIsSaved(true);
-    onSaveToTimeline(document);
-    try {
-      confetti({
-        particleCount: 80,
-        spread: 60,
-        origin: { y: 0.7 }
-      });
-    } catch (e) {}
   };
 
   // Download FHIR R4 Bundle
@@ -159,55 +144,21 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Auto-Saved to Timeline</span>
+          </div>
+
           <button
             onClick={handleDownloadFhir}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-200 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-200 transition-colors cursor-pointer"
             title="Download ABDM HL7 FHIR R4 JSON"
           >
             <Download className="w-4 h-4 text-teal-600" />
             <span>FHIR R4 JSON</span>
           </button>
-
-          <button
-            onClick={handleSave}
-            disabled={isSaved}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition-all ${
-              isSaved
-                ? 'bg-emerald-600 text-white cursor-default'
-                : 'bg-slate-900 hover:bg-slate-800 text-white'
-            }`}
-          >
-            <BookmarkCheck className="w-4 h-4 text-emerald-400" />
-            <span>{isSaved ? 'Saved to Timeline' : 'Save to Health Profile'}</span>
-          </button>
         </div>
       </div>
-
-      {/* Save Success Banner */}
-      {isSaved && (
-        <div className="flex flex-wrap items-center justify-between gap-3 p-4 bg-emerald-50 border border-emerald-300 rounded-2xl text-emerald-900 shadow-sm animate-in fade-in slide-in-from-top duration-300">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
-              ✓
-            </div>
-            <div>
-              <p className="font-bold text-sm">Successfully Saved to Health Profile!</p>
-              <p className="text-xs text-emerald-700">
-                This record is now saved to your AI Health Journey Timeline, biomarker trends have updated, and medications are scheduled.
-              </p>
-            </div>
-          </div>
-          {onViewTimeline && (
-            <button
-              onClick={onViewTimeline}
-              className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs transition-colors shrink-0 flex items-center gap-1.5 shadow-sm"
-            >
-              <span>View Health Journey Timeline</span>
-              <span>→</span>
-            </button>
-          )}
-        </div>
-      )}
 
       {/* Primary Plain-Language Health Summary Card (Gold Standard for Patients) */}
       <div className="bg-gradient-to-br from-teal-500/10 via-emerald-500/5 to-white border border-teal-200 rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">

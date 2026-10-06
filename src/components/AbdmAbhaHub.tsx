@@ -13,16 +13,10 @@ import {
   KeyRound, 
   FileCode2, 
   Sparkles, 
-  RefreshCw,
-  ExternalLink,
   ChevronDown,
-  Eye,
-  EyeOff,
-  Plus,
   AlertCircle,
-  Clock,
-  Layers,
-  Lock
+  Plus,
+  RefreshCw
 } from 'lucide-react';
 import { PatientProfile, MedicalDocument } from '@/types';
 import { MOCK_ABHA_PROFILE, generateFhirR4Bundle, verifyAbhaOtp } from '@/lib/abdm-fhir';
@@ -62,9 +56,6 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
   const [selectedHospitalId, setSelectedHospitalId] = useState(MOCK_HOSPITALS[0].id);
   const [linkedHospitals, setLinkedHospitals] = useState(MOCK_HOSPITALS.slice(0, 3));
   const [linkSuccessMsg, setLinkSuccessMsg] = useState('');
-
-  // HL7 FHIR Abstract vs Raw JSON toggle
-  const [showRawJson, setShowRawJson] = useState(false);
 
   // Generate FHIR bundle from current primary document or baseline patient bundle
   const sampleDoc = documents[0];
@@ -358,160 +349,30 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
 
       </div>
 
-      {/* HL7 FHIR R4 Standard Data Bundle Inspector (Data Abstract by Default, Reveals JSON on Click) */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-          <div>
-            <div className="flex items-center gap-2">
-              <FileCode2 className="w-5 h-5 text-indigo-600" />
-              <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                HL7 FHIR R4 Standard Data Bundle Inspector
-              </h3>
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
-                NHA ABDM M4 Profile
-              </span>
-            </div>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Abstract architectural overview of clinical entities structured into HL7 FHIR Release 4 standard resources.
-            </p>
-          </div>
-
+      {/* HL7 FHIR R4 Standard Data Bundle Inspector Section */}
+      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowRawJson(!showRawJson)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-xs sm:text-sm font-semibold border border-indigo-200/80 transition-all cursor-pointer shadow-2xs"
-            >
-              {showRawJson ? <EyeOff className="w-4 h-4 text-indigo-600" /> : <Eye className="w-4 h-4 text-indigo-600" />}
-              <span>{showRawJson ? 'Hide Raw JSON' : 'Inspect Raw FHIR JSON'}</span>
-            </button>
-
-            <button
-              onClick={handleDownloadFhir}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold shadow-2xs transition-all cursor-pointer"
-            >
-              <Download className="w-4 h-4 text-teal-400" />
-              <span>Download JSON</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Abstract FHIR Data Architecture Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">FHIR Standard Version</span>
-            <div className="text-sm font-bold text-slate-900">HL7 FHIR R4 (v4.0.1)</div>
-            <p className="text-[11px] text-slate-500">ABDM NRCeS Profile Specification</p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Bundle Structure</span>
-            <div className="text-sm font-bold text-slate-900">Document Bundle</div>
-            <p className="text-[11px] text-slate-500">Rooted at Composition Resource</p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Security & Encryption</span>
-            <div className="text-sm font-bold text-slate-900 flex items-center gap-1 text-emerald-700">
-              <Lock className="w-3.5 h-3.5 text-emerald-600" />
-              <span>JWS Token Signed</span>
-            </div>
-            <p className="text-[11px] text-slate-500">SHA-256 Digest Validation</p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">ABDM Gateway Status</span>
-            <div className="text-sm font-bold text-emerald-700 flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>M4 Milestone Ready</span>
-            </div>
-            <p className="text-[11px] text-slate-500">HIP / HIU Node Interoperable</p>
-          </div>
-        </div>
-
-        {/* Abstract Resource Mapping Chips */}
-        <div className="p-4.5 rounded-2xl bg-slate-50/80 border border-slate-200 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-teal-600" />
-              <span>Abstract Bundle Resource Breakdown</span>
-            </span>
-            <span className="text-xs text-slate-500 font-mono">
-              Total Resources: 7 Standard Types
+            <FileCode2 className="w-5 h-5 text-indigo-600" />
+            <h3 className="text-base sm:text-lg font-bold text-slate-900">
+              HL7 FHIR R4 Standard Data Bundle Inspector
+            </h3>
+            <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+              NHA ABDM M4 Profile
             </span>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-            <div className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
-              <div>
-                <span className="font-bold text-slate-900 font-mono">Composition</span>
-                <p className="text-[10px] text-slate-400">Clinical header & section trees</p>
-              </div>
-              <span className="font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-lg border border-teal-200">1</span>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
-              <div>
-                <span className="font-bold text-slate-900 font-mono">Patient</span>
-                <p className="text-[10px] text-slate-400">ABHA-linked demographics</p>
-              </div>
-              <span className="font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-lg border border-teal-200">1</span>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
-              <div>
-                <span className="font-bold text-slate-900 font-mono">Practitioner</span>
-                <p className="text-[10px] text-slate-400">Attending doctor credentials</p>
-              </div>
-              <span className="font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-lg border border-teal-200">1</span>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
-              <div>
-                <span className="font-bold text-slate-900 font-mono">Organization</span>
-                <p className="text-[10px] text-slate-400">Issuing hospital / lab HIP code</p>
-              </div>
-              <span className="font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-lg border border-teal-200">1</span>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
-              <div>
-                <span className="font-bold text-slate-900 font-mono">Observation</span>
-                <p className="text-[10px] text-slate-400">LOINC biomarker data points</p>
-              </div>
-              <span className="font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-lg border border-teal-200">
-                {sampleDoc?.labObservations?.length || 4}
-              </span>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
-              <div>
-                <span className="font-bold text-slate-900 font-mono">MedicationRequest</span>
-                <p className="text-[10px] text-slate-400">RxNorm prescription orders</p>
-              </div>
-              <span className="font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-lg border border-teal-200">
-                {sampleDoc?.medications?.length || 3}
-              </span>
-            </div>
-          </div>
+          <p className="text-xs text-slate-500 mt-1">
+            Standard clinical bundle export structured according to HL7 FHIR Release 4 specification.
+          </p>
         </div>
 
-        {/* Raw JSON viewer: ONLY displayed when user clicks button */}
-        {showRawJson && (
-          <div className="space-y-2 animate-in fade-in duration-200">
-            <div className="flex items-center justify-between text-xs text-slate-500 font-mono px-1">
-              <span>Full Validated HL7 FHIR R4 JSON Payload</span>
-              <button 
-                onClick={() => setShowRawJson(false)} 
-                className="text-indigo-600 hover:underline cursor-pointer"
-              >
-                Close Raw View
-              </button>
-            </div>
-            <div className="rounded-2xl bg-slate-950 text-slate-200 p-4 font-mono text-xs overflow-x-auto max-h-96 border border-slate-800">
-              <pre>{JSON.stringify(fhirBundle, null, 2)}</pre>
-            </div>
-          </div>
-        )}
+        <button
+          onClick={handleDownloadFhir}
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer shrink-0"
+        >
+          <Download className="w-4 h-4 text-teal-400" />
+          <span>Download JSON</span>
+        </button>
       </div>
 
       {/* Mock Aadhaar / ABDM KYC Verification Modal */}

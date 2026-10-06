@@ -34,13 +34,13 @@ function renderClinicalMessageContent(text: string): React.ReactNode {
     if (currentList.length > 0) {
       if (isNumbered) {
         elements.push(
-          <ol key={`ol-${elements.length}`} className="space-y-2 my-2 pl-0.5">
+          <ol key={`ol-${elements.length}`} className="space-y-2.5 my-2.5 pl-0.5">
             {currentList}
           </ol>
         );
       } else {
         elements.push(
-          <ul key={`ul-${elements.length}`} className="space-y-2 my-2 pl-0.5">
+          <ul key={`ul-${elements.length}`} className="space-y-2.5 my-2.5 pl-0.5">
             {currentList}
           </ul>
         );
@@ -50,24 +50,37 @@ function renderClinicalMessageContent(text: string): React.ReactNode {
   };
 
   const formatInline = (str: string) => {
-    const parts = str.split(/(\*\*.*?\*\*)/g);
-    return parts.map((part, idx) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return (
-          <strong key={idx} className="font-semibold text-slate-900">
-            {part.slice(2, -2)}
-          </strong>
-        );
-      }
-      if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
-        return (
-          <em key={idx} className="italic text-slate-700">
-            {part.slice(1, -1)}
-          </em>
-        );
-      }
-      return part;
-    });
+    // Matches ***bold italic***, **bold**, *italic*
+    const tokenRegex = /(\*\*\*.*?\*\*\*|\*\*.*?\*\*|\*[^\*\s][^\*]*?[^\*\s]\*|\*[^\*\s]\*)/g;
+    const parts = str.split(tokenRegex);
+    return parts
+      .filter(p => p !== '')
+      .map((part, idx) => {
+        if (part.startsWith('***') && part.endsWith('***') && part.length >= 6) {
+          return (
+            <strong key={idx} className="font-semibold italic text-slate-900">
+              {part.slice(3, -3)}
+            </strong>
+          );
+        }
+        if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+          return (
+            <strong key={idx} className="font-semibold text-slate-900">
+              {part.slice(2, -2)}
+            </strong>
+          );
+        }
+        if (part.startsWith('*') && part.endsWith('*') && part.length >= 2) {
+          return (
+            <em key={idx} className="italic text-slate-700">
+              {part.slice(1, -1)}
+            </em>
+          );
+        }
+        // Strip any residual stray markdown asterisks or hashes from plain text segments
+        const clean = part.replace(/\*{1,3}/g, '').replace(/#{1,6}/g, '');
+        return clean;
+      });
   };
 
   lines.forEach((line, lineIdx) => {
@@ -79,20 +92,20 @@ function renderClinicalMessageContent(text: string): React.ReactNode {
     }
 
     // Horizontal Rule
-    if (trimmed === '---' || trimmed === '***') {
+    if (/^[-*_]{3,}$/.test(trimmed)) {
       flushList();
       elements.push(<hr key={`hr-${lineIdx}`} className="my-2.5 border-slate-200" />);
       return;
     }
 
-    // Headings (### or ## or #)
-    if (/^#{1,4}\s+/.test(trimmed)) {
+    // Markdown Headings (###, ##, #)
+    if (/^#{1,6}\s*/.test(trimmed)) {
       flushList();
-      const headingText = trimmed.replace(/^#{1,4}\s+/, '');
+      const headingText = trimmed.replace(/^#{1,6}\s*/, '').replace(/\s*#{1,6}$/, '');
       elements.push(
         <h4
           key={`h-${lineIdx}`}
-          className="text-sm sm:text-base font-bold text-slate-900 mt-3 mb-1.5 tracking-tight flex items-center gap-1.5"
+          className="text-sm sm:text-base font-bold text-slate-900 mt-3.5 mb-1.5 tracking-tight flex items-center gap-1.5"
         >
           {formatInline(headingText)}
         </h4>
@@ -100,11 +113,27 @@ function renderClinicalMessageContent(text: string): React.ReactNode {
       return;
     }
 
-    // Unordered Bullet List (* or -)
-    if (/^[\*\-]\s+/.test(trimmed)) {
+    // Standalone Bold Header (e.g. **Why Dizziness Happens** or **What to Do Now:**)
+    if ((trimmed.startsWith('**') && trimmed.endsWith('**') && trimmed.length > 5) || 
+        (trimmed.startsWith('**') && trimmed.endsWith(':**') && trimmed.length > 5)) {
+      flushList();
+      const headingText = trimmed.replace(/^\*\*/, '').replace(/\:?\*\*$/, '');
+      elements.push(
+        <h4
+          key={`h-${lineIdx}`}
+          className="text-sm sm:text-base font-bold text-slate-900 mt-3.5 mb-1.5 tracking-tight flex items-center gap-1.5"
+        >
+          {formatInline(headingText)}
+        </h4>
+      );
+      return;
+    }
+
+    // Bullet List (*, -, •)
+    if (/^[\*\-•]\s+/.test(trimmed)) {
       if (isNumbered) flushList();
       isNumbered = false;
-      const bulletText = trimmed.replace(/^[\*\-]\s+/, '');
+      const bulletText = trimmed.replace(/^[\*\-•]\s+/, '');
       currentList.push(
         <li key={`li-${lineIdx}`} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 leading-relaxed">
           <span className="w-1.5 h-1.5 rounded-full bg-teal-600 mt-2 shrink-0" />
@@ -114,8 +143,8 @@ function renderClinicalMessageContent(text: string): React.ReactNode {
       return;
     }
 
-    // Numbered List (1. or 2.)
-    const numMatch = trimmed.match(/^(\d+)\.\s+(.*)/);
+    // Numbered List (1. or 2. or 1))
+    const numMatch = trimmed.match(/^(\d+)[\.\)]\s+(.*)/);
     if (numMatch) {
       if (!isNumbered) flushList();
       isNumbered = true;
@@ -132,15 +161,16 @@ function renderClinicalMessageContent(text: string): React.ReactNode {
       return;
     }
 
-    // Regular text paragraph
-    flushList();
-
-    // Clinical disclaimer/reminder callout
+    // Clinical disclaimer / note callout
+    const lowerTrim = trimmed.toLowerCase();
     if (
-      trimmed.toLowerCase().includes('clinical disclaimer') || 
-      trimmed.toLowerCase().includes('important clinical reminder') || 
-      trimmed.toLowerCase().includes('disclaimer:')
+      lowerTrim.includes('clinical disclaimer') || 
+      lowerTrim.includes('important clinical reminder') || 
+      lowerTrim.includes('disclaimer:') ||
+      lowerTrim.startsWith('note:') ||
+      lowerTrim.startsWith('*note:')
     ) {
+      flushList();
       elements.push(
         <div key={`p-${lineIdx}`} className="p-3 my-2.5 rounded-xl bg-amber-50/90 border border-amber-200/80 text-[11px] text-amber-900 leading-relaxed shadow-2xs">
           <div className="font-bold text-amber-950 mb-0.5 flex items-center gap-1">
@@ -150,13 +180,16 @@ function renderClinicalMessageContent(text: string): React.ReactNode {
           {formatInline(trimmed.replace(/^(\*+|#+|\s*⚕️\s*)+/g, '').replace(/\*+$/g, ''))}
         </div>
       );
-    } else {
-      elements.push(
-        <p key={`p-${lineIdx}`} className="text-xs sm:text-sm text-slate-700 leading-relaxed my-0.5">
-          {formatInline(trimmed)}
-        </p>
-      );
+      return;
     }
+
+    // Regular text paragraph
+    flushList();
+    elements.push(
+      <p key={`p-${lineIdx}`} className="text-xs sm:text-sm text-slate-700 leading-relaxed my-0.5">
+        {formatInline(trimmed)}
+      </p>
+    );
   });
 
   flushList();

@@ -55,9 +55,14 @@ GUIDELINES:
     );
 
     if (failoverResult.success && failoverResult.text) {
+      // Clean raw markdown hashtags from heading lines so text is clean even before rendering
+      const cleanReply = failoverResult.text
+        .replace(/^#{1,6}\s*/gm, '')
+        .replace(/\s*#{1,6}$/gm, '');
+
       return NextResponse.json({
         success: true,
-        reply: failoverResult.text,
+        reply: cleanReply,
         source: `${failoverResult.model} (Key #${failoverResult.keyIndex})`
       });
     }
@@ -76,11 +81,11 @@ Here is what helps right now:
 4. **Doctor Visit**: Schedule a follow-up in the next 7-10 days to ask if dosage titration is required.`;
     } else if (lower.includes('medication') || lower.includes('medicine') || lower.includes('timing') || lower.includes('food')) {
       reply = `Here is your current medication regimen review:
-- **Metformin 500mg**: Take twice daily *after food* with a glass of water.
-- **Telmisartan 40mg**: Take once daily in the *morning after breakfast* for consistent blood pressure control.
-- **Atorvastatin 10mg**: Take once daily *at bedtime* — cholesterol synthesis in the liver peaks overnight, making night-time dosing most effective.
+- **Metformin 500mg**: Take twice daily after food with a glass of water.
+- **Telmisartan 40mg**: Take once daily in the morning after breakfast for consistent blood pressure control.
+- **Atorvastatin 10mg**: Take once daily at bedtime — cholesterol synthesis in the liver peaks overnight, making night-time dosing most effective.
 
-*Note: Never discontinue medications without consulting your prescribing physician.*`;
+Important Clinical Reminder: Never discontinue medications without consulting your prescribing physician.`;
     } else if (lower.includes('diet') || lower.includes('food') || lower.includes('eat') || lower.includes('nutrition')) {
       reply = `Based on your glycemic and lipid profile (HbA1c 7.4%, LDL 148 mg/dL), here are key dietary recommendations:
 1. **Reduce Refined Fats**: Switch from vanaspati and deep frying to cold-pressed mustard, olive, or groundnut oil (limited to 2-3 tsp daily).

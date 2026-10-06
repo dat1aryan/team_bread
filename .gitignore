@@ -19,6 +19,8 @@ node_modules/
 
 # Local env files
 .env*.local
+backend/.env
+.env
 
 # Vercel
 .vercel

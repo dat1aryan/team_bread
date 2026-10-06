@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { callGeminiWithFailover } from '@/lib/gemini-pool';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { messages, language = 'en', clinicalContext } = body;
-    const apiKey = process.env.GEMINI_API_KEY;
 
     const userMessage = messages[messages.length - 1]?.content || '';
 
@@ -40,46 +40,25 @@ GUIDELINES:
 7. ${langInstruction}
 `;
 
-    if (apiKey && apiKey !== 'your-gemini-api-key') {
-      const activeModels = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-3.8-flash'];
-      for (const model of activeModels) {
-        try {
-          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-
-          const contents = [
-            {
-              role: 'user',
-              parts: [{ text: `${systemPrompt}\n\nPATIENT QUERY:\n${userMessage}` }]
-            }
-          ];
-
-          const geminiRes = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents,
-              generationConfig: {
-                temperature: 0.3,
-                maxOutputTokens: 800
-              }
-            })
-          });
-
-          if (geminiRes.ok) {
-            const geminiData = await geminiRes.json();
-            const text = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) {
-              return NextResponse.json({
-                success: true,
-                reply: text,
-                source: model
-              });
-            }
-          }
-        } catch (geminiError) {
-          console.warn(`Gemini model ${model} error, trying next:`, geminiError);
+    const failoverResult = await callGeminiWithFailover(
+      [
+        {
+          role: 'user',
+          parts: [{ text: `${systemPrompt}\n\nPATIENT QUERY:\n${userMessage}` }]
         }
+      ],
+      {
+        temperature: 0.3,
+        maxOutputTokens: 800
       }
+    );
+
+    if (failoverResult.success && failoverResult.text) {
+      return NextResponse.json({
+        success: true,
+        reply: failoverResult.text,
+        source: `${failoverResult.model} (Key #${failoverResult.keyIndex})`
+      });
     }
 
     // Heuristic Clinical Response Fallback

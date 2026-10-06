@@ -1,55 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { callGeminiWithFailover } from '@/lib/gemini-pool';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { imageBase64, mimeType, rawText } = body;
-    const apiKey = process.env.GEMINI_API_KEY;
 
-    // If Gemini API Key exists, call Google Gemini Vision
-    if (apiKey && apiKey !== 'your-gemini-api-key') {
-      const activeModels = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-3.8-flash'];
-      for (const model of activeModels) {
-        try {
-          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-          const parts: any[] = [];
+    const parts: any[] = [];
 
-          if (imageBase64) {
-            const cleanBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '').replace(/^data:application\/pdf;base64,/, '');
-            parts.push({
-              inlineData: {
-                mimeType: mimeType || 'image/jpeg',
-                data: cleanBase64
-              }
-            });
-          }
-
-          const prompt = `Analyze this medical record and return a strict JSON object with fields: documentType, title, doctorName, facilityName, documentDate, medications (array with name, dosage, frequency, timing, instructions), labObservations (array with testName, category, value, unit, referenceLow, referenceHigh, referenceRangeString, status, clinicalMeaning), diagnoses (array), and aiSummary (object with headline, simpleExplanation, whyItMatters, urgencyLevel, urgencyReason, keyActionItems, dietAndLifestyleTips, questionsForDoctor, flaggedAbnormalities). Return ONLY pure JSON without markdown fences.`;
-
-          parts.push({ text: rawText ? `${prompt}\n\nDOCUMENT OCR TEXT:\n${rawText}` : prompt });
-
-          const geminiRes = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts }],
-              generationConfig: {
-                temperature: 0.2,
-                responseMimeType: 'application/json'
-              }
-            })
-          });
-
-          if (geminiRes.ok) {
-            const geminiData = await geminiRes.json();
-            const text = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) {
-              return NextResponse.json({ success: true, data: JSON.parse(text), source: model });
-            }
-          }
-        } catch (geminiErr) {
-          console.warn(`OCR model ${model} error, trying next:`, geminiErr);
+    if (imageBase64) {
+      const cleanBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '').replace(/^data:application\/pdf;base64,/, '');
+      parts.push({
+        inlineData: {
+          mimeType: mimeType || 'image/jpeg',
+          data: cleanBase64
         }
+      });
+    }
+
+    const prompt = `Analyze this medical record and return a strict JSON object with fields: documentType, title, doctorName, facilityName, documentDate, medications (array with name, dosage, frequency, timing, instructions), labObservations (array with testName, category, value, unit, referenceLow, referenceHigh, referenceRangeString, status, clinicalMeaning), diagnoses (array), and aiSummary (object with headline, simpleExplanation, whyItMatters, urgencyLevel, urgencyReason, keyActionItems, dietAndLifestyleTips, questionsForDoctor, flaggedAbnormalities). Return ONLY pure JSON without markdown fences.`;
+
+    parts.push({ text: rawText ? `${prompt}\n\nDOCUMENT OCR TEXT:\n${rawText}` : prompt });
+
+    const failoverResult = await callGeminiWithFailover(
+      [{ parts }],
+      {
+        temperature: 0.2,
+        responseMimeType: 'application/json'
+      }
+    );
+
+    if (failoverResult.success && failoverResult.text) {
+      try {
+        const cleanText = failoverResult.text.replace(/```json/g, '').replace(/```/g, '').trim();
+        const parsed = JSON.parse(cleanText);
+        return NextResponse.json({
+          success: true,
+          data: parsed,
+          source: `${failoverResult.model} (Key #${failoverResult.keyIndex})`
+        });
+      } catch (parseErr) {
+        console.warn('JSON parse error from Gemini OCR result, using heuristic fallback:', parseErr);
       }
     }
 

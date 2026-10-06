@@ -14,14 +14,10 @@ import {
   Stethoscope,
   Pill,
   Activity,
-  AlertTriangle,
-  Plus,
-  CheckCircle2,
-  X
+  AlertTriangle
 } from 'lucide-react';
 import { ChatMessage, LanguageCode, PatientProfile, ExtractedMedication, ExtractedLabObservation } from '@/types';
 import { speakText, stopSpeaking } from '@/lib/multilingual';
-import confetti from 'canvas-confetti';
 
 /**
  * Parses and formats clinical AI responses cleanly.
@@ -230,15 +226,6 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
   const [isSpeaking, setIsSpeaking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Add medication modal state
-  const [showAddMedModal, setShowAddMedModal] = useState(false);
-  const [newMedName, setNewMedName] = useState('');
-  const [newDosage, setNewDosage] = useState('');
-  const [newFrequency, setNewFrequency] = useState('Once Daily (OD)');
-  const [newTiming, setNewTiming] = useState<'After Food' | 'Before Food' | 'With Food'>('After Food');
-  const [newTimeOfDay, setNewTimeOfDay] = useState<'Morning' | 'Afternoon' | 'Evening' | 'Night'>('Morning');
-  const [newInstructions, setNewInstructions] = useState('');
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -248,12 +235,6 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
   }, [messages, isLoading]);
 
   const quickPrompts = [
-    {
-      label: '+ Log Med to Schedule',
-      icon: Pill,
-      action: () => setShowAddMedModal(true),
-      prompt: ''
-    },
     {
       label: 'Abnormal Lab Results',
       icon: Activity,
@@ -275,45 +256,6 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
       prompt: 'What key questions should I prepare to ask my doctor during my next clinic visit?'
     }
   ];
-
-  const handleConfirmAddMed = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newMedName.trim() || !newDosage.trim()) return;
-
-    const medPayload: Omit<ExtractedMedication, 'id'> = {
-      name: newMedName.trim(),
-      dosage: newDosage.trim(),
-      frequency: newFrequency,
-      route: 'Oral',
-      timing: newTiming,
-      timeOfDay: [newTimeOfDay],
-      instructions: newInstructions.trim() || `Take ${newTiming.toLowerCase()} as prescribed`,
-      isActive: true,
-      streakDays: 1,
-      isTakenToday: false
-    };
-
-    if (onAddMedication) {
-      onAddMedication(medPayload);
-    }
-
-    const confirmMsg: ChatMessage = {
-      id: `bot-med-${Date.now()}`,
-      role: 'assistant',
-      content: `I have updated your schedule with ${newMedName.trim()} (${newDosage.trim()}, ${newFrequency}, ${newTiming}). You can review your doses and mark them taken in the Medication Tracker tab.`,
-      createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    setMessages(prev => [...prev, confirmMsg]);
-    setShowAddMedModal(false);
-    setNewMedName('');
-    setNewDosage('');
-    setNewInstructions('');
-
-    try {
-      confetti({ particleCount: 30, spread: 50, origin: { y: 0.7 } });
-    } catch (e) {}
-  };
 
   const handleSend = async (messageText?: string) => {
     const textToSend = messageText || input.trim();
@@ -419,14 +361,6 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowAddMedModal(true)}
-            className="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
-            title="Log medication into schedule"
-          >
-            <Pill className="w-3.5 h-3.5 text-teal-300" />
-            <span className="hidden sm:inline">Add Med to Schedule</span>
-          </button>
 
           <button 
             onClick={() => {
@@ -459,7 +393,7 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
           return (
             <button
               key={idx}
-              onClick={() => qp.action ? qp.action() : handleSend(qp.prompt)}
+              onClick={() => handleSend(qp.prompt)}
               disabled={isLoading}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-teal-50 border border-slate-200/90 hover:border-teal-300 text-slate-700 text-xs font-medium whitespace-nowrap shadow-2xs transition-all cursor-pointer"
             >
@@ -569,119 +503,6 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
           <Send className="w-4 h-4" />
         </button>
       </form>
-
-      {/* Add Medication Modal directly from Copilot */}
-      {showAddMedModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 animate-in fade-in zoom-in duration-200">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-teal-50 text-teal-600">
-                  <Pill className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 text-base">Add to Medication Schedule</h4>
-                  <p className="text-xs text-slate-500">Log a new medicine via SetuHealth AI Copilot</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => setShowAddMedModal(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleConfirmAddMed} className="space-y-3.5">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Medication Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Metformin, Telmisartan, Pantoprazole"
-                  value={newMedName}
-                  onChange={(e) => setNewMedName(e.target.value)}
-                  required
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Strength / Dosage</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 500mg, 40mg"
-                    value={newDosage}
-                    onChange={(e) => setNewDosage(e.target.value)}
-                    required
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Frequency</label>
-                  <select
-                    value={newFrequency}
-                    onChange={(e) => setNewFrequency(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  >
-                    <option value="Once Daily (OD)">Once Daily (OD)</option>
-                    <option value="Twice Daily (BD)">Twice Daily (BD)</option>
-                    <option value="Thrice Daily (TDS)">Thrice Daily (TDS)</option>
-                    <option value="As Needed (SOS)">As Needed (SOS)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Food Timing</label>
-                  <select
-                    value={newTiming}
-                    onChange={(e) => setNewTiming(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  >
-                    <option value="After Food">After Food (खाने के बाद)</option>
-                    <option value="Before Food">Before Food (खाने से पहले)</option>
-                    <option value="With Food">With Food (खाने के साथ)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Time of Day</label>
-                  <select
-                    value={newTimeOfDay}
-                    onChange={(e) => setNewTimeOfDay(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  >
-                    <option value="Morning">Morning (08:00 AM)</option>
-                    <option value="Afternoon">Afternoon (01:30 PM)</option>
-                    <option value="Evening">Evening (06:00 PM)</option>
-                    <option value="Night">Bedtime (09:30 PM)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setShowAddMedModal(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer"
-                >
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Add to Schedule</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

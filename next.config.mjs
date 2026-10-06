@@ -4,9 +4,6 @@ const nextConfig = {
   images: {
     domains: ['images.unsplash.com'],
   },
-  experimental: {
-    serverComponentsExternalPackages: ['tesseract.js'],
-  },
 };
 
 export default nextConfig;

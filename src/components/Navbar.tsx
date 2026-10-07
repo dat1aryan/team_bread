@@ -112,51 +112,54 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           )}
 
-          {/* ABHA Status Badge */}
-          <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>{isAbhaVerified ? 'ABHA Linked' : 'ABHA Ready'}</span>
-          </div>
-
-          {/* Regional Language Switcher */}
-          <div className="relative">
-            <button
-              onClick={() => {
-                setLangMenuOpen(!langMenuOpen);
-                setProfileMenuOpen(false);
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-medium transition-colors border border-slate-200 cursor-pointer"
-              title="Change Language"
-            >
-              <Languages className="w-4 h-4 text-teal-600" />
-              <span className="hidden sm:inline font-semibold">
-                {SUPPORTED_LANGUAGES.find((l) => l.code === currentLanguage)?.nativeLabel}
-              </span>
-            </button>
-
-            {langMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95">
-                <div className="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                  Select Language
-                </div>
-                {SUPPORTED_LANGUAGES.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => {
-                      onLanguageChange(lang.code);
-                      setLangMenuOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-2 text-xs sm:text-sm flex items-center justify-between hover:bg-teal-50 hover:text-teal-900 transition-colors cursor-pointer ${
-                      currentLanguage === lang.code ? 'font-bold text-teal-700 bg-teal-50/50' : 'text-slate-700'
-                    }`}
-                  >
-                    <span>{lang.nativeLabel}</span>
-                    <span className="text-xs text-slate-400">{lang.label}</span>
-                  </button>
-                ))}
+          {/* ABHA Status Badge & Language Switcher (Only in Dashboard, hidden on Hero) */}
+          {activeRoute !== 'home' && (
+            <>
+              <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>{isAbhaVerified ? 'ABHA Linked' : 'ABHA Ready'}</span>
               </div>
-            )}
-          </div>
+
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    setLangMenuOpen(!langMenuOpen);
+                    setProfileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-medium transition-colors border border-slate-200 cursor-pointer"
+                  title="Change Language"
+                >
+                  <Languages className="w-4 h-4 text-teal-600" />
+                  <span className="hidden sm:inline font-semibold">
+                    {SUPPORTED_LANGUAGES.find((l) => l.code === currentLanguage)?.nativeLabel}
+                  </span>
+                </button>
+
+                {langMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95">
+                    <div className="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                      Select Language
+                    </div>
+                    {SUPPORTED_LANGUAGES.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          onLanguageChange(lang.code);
+                          setLangMenuOpen(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 text-xs sm:text-sm flex items-center justify-between hover:bg-teal-50 hover:text-teal-900 transition-colors cursor-pointer ${
+                          currentLanguage === lang.code ? 'font-bold text-teal-700 bg-teal-50/50' : 'text-slate-700'
+                        }`}
+                      >
+                        <span>{lang.nativeLabel}</span>
+                        <span className="text-xs text-slate-400">{lang.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
 
           {/* Conditional Controls: Sign In / Sign Up when unauthenticated, User Profile when authenticated */}
           {!isAuthenticated ? (

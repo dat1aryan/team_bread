@@ -253,33 +253,22 @@ export default function HomePage() {
       </main>
 
       {/* Global Clinical Footer */}
-      <footer className="border-t border-slate-200 bg-slate-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-slate-900 tracking-tight">Setu</span>
-            <span>•</span>
-            <span>AI-Powered Personal Health Copilot & ABDM FHIR R4 Hub</span>
+      <footer className="border-t border-slate-200/80 bg-white py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center gap-2.5">
+          <div className="flex items-center gap-2.5">
+            <img
+              src="/brand/favicon.png"
+              alt="Setu"
+              className="w-5 h-5 object-contain"
+            />
+            <span className="font-extrabold text-slate-900 tracking-tight text-sm">
+              Setu
+            </span>
+            <span className="text-slate-400 text-xs font-medium">@2026</span>
           </div>
-
-          <div className="flex items-center gap-4">
-            {isAuthenticated ? (
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold transition-all shadow-xs"
-              >
-                <LayoutDashboard className="w-3.5 h-3.5 text-teal-300" />
-                <span>Go to Dashboard</span>
-              </Link>
-            ) : (
-              <button
-                type="button"
-                onClick={() => handleOpenAuth('signin')}
-                className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors cursor-pointer"
-              >
-                Sign In
-              </button>
-            )}
-          </div>
+          <p className="text-xs text-slate-500">
+            Bridging Medical Jargon to Human Understanding.
+          </p>
         </div>
       </footer>
 

@@ -595,30 +595,22 @@ function DashboardContent() {
       </main>
 
       {/* Global Clinical Footer */}
-      <footer className="mt-auto border-t border-slate-200 bg-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-slate-900 tracking-tight">Setu Health</span>
-            <span>•</span>
-            <span>HL7 FHIR R4 & ABDM Compliant</span>
+      <footer className="mt-auto border-t border-slate-200/80 bg-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center gap-2">
+          <div className="flex items-center gap-2.5">
+            <img
+              src="/brand/favicon.png"
+              alt="Setu"
+              className="w-5 h-5 object-contain"
+            />
+            <span className="font-extrabold text-slate-900 tracking-tight text-sm">
+              Setu
+            </span>
+            <span className="text-slate-400 text-xs font-medium">@2026</span>
           </div>
-
-          <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="text-slate-600 hover:text-slate-900 font-semibold transition-colors flex items-center gap-1"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>Landing Page</span>
-            </Link>
-            <button
-              onClick={() => handleTabChange('copilot')}
-              className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
-            >
-              <Bot className="w-3.5 h-3.5 text-teal-200" />
-              <span>Ask AI Copilot</span>
-            </button>
-          </div>
+          <p className="text-xs text-slate-500">
+            Bridging Medical Jargon to Human Understanding.
+          </p>
         </div>
       </footer>
 

@@ -460,17 +460,17 @@ function DashboardContent() {
         </section>
 
         {/* Workspace Tabs Navigation Bar */}
-        <nav className="flex items-center gap-1.5 p-1.5 bg-slate-200/70 rounded-2xl border border-slate-200 overflow-x-auto">
+        <nav className="flex items-center gap-2 p-1.5 bg-slate-200/70 rounded-2xl border border-slate-200 overflow-x-auto shadow-2xs">
           <button
             onClick={() => handleTabChange('upload')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'upload'
                 ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
             }`}
           >
-            <UploadCloud className="w-4 h-4 text-teal-600" />
-            <span>{t.tabScanUpload}</span>
+            <UploadCloud className="w-4 h-4 text-teal-600 shrink-0" />
+            <span>Upload & Scan</span>
           </button>
 
           <button
@@ -478,13 +478,13 @@ function DashboardContent() {
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'timeline'
                 ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
             }`}
           >
-            <Clock className="w-4 h-4 text-teal-600" />
-            <span>{t.tabTimeline}</span>
+            <Clock className="w-4 h-4 text-teal-600 shrink-0" />
+            <span>Timeline</span>
             {totalRecords > 0 && (
-              <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-100 font-semibold text-slate-600">
+              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 font-semibold text-slate-600">
                 {totalRecords}
               </span>
             )}
@@ -495,11 +495,11 @@ function DashboardContent() {
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'trends'
                 ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
             }`}
           >
-            <TrendingUp className="w-4 h-4 text-teal-600" />
-            <span>{t.tabTrends}</span>
+            <TrendingUp className="w-4 h-4 text-teal-600 shrink-0" />
+            <span>Vital Trends</span>
           </button>
 
           <button
@@ -507,13 +507,13 @@ function DashboardContent() {
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'meds'
                 ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
             }`}
           >
-            <Pill className="w-4 h-4 text-teal-600" />
-            <span>{t.tabMeds}</span>
+            <Pill className="w-4 h-4 text-teal-600 shrink-0" />
+            <span>Medications</span>
             {activeMedCount > 0 && (
-              <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-teal-100 font-semibold text-teal-800">
+              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-teal-100 font-semibold text-teal-800">
                 {activeMedCount}
               </span>
             )}
@@ -524,11 +524,11 @@ function DashboardContent() {
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'copilot'
                 ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
             }`}
           >
-            <Bot className="w-4 h-4 text-teal-600" />
-            <span>Ask AI Copilot</span>
+            <Bot className="w-4 h-4 text-teal-600 shrink-0" />
+            <span>AI Copilot</span>
           </button>
 
           <button
@@ -536,11 +536,11 @@ function DashboardContent() {
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'abdm'
                 ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
             }`}
           >
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>{t.tabAbdmHub}</span>
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>ABDM Hub</span>
           </button>
         </nav>
 

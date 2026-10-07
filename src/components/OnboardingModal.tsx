@@ -58,7 +58,15 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.fullName.trim()) {
-      setErrorMsg('Please enter your full name.');
+      setErrorMsg('Please enter your full legal name.');
+      return;
+    }
+    if (!formData.dateOfBirth) {
+      setErrorMsg('Please enter your date of birth.');
+      return;
+    }
+    if (!formData.phone || !formData.phone.trim()) {
+      setErrorMsg('Please enter your phone number.');
       return;
     }
 
@@ -68,6 +76,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
     const completedProfile: PatientProfile = {
       ...formData,
       fullName: formData.fullName.trim(),
+      phone: formData.phone?.trim(),
       isOnboarded: true,
     };
 
@@ -76,13 +85,13 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8 space-y-6">
+      <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8 space-y-6">
         
         {/* Header */}
         <div className="text-center space-y-2 pb-4 border-b border-slate-100">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-bold mb-1">
             <Sparkles className="w-3.5 h-3.5 text-teal-600" />
-            <span>Welcome to Setu • Patient Onboarding</span>
+            <span>Welcome to Setu</span>
           </div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight">
             Complete Your Health Profile
@@ -101,11 +110,11 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           
-          {/* Full Name & Email */}
+          {/* Row 1: Full Name & Email */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Full Legal Name <span className="text-rose-500">*</span>
+                Full Legal Name <span className="text-rose-500 font-bold">*</span>
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -113,7 +122,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   type="text"
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  placeholder="e.g. Aryan Kumar"
+                  placeholder="e.g. Nitish"
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 font-medium placeholder:text-slate-400"
                   required
                 />
@@ -137,16 +146,17 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
             </div>
           </div>
 
-          {/* DOB, Gender & Blood Group */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Row 2: Date of Birth & Gender */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Date of Birth
+                Date of Birth <span className="text-rose-500 font-bold">*</span>
               </label>
               <div className="relative">
                 <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <input
                   type="date"
+                  required
                   value={formData.dateOfBirth || ''}
                   onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 font-medium"
@@ -156,7 +166,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Gender
+                Gender <span className="text-rose-500 font-bold">*</span>
               </label>
               <select
                 value={formData.gender}
@@ -169,10 +179,13 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 <option value="unknown">Prefer not to say</option>
               </select>
             </div>
+          </div>
 
+          {/* Row 3: Blood Group & Phone Number */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Blood Group
+                Blood Group <span className="text-rose-500 font-bold">*</span>
               </label>
               <div className="relative">
                 <Heart className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -193,18 +206,16 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 </select>
               </div>
             </div>
-          </div>
 
-          {/* Phone & Emergency Contact */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Phone Number
+                Phone Number <span className="text-rose-500 font-bold">*</span>
               </label>
               <div className="relative">
                 <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <input
                   type="tel"
+                  required
                   value={formData.phone || ''}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="+91 98765 43210"
@@ -212,10 +223,13 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 />
               </div>
             </div>
+          </div>
 
+          {/* Row 4: Emergency Contact & Preferred Language */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Emergency Contact
+                Emergency Contact <span className="text-slate-400 font-normal text-[11px]">(Optional)</span>
               </label>
               <input
                 type="text"
@@ -224,6 +238,23 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 placeholder="+91 98765 43211 (Spouse / Parent)"
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 font-medium placeholder:text-slate-400"
               />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Preferred Language for AI Insights
+              </label>
+              <select
+                value={formData.preferredLanguage || 'en'}
+                onChange={(e) => setFormData({ ...formData, preferredLanguage: e.target.value as LanguageCode })}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 font-medium cursor-pointer"
+              >
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.nativeLabel} ({lang.label})
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -261,24 +292,6 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 />
               </div>
             </div>
-          </div>
-
-          {/* Preferred Language */}
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
-              Preferred Language for AI Insights
-            </label>
-            <select
-              value={formData.preferredLanguage || 'en'}
-              onChange={(e) => setFormData({ ...formData, preferredLanguage: e.target.value as LanguageCode })}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 font-medium cursor-pointer"
-            >
-              {SUPPORTED_LANGUAGES.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.nativeLabel} ({lang.label})
-                </option>
-              ))}
-            </select>
           </div>
 
           {/* Submit Action */}

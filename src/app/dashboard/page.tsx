@@ -608,9 +608,6 @@ function DashboardContent() {
             </span>
             <span className="text-slate-400 text-xs font-medium">@2026</span>
           </div>
-          <p className="text-xs text-slate-500">
-            Bridging Medical Jargon to Human Understanding.
-          </p>
         </div>
       </footer>
 

@@ -11,7 +11,6 @@ import {
   Sparkles, 
   ExternalLink,
   LayoutDashboard,
-  Home,
   ArrowRight
 } from 'lucide-react';
 import { LanguageCode } from '@/types';
@@ -84,32 +83,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Action Controls & Navigation Badges */}
         <div className="flex items-center gap-2 sm:gap-3">
           
-          {/* Navigation Links between Home and Dashboard */}
-          {isAuthenticated && (
-            <div className="flex items-center gap-1.5 mr-1">
-              <Link
-                href="/"
-                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center gap-1.5 ${
-                  activeRoute === 'home'
-                    ? 'bg-slate-100 text-slate-900'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-              >
-                <Home className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Home</span>
-              </Link>
-              <Link
-                href="/dashboard"
-                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center gap-1.5 ${
-                  activeRoute === 'dashboard'
-                    ? 'bg-teal-50 text-teal-800 font-bold border border-teal-200/80'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-              >
-                <LayoutDashboard className="w-3.5 h-3.5 text-teal-700" />
-                <span>Dashboard</span>
-              </Link>
-            </div>
+          {/* Dashboard shortcut only on Home page when authenticated */}
+          {isAuthenticated && activeRoute === 'home' && (
+            <Link
+              href="/dashboard"
+              className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-colors shadow-2xs"
+            >
+              <LayoutDashboard className="w-3.5 h-3.5 text-teal-300" />
+              <span>Dashboard</span>
+            </Link>
           )}
 
           {/* ABHA Status Badge & Language Switcher (Only in Dashboard, hidden on Hero) */}
@@ -197,7 +179,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
 
               {profileMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95">
+                <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95">
                   {/* User Identity Header */}
                   <div className="px-4 py-2 border-b border-slate-100 mb-1">
                     <div className="text-xs font-bold text-slate-900 truncate">{patientName}</div>
@@ -206,34 +188,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </div>
                   </div>
 
-                  {/* Option 1: Dashboard Workspace */}
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setProfileMenuOpen(false)}
-                    className="w-full text-left px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 hover:text-teal-900 hover:bg-teal-50 flex items-center gap-2.5 transition-colors"
-                  >
-                    <LayoutDashboard className="w-4 h-4 text-teal-600" />
-                    <span>Dashboard Workspace</span>
-                  </Link>
-
-                  {/* Option 2: Landing Page */}
-                  <Link
-                    href="/"
-                    onClick={() => setProfileMenuOpen(false)}
-                    className="w-full text-left px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 hover:text-teal-900 hover:bg-teal-50 flex items-center gap-2.5 transition-colors"
-                  >
-                    <Home className="w-4 h-4 text-slate-500" />
-                    <span>Home & Features</span>
-                  </Link>
-
-                  {/* Option 3: My Profile */}
+                  {/* Option: My Profile */}
                   <button
                     type="button"
                     onClick={() => {
                       setProfileMenuOpen(false);
                       onOpenProfile();
                     }}
-                    className="w-full text-left px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 hover:text-teal-900 hover:bg-teal-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+                    className="w-full text-left px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-teal-900 hover:bg-teal-50 flex items-center gap-2.5 transition-colors cursor-pointer"
                   >
                     <UserCheck className="w-4 h-4 text-teal-600" />
                     <span>My Profile</span>
@@ -241,17 +203,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                   <div className="border-t border-slate-100 my-1" />
 
-                  {/* Option 4: Sign Off */}
+                  {/* Option: Sign Out */}
                   <button
                     type="button"
                     onClick={() => {
                       setProfileMenuOpen(false);
                       onSignOut();
                     }}
-                    className="w-full text-left px-4 py-2.5 text-xs sm:text-sm font-semibold text-rose-600 hover:text-rose-800 hover:bg-rose-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+                    className="w-full text-left px-4 py-2 text-xs sm:text-sm font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 flex items-center gap-2.5 transition-colors cursor-pointer"
                   >
                     <RotateCcw className="w-4 h-4 text-rose-500" />
-                    <span>Sign Off</span>
+                    <span>Sign Out</span>
                   </button>
                 </div>
               )}

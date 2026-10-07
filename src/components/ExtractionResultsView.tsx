@@ -187,7 +187,7 @@ export const ExtractionResultsView: React.FC<ExtractionResultsViewProps> = ({
         </div>
       </div>
 
-      {/* Primary Plain-Language Health Summary Card (Gold Standard for Patients) */}
+      {/* Primary Plain-Language Health Summary Card */}
       <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
         
         {/* Urgency Badge & Voice Playback Header */}

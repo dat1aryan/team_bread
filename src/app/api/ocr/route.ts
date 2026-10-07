@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const parts: any[] = [];
 
     if (imageBase64) {
-      const cleanBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '').replace(/^data:application\/pdf;base64,/, '');
+      const cleanBase64 = imageBase64.replace(/^data:[^;]+;base64,/, '');
       parts.push({
         inlineData: {
           mimeType: mimeType || 'image/jpeg',

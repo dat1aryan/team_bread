@@ -199,7 +199,9 @@ function DashboardContent() {
         preferred_language: completedProfile.preferredLanguage,
         is_onboarded: true,
         updated_at: new Date().toISOString()
-      }).then();
+      }).then(({ error }) => {
+        if (error) console.warn('Supabase profile sync error:', error.message);
+      });
     }
   };
 
@@ -307,6 +309,7 @@ function DashboardContent() {
     if (isNaN(birth.getTime())) return 'Age Not Set';
     const diff = Date.now() - birth.getTime();
     const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+    if (age < 0 || age > 125) return 'Age Not Set';
     return `${age} Y`;
   };
 
@@ -549,14 +552,12 @@ function DashboardContent() {
           
           {activeTab === 'upload' ? (
             activeDocument ? (
-              /* View 1: Clinical Extraction Results */
               <ExtractionResultsView
                 document={activeDocument}
                 currentLanguage={currentLanguage}
                 onBack={() => setActiveDocument(null)}
               />
             ) : (
-              /* View 2: Medical Ingestion & Vision Analyzer */
               <DocumentUploader
                 currentLanguage={currentLanguage}
                 onAnalysisComplete={handleAnalysisComplete}
@@ -564,7 +565,6 @@ function DashboardContent() {
               />
             )
           ) : activeTab === 'timeline' ? (
-            /* View 3: Longitudinal Health Timeline */
             <HealthTimeline
               events={timelineEvents}
               documents={documents}
@@ -573,14 +573,12 @@ function DashboardContent() {
               onDeleteEvent={handleDeleteDocument}
             />
           ) : activeTab === 'trends' ? (
-            /* View 4: Longitudinal Biomarker Trends */
             <VitalTrendsChart
               seriesList={vitalTrends}
               onLogVital={handleLogVital}
               onNavigateToUpload={() => handleTabChange('upload')}
             />
           ) : activeTab === 'copilot' ? (
-            /* View 5: Multilingual Health Copilot */
             <div className="max-w-4xl mx-auto">
               <AiHealthChatbot
                 currentLanguage={currentLanguage}
@@ -599,7 +597,6 @@ function DashboardContent() {
               />
             </div>
           ) : activeTab === 'meds' ? (
-            /* View 6: Smart Medication Schedule & Safety Watchdog */
             <MedicationTracker
               medications={activeMeds}
               onAddCustomMedication={handleAddCustomMedication}
@@ -610,7 +607,6 @@ function DashboardContent() {
               onNavigateToCopilot={() => handleTabChange('copilot')}
             />
           ) : activeTab === 'abdm' ? (
-            /* View 7: ABDM & ABHA Interoperability Hub */
             <AbdmAbhaHub
               patient={patient}
               documents={documents}

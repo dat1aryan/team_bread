@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { ChatMessage, LanguageCode, PatientProfile, ExtractedMedication, ExtractedLabObservation, TestStatus } from '@/types';
 import { speakText, stopSpeaking } from '@/lib/multilingual';
+import { HealthStorageService } from '@/lib/storage';
 
 /**
  * Parses and formats clinical AI responses cleanly.
@@ -390,11 +391,18 @@ export const AiHealthChatbot: React.FC<AiHealthChatbotProps> = ({
           messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
           language: currentLanguage,
           clinicalContext: {
-            patientName: profile.fullName,
-            age: 52,
-            gender: profile.gender,
+            patientName: profile.fullName || 'Patient',
+            age: (() => {
+              if (!profile.dateOfBirth) return 'Not specified';
+              const birth = new Date(profile.dateOfBirth);
+              if (isNaN(birth.getTime())) return 'Not specified';
+              const diff = Date.now() - birth.getTime();
+              const calculated = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+              return (calculated >= 0 && calculated <= 125) ? `${calculated} Y` : 'Not specified';
+            })(),
+            gender: profile.gender || 'Not specified',
             activeTab: activeTab || 'copilot',
-            diagnoses: ['Type 2 Diabetes Mellitus', 'Essential Hypertension', 'Dyslipidemia'],
+            diagnoses: HealthStorageService.getDocuments().flatMap(d => d.diagnoses?.map(diag => diag.condition) || []),
             medications: medications.map(m => ({
               id: m.id,
               name: m.name,

@@ -168,7 +168,9 @@ export default function HomePage() {
         preferred_language: completedProfile.preferredLanguage,
         is_onboarded: true,
         updated_at: new Date().toISOString()
-      }).then();
+      }).then(({ error }) => {
+        if (error) console.warn('Supabase profile sync error:', error.message);
+      });
     }
 
     // Auto-navigate from hero to dashboard once onboarding is complete

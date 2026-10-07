@@ -82,7 +82,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
     setProcessingStage('Pre-processing image and enhancing contrast for clinical OCR...');
 
     try {
-      // 1. Client OCR
       let rawText = '';
       if (selectedFile) {
         setProcessingPercent(35);
@@ -93,7 +92,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
         });
       }
 
-      // 2. Upload file to Supabase Storage bucket
       setProcessingPercent(55);
       setProcessingStage('Uploading document securely to Supabase Storage...');
       let storageUrl = filePreview || '';
@@ -105,7 +103,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
         }
       }
 
-      // 3. Call Medical AI Engine
       setProcessingPercent(75);
       setProcessingStage('Analyzing clinical entities & extracting biomarkers...');
       
@@ -118,7 +115,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
       setProcessingPercent(95);
       setProcessingStage('Generating plain-language explanation and clinical triage review...');
 
-      // 4. Assemble document
       const newDoc: MedicalDocument = {
         id: `doc-${Date.now()}`,
         userId: userId || 'patient',
@@ -297,7 +293,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
         )}
       </div>
 
-      {/* 1-Click Instant Preloaded Samples for Judges */}
+      {/* Preloaded Clinical Reference Samples */}
       <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">

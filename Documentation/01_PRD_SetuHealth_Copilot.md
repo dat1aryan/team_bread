@@ -1,10 +1,10 @@
 # 01. Product Requirements Document (PRD)
-## Project Name: SetuHealth AI Copilot (सेतु हेल्थ)
+## Project Name: Setu AI Copilot (सेतु हेल्थ)
 **Tagline**: *Bridging Complex Medical Data to Actionable Human Health*  
 **Hackathon**: HacXLerate 2026 (byteXL & Altrix Labs)  
 **Round**: Round 1 — 24-Hour Campus Hackathon  
 **Problem Statement**: AI-Powered Personal Health Copilot  
-**Author / Team**: SetuHealth Innovation Team  
+**Author / Team**: Setu Innovation Team  
 **Date**: October 2026  
 
 ---
@@ -25,7 +25,7 @@ Modern healthcare is notoriously fragmented. When a patient experiences a medica
 ---
 
 ## 2. Product Vision & Value Proposition
-**SetuHealth Copilot** is an AI-powered personal health companion that ingests, digitizes, interprets, and unifies fragmented medical documents into an intuitive, interactive, patient-first health ecosystem.
+**Setu Copilot** is an AI-powered personal health companion that ingests, digitizes, interprets, and unifies fragmented medical documents into an intuitive, interactive, patient-first health ecosystem.
 
 ### Value Pillars:
 - **Zero-Friction Ingestion**: Ingest photos, scans, and PDFs of prescriptions, lab sheets, and discharge summaries via intelligent multi-modal OCR.
@@ -115,7 +115,7 @@ Modern healthcare is notoriously fragmented. When a patient experiences a medica
 
 ## 6. Success Metrics & Hackathon Evaluation Alignment
 
-| Evaluation Criterion | Hackathon Weight | How SetuHealth Excels |
+| Evaluation Criterion | Hackathon Weight | How Setu Excels |
 | :--- | :---: | :--- |
 | **AI Utilization** | **35%** | High-precision multi-entity OCR extraction (medications, doses, abnormal lab values, dates), medical entity classification, plain-language empathetic explanations, contextual abnormal value breakdowns. |
 | **Technical Architecture** | **25%** | Clean data pipeline, Supabase PostgreSQL with RLS, Supabase Storage, offline/mock fallback for 100% demo uptime, ABDM FHIR R4 schema compliance. |

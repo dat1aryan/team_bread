@@ -1,12 +1,12 @@
 # 04. UI/UX Design System & Style Guide
-## Project Name: SetuHealth AI Copilot (सेतु हेल्थ)
+## Project Name: Setu AI Copilot (सेतु हेल्थ)
 **Design Tokens, Typography, Color Palette, & Component Guidelines**  
 **Hackathon**: HacXLerate 2026 (byteXL & Altrix Labs)  
 
 ---
 
 ## 1. Design Philosophy: "Empathetic Clinical Modernism"
-Medical software is often drab, intimidating, or visually overwhelming with clinical clutter. **SetuHealth Copilot** redefines the personal health interface:
+Medical software is often drab, intimidating, or visually overwhelming with clinical clutter. **Setu Copilot** redefines the personal health interface:
 - **Calm, Reassuring Aesthetic**: Warm slate, clinical cyan/emerald greens, and clean white backgrounds reduce health-related anxiety.
 - **Instant Scannability**: Distinct visual hierarchy separates urgent clinical flags from routine informational updates.
 - **Glassmorphism & Depth**: Subtle backdrop-blur card containers with soft border highlights create an ultra-premium, modern feel.

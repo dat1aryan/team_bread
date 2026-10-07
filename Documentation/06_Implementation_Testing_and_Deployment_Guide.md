@@ -1,5 +1,5 @@
 # 06. Implementation, Testing & Deployment Guide
-## Project Name: SetuHealth AI Copilot (सेतु हेल्थ)
+## Project Name: Setu AI Copilot (सेतु हेल्थ)
 **Setup Instructions, Environment Variables, Vercel, Render & Supabase Deployment**  
 **Hackathon**: HacXLerate 2026 (byteXL & Altrix Labs)  
 
@@ -55,7 +55,7 @@ PORT=3000
 ```
 
 > **Note on Zero-Config Demo Mode**:  
-> If Supabase or Gemini keys are omitted, SetuHealth automatically engages its **Built-In Resilient Simulation & Local Persistence Engine**. Evaluators and judges can test all features (OCR scanning, multi-language translation, timeline charting, ABHA linking, FHIR exports) with zero configuration.
+> If Supabase or Gemini keys are omitted, Setu automatically engages its **Built-In Resilient Simulation & Local Persistence Engine**. Evaluators and judges can test all features (OCR scanning, multi-language translation, timeline charting, ABHA linking, FHIR exports) with zero configuration.
 
 ---
 
@@ -81,7 +81,7 @@ Vercel provides instant worldwide CDN delivery and serverless edge compute for N
 1. Push your repository to GitHub:
    ```bash
    git add .
-   git commit -m "feat: complete SetuHealth AI Copilot with documentation & deployment"
+   git commit -m "feat: complete Setu AI Copilot with documentation & deployment"
    git push origin main
    ```
 2. Open [vercel.com](https://vercel.com) and click **"Add New Project"**.

@@ -1,5 +1,5 @@
 # 05. Backend Schema & ABDM FHIR Data Models
-## Project Name: SetuHealth AI Copilot (सेतु हेल्थ)
+## Project Name: Setu AI Copilot (सेतु हेल्थ)
 **Supabase PostgreSQL Schema, RLS Security Policies, & HL7 FHIR R4 Mapping**  
 **Hackathon**: HacXLerate 2026 (byteXL & Altrix Labs)  
 
@@ -174,7 +174,7 @@ ON public.timeline_events FOR ALL USING (auth.uid() = user_id);
 
 ## 4. HL7 FHIR R4 & ABDM Data Model Alignment
 
-Under India's Ayushman Bharat Digital Mission (ABDM), health data is exchanged using standard HL7 FHIR R4 Bundles. SetuHealth automatically synthesizes compliant FHIR resources from parsed documents:
+Under India's Ayushman Bharat Digital Mission (ABDM), health data is exchanged using standard HL7 FHIR R4 Bundles. Setu automatically synthesizes compliant FHIR resources from parsed documents:
 
 ### 4.1 FHIR Bundle Structure
 ```json

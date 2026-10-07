@@ -1,5 +1,5 @@
 # 07. Architecture Diagrams & Hackathon Presentation Deck
-## Project Name: SetuHealth AI Copilot (सेतु हेल्थ)
+## Project Name: Setu AI Copilot (सेतु हेल्थ)
 **Hackathon Presentation Deck & Architectural Blueprint**  
 **Hackathon**: HacXLerate 2026 (byteXL & Altrix Labs)  
 
@@ -76,7 +76,7 @@ flowchart TB
 ## 2. 8-Slide Pitch Deck for Evaluators & Judges
 
 ### Slide 1: The Hook & Problem Statement
-- **Title**: *SetuHealth AI Copilot — Bridging Fragmented Medical Records to Actionable Health Intelligence*
+- **Title**: *Setu AI Copilot — Bridging Fragmented Medical Records to Actionable Health Intelligence*
 - **Problem**: 
   - Over 75% of Indian and global patients possess critical health records fragmented across crumpled paper prescriptions, multi-page lab slips, and discharge summaries.
   - Patients cannot understand lab jargon, leading to delayed interventions or unnecessary panic.

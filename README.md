@@ -29,7 +29,7 @@ Healthcare information is dangerously fragmented across handwritten doctor presc
                   ▼
       ┌─────────────────────────┐
       │   FRONTEND (Vercel)     │  ◄── Next.js 14 App Router
-      │   setu-health.vercel.app│      TypeScript + Tailwind CSS
+      │   team-bread.vercel.app│      TypeScript + Tailwind CSS
       └───────────┬─────────────┘
                   │  REST API Calls
                   ├───────────────────────────────┐
@@ -137,7 +137,7 @@ npm run dev
 
 ## 📚 Complete Project Documentation
 Comprehensive documentation matching the hackathon rulebook and standard engineering practices:
-- [01. Product Requirements Document (PRD)](file:///c:/Users/aryan/Downloads/Setu/Documentation/01_PRD_SetuHealth_Copilot.md)
+- [01. Product Requirements Document (PRD)](file:///c:/Users/aryan/Downloads/Setu/Documentation/01_PRD_Setu_Copilot.md)
 - [02. Technical Requirements Document (TRD)](file:///c:/Users/aryan/Downloads/Setu/Documentation/02_TRD_Technical_Architecture.md)
 - [03. App Flow & User Journey Map](file:///c:/Users/aryan/Downloads/Setu/Documentation/03_App_Flow_and_User_Journeys.md)
 - [04. UI/UX Design System Guide](file:///c:/Users/aryan/Downloads/Setu/Documentation/04_UI_UX_Design_System.md)

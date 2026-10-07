@@ -1,5 +1,5 @@
 # 03. App Flow & User Journey Map
-## Project Name: SetuHealth AI Copilot (सेतु हेल्थ)
+## Project Name: Setu AI Copilot (सेतु हेल्थ)
 **Navigation Pathways, State Machines, & User Flows**  
 **Hackathon**: HacXLerate 2026 (byteXL & Altrix Labs)  
 
@@ -125,7 +125,7 @@
 1. Dedicated top navigation button: **"Judges / Demo Presentation"**.
 2. Opens full-screen interactive slide presentation deck with 8 comprehensive slides:
    - Slide 1: Challenge & Executive Problem Statement.
-   - Slide 2: SetuHealth Innovation & Solution Architecture.
+   - Slide 2: Setu Innovation & Solution Architecture.
    - Slide 3: Multi-Modal OCR & Entity Intelligence Pipeline.
    - Slide 4: Plain-Language & Multilingual Translation Engine.
    - Slide 5: Longitudinal Timeline & Vital Trend Analytics.

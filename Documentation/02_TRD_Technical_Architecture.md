@@ -1,12 +1,12 @@
 # 02. Technical Requirements Document (TRD)
-## Project Name: SetuHealth AI Copilot (सेतु हेल्थ)
+## Project Name: Setu AI Copilot (सेतु हेल्थ)
 **System Architecture & Technical Specifications**  
 **Hackathon**: HacXLerate 2026 (byteXL & Altrix Labs)  
 
 ---
 
 ## 1. System Architecture Overview
-SetuHealth Copilot is architected as an AI-native, modular, full-stack digital health platform designed for high reliability, clinical safety, real-time response, and global health data interoperability (HL7 FHIR R4 & ABDM).
+Setu Copilot is architected as an AI-native, modular, full-stack digital health platform designed for high reliability, clinical safety, real-time response, and global health data interoperability (HL7 FHIR R4 & ABDM).
 
 ```
 +---------------------------------------------------------------------------------------+
@@ -108,7 +108,7 @@ The medical summarization engine uses a dual-layer architecture ensuring both **
 4. **Questions for Your Doctor**:
    - Automatically formulates 3 to 4 personalized questions the patient should bring to their next consultation.
 5. **Medical Guardrail Disclaimer**:
-   - Mandatory disclaimer banner on every generated summary: *"SetuHealth AI is an educational assistant and not a diagnostic medical device. Consult your licensed healthcare provider before altering any treatment."*
+   - Mandatory disclaimer banner on every generated summary: *"Setu AI is an educational assistant and not a diagnostic medical device. Consult your licensed healthcare provider before altering any treatment."*
 
 ---
 

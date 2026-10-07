@@ -13,7 +13,7 @@ This guide provides step-by-step instructions to deploy the entire **Setu AI Cop
                   ▼
       ┌─────────────────────────┐
       │   FRONTEND (Vercel)     │  ◄── Next.js 14 App Router
-      │   setu-health.vercel.app│      TypeScript + Tailwind CSS
+      │   team-bread.vercel.app│      TypeScript + Tailwind CSS
       └───────────┬─────────────┘
                   │  REST API Calls
                   ├───────────────────────────────┐
@@ -59,7 +59,7 @@ The backend is located in the `/backend` directory.
 1. Push your repository to GitHub:
    ```bash
    git add .
-   git commit -m "feat: complete SetuHealth AI Copilot"
+   git commit -m "feat: complete Setu AI Copilot"
    git push origin main
    ```
 2. Log in to [https://dashboard.render.com](https://dashboard.render.com).

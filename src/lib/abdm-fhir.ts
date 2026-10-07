@@ -2,11 +2,11 @@
 import { MedicalDocument, PatientProfile, ExtractedLabObservation, ExtractedMedication, AbhaProfileData } from '@/types';
 
 export const MOCK_ABHA_PROFILE: AbhaProfileData = {
-  abhaNumber: '91-2048-5892-1144',
-  abhaAddress: 'rajesh.kumar@abdm',
-  fullName: 'Rajesh Kumar',
+  abhaNumber: '91-8840-2041-9923',
+  abhaAddress: 'patient.health@abdm',
+  fullName: 'Verified Patient',
   gender: 'MALE',
-  dateOfBirth: '1974-05-14',
+  dateOfBirth: '1990-01-01',
   kycVerified: true,
   linkedFacilities: [
     {
@@ -316,8 +316,8 @@ export async function verifyAbhaOtp(abhaId: string, otp: string): Promise<{ succ
     message: 'ABHA ID verified successfully through ABDM National Health Gateway.',
     profile: {
       ...MOCK_ABHA_PROFILE,
-      abhaNumber: abhaId.includes('@') ? '91-2048-5892-1144' : abhaId,
-      abhaAddress: abhaId.includes('@') ? abhaId : 'rajesh.kumar@abdm'
+      abhaNumber: abhaId.includes('@') ? '91-8840-2041-9923' : abhaId,
+      abhaAddress: abhaId.includes('@') ? abhaId : 'patient.abha@abdm'
     }
   };
 }

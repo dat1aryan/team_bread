@@ -11,8 +11,8 @@ const STORAGE_KEYS = {
   CUSTOM_MEDS: 'setu_custom_medications',
 };
 
-// Ensure v3 clean initialization: No mock data pre-injected into profile, timeline, vitals, or meds
-if (typeof window !== 'undefined' && !localStorage.getItem('setu_v3_clean_init')) {
+// Ensure v4 clean initialization: Completely purge old mock patient profile and records
+if (typeof window !== 'undefined' && !localStorage.getItem('setu_v4_clean_no_mock')) {
   try {
     localStorage.removeItem(STORAGE_KEYS.DOCUMENTS);
     localStorage.removeItem(STORAGE_KEYS.TRENDS);
@@ -20,10 +20,11 @@ if (typeof window !== 'undefined' && !localStorage.getItem('setu_v3_clean_init')
     const storedP = localStorage.getItem(STORAGE_KEYS.PATIENT);
     if (storedP) {
       const parsed = JSON.parse(storedP);
-      parsed.isAbhaVerified = false;
-      localStorage.setItem(STORAGE_KEYS.PATIENT, JSON.stringify(parsed));
+      if (parsed.fullName === 'Rajesh Kumar' || parsed.id === 'pat-rajesh-001') {
+        localStorage.removeItem(STORAGE_KEYS.PATIENT);
+      }
     }
-    localStorage.setItem('setu_v3_clean_init', 'true');
+    localStorage.setItem('setu_v4_clean_no_mock', 'true');
   } catch (e) {}
 }
 
@@ -675,7 +676,6 @@ export class HealthStorageService {
     localStorage.removeItem(STORAGE_KEYS.DOCUMENTS);
     localStorage.removeItem(STORAGE_KEYS.TRENDS);
     localStorage.removeItem(STORAGE_KEYS.CUSTOM_MEDS);
-    const defaultPat = { ...DEFAULT_PATIENT, isAbhaVerified: false };
-    localStorage.setItem(STORAGE_KEYS.PATIENT, JSON.stringify(defaultPat));
+    localStorage.removeItem(STORAGE_KEYS.PATIENT);
   }
 }

@@ -18,16 +18,22 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  onSelectDemoUser?: () => void;
+  initialTab?: 'signin' | 'signup';
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
-  onSelectDemoUser
+  initialTab = 'signin'
 }) => {
-  const [tab, setTab] = useState<'signin' | 'signup'>('signin');
+  const [tab, setTab] = useState<'signin' | 'signup'>(initialTab);
+
+  React.useEffect(() => {
+    if (initialTab) {
+      setTab(initialTab);
+    }
+  }, [initialTab]);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -221,7 +227,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="e.g. Rajesh Kumar"
+                  placeholder="e.g. John Doe"
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 font-medium placeholder:text-slate-400"
                   required
                 />
@@ -269,20 +275,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </button>
         </form>
 
-        {/* Demo Patient Fast Access Option */}
-        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-          <span>Testing or judging?</span>
-          <button
-            type="button"
-            onClick={() => {
-              onSelectDemoUser?.();
-              onClose();
-            }}
-            className="text-teal-700 hover:text-teal-900 font-semibold inline-flex items-center gap-1 cursor-pointer"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-teal-600" />
-            <span>Continue as Demo Patient</span>
-          </button>
+        {/* Security & Privacy Footer */}
+        <div className="pt-2 border-t border-slate-100 flex items-center justify-center text-xs text-slate-500 gap-2">
+          <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <span className="text-[11px]">Protected by Supabase Row-Level Security & Encrypted Vault</span>
         </div>
 
       </div>

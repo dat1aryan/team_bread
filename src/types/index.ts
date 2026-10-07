@@ -36,6 +36,7 @@ export interface PatientProfile {
   abhaId?: string;
   abhaAddress?: string;
   isAbhaVerified: boolean;
+  isOnboarded?: boolean;
 }
 
 export interface ExtractedMedication {
@@ -161,7 +162,7 @@ export interface VitalTrendSeries {
 
 export interface AbhaProfileData {
   abhaNumber: string; // "91-2048-5892-1144"
-  abhaAddress: string; // "rajesh.kumar@abdm"
+  abhaAddress: string; // "user@abdm"
   fullName: string;
   gender: string;
   dateOfBirth: string;

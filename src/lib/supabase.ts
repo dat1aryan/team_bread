@@ -13,6 +13,15 @@ export const isSupabaseConfigured = Boolean(
   !supabaseAnonKey.includes('your-anon-key')
 );
 
+const clientOptions = {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce' as const,
+  },
+};
+
 let supabaseInstance: SupabaseClient | null = null;
 
 export function getSupabaseClient(): SupabaseClient | null {
@@ -21,12 +30,12 @@ export function getSupabaseClient(): SupabaseClient | null {
   }
   
   if (!supabaseInstance) {
-    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, clientOptions);
   }
   
   return supabaseInstance;
 }
 
 export const supabase = isSupabaseConfigured 
-  ? createClient(supabaseUrl, supabaseAnonKey) 
+  ? createClient(supabaseUrl, supabaseAnonKey, clientOptions) 
   : null;

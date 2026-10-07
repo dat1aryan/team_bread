@@ -2,24 +2,25 @@
 import { MedicalDocument, PatientProfile, VitalTrendSeries } from '@/types';
 
 export const DEFAULT_PATIENT: PatientProfile = {
-  id: 'pat-rajesh-001',
-  fullName: 'Rajesh Kumar',
-  email: 'rajesh.kumar@example.com',
-  dateOfBirth: '1974-05-14',
+  id: '',
+  fullName: '',
+  email: '',
+  dateOfBirth: '',
   gender: 'male',
-  bloodGroup: 'B+',
-  phone: '+91 98765 43210',
-  emergencyContact: '+91 98765 43211 (Sunita Kumar - Spouse)',
+  bloodGroup: '',
+  phone: '',
+  emergencyContact: '',
   preferredLanguage: 'en',
-  abhaId: '91-2048-5892-1144',
-  abhaAddress: 'rajesh.kumar@abdm',
+  abhaId: '',
+  abhaAddress: '',
   isAbhaVerified: false,
+  isOnboarded: false,
 };
 
 export const SAMPLE_DOCUMENTS: MedicalDocument[] = [
   {
     id: 'doc-lab-diabetic-01',
-    userId: 'pat-rajesh-001',
+    userId: 'user',
     title: 'Comprehensive Diabetic & Lipid Health Profile',
     fileName: 'diabetic_lipid_panel_oct2026.pdf',
     fileUrl: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800',
@@ -28,7 +29,7 @@ export const SAMPLE_DOCUMENTS: MedicalDocument[] = [
     doctorName: 'Dr. Sunita Rao, MD (Endocrinology)',
     facilityName: 'Dr. Lal PathLabs - Central Reference Lab',
     rawOcrText: `DR. LAL PATHLABS - PATIENT REPORT
-Patient: Rajesh Kumar | Age: 52 Y / Male | Ref by: Dr. Sunita Rao
+Patient: Patient Record | Age: 52 Y / Male | Ref by: Dr. Sunita Rao
 Date of Collection: 04-Oct-2026 | Report Status: Final
 -------------------------------------------------------------------
 TEST NAME                      RESULT   UNIT       REFERENCE INTERVAL
@@ -215,7 +216,7 @@ Dyslipidemia with elevated LDL and triglycerides noted. Kidney function preserve
   },
   {
     id: 'doc-rx-cardio-02',
-    userId: 'pat-rajesh-001',
+    userId: 'user',
     title: 'Cardiology & Diabetes Prescription',
     fileName: 'prescription_dr_mehra_oct2026.png',
     fileUrl: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=800',
@@ -225,7 +226,7 @@ Dyslipidemia with elevated LDL and triglycerides noted. Kidney function preserve
     facilityName: 'Apollo Heart Clinic OPD',
     rawOcrText: `APOLLO CLINIC - OPD PRESCRIPTION
 Dr. Arvind Mehra, MD, DM (Cardiology) | Reg No: MCI-44289
-Patient: Rajesh Kumar, 52/M | Date: 05/10/2026
+Patient: Patient Record, 52/M | Date: 05/10/2026
 Diagnosis: Essential Hypertension, Type 2 DM, Dyslipidemia
 BP: 142/88 mmHg | Pulse: 76 bpm
 
@@ -384,7 +385,7 @@ Advice:
   },
   {
     id: 'doc-discharge-03',
-    userId: 'pat-rajesh-001',
+    userId: 'user',
     title: 'Hospital Discharge Summary - Acute Gastroenteritis',
     fileName: 'discharge_summary_max_aug2026.pdf',
     fileUrl: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800',
@@ -394,7 +395,7 @@ Advice:
     facilityName: 'Max Super Speciality Hospital, Saket',
     rawOcrText: `MAX HEALTHCARE - DISCHARGE SUMMARY
 IPD No: MAX-26-88129 | UHID: 1049281
-Patient: Rajesh Kumar, 52/M | Ward: Deluxe 402
+Patient: Patient Record, 52/M | Ward: Deluxe 402
 Date of Admission: 15-Aug-2026 | Date of Discharge: 18-Aug-2026
 Primary Diagnosis: Acute Infective Gastroenteritis with Dehydration
 Secondary Diagnosis: Known Type 2 Diabetes, Hypertension
@@ -528,7 +529,7 @@ Discharge Medications:
   },
   {
     id: 'doc-cbc-04',
-    userId: 'pat-rajesh-001',
+    userId: 'user',
     title: 'Complete Blood Count (CBC) Hematology Profile',
     fileName: 'cbc_hematology_jun2026.pdf',
     fileUrl: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&q=80&w=800',
@@ -537,7 +538,7 @@ Discharge Medications:
     doctorName: 'Dr. Ramesh Chawla, Pathologist',
     facilityName: 'SRL Diagnostics Labs',
     rawOcrText: `SRL DIAGNOSTICS - HEMATOLOGY REPORT
-Patient: Rajesh Kumar | Age: 52 Y / Male | Date: 12-Jun-2026
+Patient: Patient Record | Age: 52 Y / Male | Date: 12-Jun-2026
 -------------------------------------------------------------------
 TEST NAME                   RESULT   UNIT       REFERENCE INTERVAL
 Hemoglobin (Hb)             12.8     g/dL       13.5 - 17.5 (Low)

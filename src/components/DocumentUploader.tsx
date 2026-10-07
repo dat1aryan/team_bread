@@ -25,11 +25,13 @@ import { WebcamScannerModal } from './WebcamScannerModal';
 interface DocumentUploaderProps {
   currentLanguage: LanguageCode;
   onAnalysisComplete: (document: MedicalDocument) => void;
+  userId?: string;
 }
 
 export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
   currentLanguage,
-  onAnalysisComplete
+  onAnalysisComplete,
+  userId
 }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -97,7 +99,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
       let storageUrl = filePreview || '';
       if (selectedFile) {
         try {
-          storageUrl = await HealthStorageService.uploadFileToStorage(selectedFile, 'pat-rajesh-001');
+          storageUrl = await HealthStorageService.uploadFileToStorage(selectedFile, userId || 'patient');
         } catch (e) {
           console.warn('Storage upload error, using preview URL', e);
         }
@@ -119,7 +121,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
       // 4. Assemble document
       const newDoc: MedicalDocument = {
         id: `doc-${Date.now()}`,
-        userId: 'pat-rajesh-001',
+        userId: userId || 'patient',
         title: analysis.title || selectedFile?.name?.replace(/\.[^/.]+$/, '') || 'Analyzed Medical Document',
         fileName: selectedFile?.name || 'medical_scan.jpg',
         fileUrl: storageUrl || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800',
@@ -144,7 +146,11 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
     } catch (err) {
       console.error('Error during OCR processing:', err);
       setIsProcessing(false);
-      onAnalysisComplete(SAMPLE_DOCUMENTS[0]);
+      onAnalysisComplete({
+        ...SAMPLE_DOCUMENTS[0],
+        id: `doc-${Date.now()}`,
+        userId: userId || 'user'
+      });
     }
   };
 
@@ -161,7 +167,11 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
       setTimeout(() => {
         setProcessingPercent(100);
         setIsProcessing(false);
-        onAnalysisComplete(sample);
+        onAnalysisComplete({
+          ...sample,
+          id: `doc-${Date.now()}`,
+          userId: userId || 'user'
+        });
       }, 400);
     }, 400);
   };

@@ -22,10 +22,10 @@ export async function POST(req: NextRequest) {
 
     const contextSummary = clinicalContext ? `
 PATIENT CLINICAL CONTEXT:
-- Name: ${clinicalContext.patientName || 'Rajesh Kumar'} (Age: ${clinicalContext.age || '52'}, Gender: ${clinicalContext.gender || 'Male'})
-- Diagnoses: ${clinicalContext.diagnoses?.join(', ') || 'Type 2 Diabetes Mellitus, Essential Hypertension'}
-- Active Medications: ${clinicalContext.medications?.map((m: any) => `${m.name} (${m.dosage}, ${m.frequency}, ${m.timing})`).join('; ') || 'Metformin 500mg, Telmisartan 40mg, Atorvastatin 10mg'}
-- Recent Lab Biomarkers: ${clinicalContext.labObservations?.map((o: any) => `${o.testName}: ${o.value} ${o.unit} (${o.status})`).join('; ') || 'HbA1c: 7.4% (HIGH), Fasting Glucose: 162 mg/dL (HIGH), LDL: 148 mg/dL (HIGH)'}
+- Name: ${clinicalContext.patientName || 'Patient'} (Age: ${clinicalContext.age || 'Not specified'}, Gender: ${clinicalContext.gender || 'Not specified'})
+- Active Medications: ${clinicalContext.activeMedications?.join('; ') || 'None recorded yet'}
+- Recent Lab Biomarkers: ${clinicalContext.recentVitals?.join('; ') || 'None recorded yet'}
+- Recent Timeline Events: ${clinicalContext.recentEvents?.join('; ') || 'No timeline records yet'}
 ` : '';
 
     const systemPrompt = `You are Setu AI Copilot (सेतु), an empathetic, expert clinical health assistant designed to help patients understand and manage their healthcare journey.

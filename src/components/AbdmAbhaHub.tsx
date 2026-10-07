@@ -173,17 +173,19 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
               <div>
                 <span className="text-[10px] text-slate-400 uppercase font-semibold">ABHA Number</span>
                 <div className="text-lg font-mono font-bold tracking-wider flex items-center justify-between text-white">
-                  <span>{patient.abhaId || '91-2048-5892-1144'}</span>
-                  <button onClick={handleCopyAbha} className="p-1 hover:bg-slate-800 rounded transition-colors" title="Copy ABHA">
-                    <Copy className="w-4 h-4 text-slate-400 hover:text-white" />
-                  </button>
+                  <span>{patient.abhaId || 'Not Linked Yet'}</span>
+                  {patient.abhaId && (
+                    <button onClick={handleCopyAbha} className="p-1 hover:bg-slate-800 rounded transition-colors" title="Copy ABHA">
+                      <Copy className="w-4 h-4 text-slate-400 hover:text-white" />
+                    </button>
+                  )}
                 </div>
               </div>
 
               <div>
                 <span className="text-[10px] text-slate-400 uppercase font-semibold">ABHA Address (PHR)</span>
                 <div className="text-xs font-mono font-semibold text-teal-300">
-                  {patient.abhaAddress || 'rajesh.kumar@abdm'}
+                  {patient.abhaAddress || 'Not Configured'}
                 </div>
               </div>
             </div>
@@ -191,11 +193,13 @@ export const AbdmAbhaHub: React.FC<AbdmAbhaHubProps> = ({
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div>
                 <span className="text-slate-400 text-[10px]">Name</span>
-                <p className="font-bold text-white">{patient.fullName}</p>
+                <p className="font-bold text-white">{patient.fullName || 'Registered Patient'}</p>
               </div>
               <div>
                 <span className="text-slate-400 text-[10px]">DOB / Gender</span>
-                <p className="font-bold text-white">{patient.dateOfBirth} / M</p>
+                <p className="font-bold text-white">
+                  {patient.dateOfBirth || 'Not Set'} / {patient.gender === 'female' ? 'Female' : patient.gender === 'male' ? 'Male' : 'Other'}
+                </p>
               </div>
             </div>
           </div>

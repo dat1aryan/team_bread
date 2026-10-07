@@ -460,10 +460,10 @@ function DashboardContent() {
         </section>
 
         {/* Workspace Tabs Navigation Bar */}
-        <nav className="flex items-center gap-2 p-1.5 bg-slate-200/70 rounded-2xl border border-slate-200 overflow-x-auto shadow-2xs">
+        <nav className="flex items-center gap-2 p-1.5 bg-slate-200/70 rounded-2xl border border-slate-200 overflow-x-auto shadow-2xs w-full">
           <button
             onClick={() => handleTabChange('upload')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+            className={`flex-1 min-w-[130px] sm:min-w-0 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'upload'
                 ? 'bg-white text-slate-900 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
@@ -475,7 +475,7 @@ function DashboardContent() {
 
           <button
             onClick={() => handleTabChange('timeline')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+            className={`flex-1 min-w-[120px] sm:min-w-0 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'timeline'
                 ? 'bg-white text-slate-900 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
@@ -492,7 +492,7 @@ function DashboardContent() {
 
           <button
             onClick={() => handleTabChange('trends')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+            className={`flex-1 min-w-[120px] sm:min-w-0 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'trends'
                 ? 'bg-white text-slate-900 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
@@ -504,7 +504,7 @@ function DashboardContent() {
 
           <button
             onClick={() => handleTabChange('meds')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+            className={`flex-1 min-w-[120px] sm:min-w-0 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'meds'
                 ? 'bg-white text-slate-900 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
@@ -521,7 +521,7 @@ function DashboardContent() {
 
           <button
             onClick={() => handleTabChange('copilot')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+            className={`flex-1 min-w-[120px] sm:min-w-0 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'copilot'
                 ? 'bg-white text-slate-900 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
@@ -533,7 +533,7 @@ function DashboardContent() {
 
           <button
             onClick={() => handleTabChange('abdm')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+            className={`flex-1 min-w-[120px] sm:min-w-0 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'abdm'
                 ? 'bg-white text-slate-900 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'

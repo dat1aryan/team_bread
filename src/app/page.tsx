@@ -27,6 +27,9 @@ import { MedicationTracker } from '@/components/MedicationTracker';
 import { AbdmAbhaHub } from '@/components/AbdmAbhaHub';
 import { AiHealthChatbot } from '@/components/AiHealthChatbot';
 import { AuthModal } from '@/components/AuthModal';
+import { OpeningSplash } from '@/components/OpeningSplash';
+import { HeroSection } from '@/components/HeroSection';
+import { ProfileModal } from '@/components/ProfileModal';
 
 import { MedicalDocument, PatientProfile, LanguageCode, TimelineEvent, VitalTrendSeries, ExtractedMedication, TestStatus } from '@/types';
 import { HealthStorageService } from '@/lib/storage';
@@ -48,8 +51,11 @@ export default function HomePage() {
   // Selected analyzed document (if viewing extraction view)
   const [activeDocument, setActiveDocument] = useState<MedicalDocument | null>(null);
 
-  // Modals
+  // Modals & Auth State
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const workspaceRef = React.useRef<HTMLDivElement>(null);
 
   // Synchronize state from storage
   const reloadData = () => {
@@ -69,6 +75,7 @@ export default function HomePage() {
     if (isSupabaseConfigured && client) {
       client.auth.getSession().then(({ data: { session } }) => {
         if (session?.user) {
+          setIsAuthenticated(true);
           client
             .from('profiles')
             .select('*')
@@ -89,8 +96,9 @@ export default function HomePage() {
         }
       });
 
-      const { data: { subscription } } = client.auth.onAuthStateChange((_event, session) => {
+      const { data: { subscription } } = client.auth.onAuthStateChange((event, session) => {
         if (session?.user) {
+          setIsAuthenticated(true);
           client
             .from('profiles')
             .select('*')
@@ -106,12 +114,33 @@ export default function HomePage() {
                 }));
               }
             });
+        } else if (event === 'SIGNED_OUT') {
+          setIsAuthenticated(false);
         }
       });
 
       return () => subscription.unsubscribe();
     }
   }, []);
+
+  const handleScrollToWorkspace = () => {
+    workspaceRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSaveProfile = (updated: PatientProfile) => {
+    HealthStorageService.savePatientProfile(updated);
+    setPatient(updated);
+    reloadData();
+  };
+
+  const handleSignOut = async () => {
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
+    setIsAuthenticated(false);
+    HealthStorageService.resetToDefault();
+    reloadData();
+  };
 
   const t = UI_TRANSLATIONS[currentLanguage] || UI_TRANSLATIONS.en;
 
@@ -199,17 +228,32 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       
-      {/* Top Global Navigation Bar */}
+      {/* 1-Second Opening Animation (Inspired by Alethea Medical) */}
+      <OpeningSplash />
+
+      {/* Top Global Navigation Bar with User Profile Dropdown */}
       <Navbar
         currentLanguage={currentLanguage}
         onLanguageChange={setCurrentLanguage}
+        onOpenProfile={() => setIsProfileOpen(true)}
+        onSignOut={handleSignOut}
         onOpenAuth={() => setIsAuthOpen(true)}
         isAbhaVerified={patient.isAbhaVerified}
         onResetDemo={handleResetDemo}
+        patientName={patient.fullName}
+        isAuthenticated={isAuthenticated}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      {/* Hero Section (Inspired by Alethea Medical) */}
+      <HeroSection 
+        onGetStarted={handleScrollToWorkspace}
+        onOpenAuth={() => setIsAuthOpen(true)}
+        isAuthenticated={isAuthenticated}
+        userName={patient.fullName}
+      />
+
+      {/* Main Content Area / Clinical Workspace */}
+      <main ref={workspaceRef} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         
         {/* Patient Status & High-Level Metric Tiles */}
         <section className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xs">
@@ -467,10 +511,21 @@ export default function HomePage() {
       </footer>
 
       {/* Modals */}
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        profile={patient}
+        onSaveProfile={handleSaveProfile}
+      />
+
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
-        onResetData={handleResetDemo}
+        onSuccess={() => {
+          setIsAuthenticated(true);
+          reloadData();
+        }}
+        onSelectDemoUser={handleResetDemo}
       />
 
     </div>

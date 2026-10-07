@@ -15,7 +15,8 @@ import {
   Bot,
   Lock,
   ArrowRight,
-  Home
+  Home,
+  Trash2
 } from 'lucide-react';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
@@ -62,6 +63,8 @@ function DashboardContent() {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   // Synchronize state from storage
   const reloadData = () => {
@@ -214,7 +217,31 @@ function DashboardContent() {
     setIsOnboardingOpen(false);
     HealthStorageService.resetToDefault();
     reloadData();
-    router.push('/');
+    router.replace('/');
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    try {
+      if (supabase && patient?.id) {
+        await supabase.from('documents').delete().eq('user_id', patient.id);
+        await supabase.from('profiles').delete().eq('id', patient.id);
+        await supabase.auth.signOut();
+      }
+    } catch (err) {
+      console.error('Error during account deletion:', err);
+    } finally {
+      setIsAuthenticated(false);
+      setIsOnboardingOpen(false);
+      HealthStorageService.resetToDefault();
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+      }
+      reloadData();
+      setIsDeleteModalOpen(false);
+      setIsDeletingAccount(false);
+      router.replace('/');
+    }
   };
 
   const t = UI_TRANSLATIONS[currentLanguage] || UI_TRANSLATIONS.en;
@@ -302,6 +329,7 @@ function DashboardContent() {
         onLanguageChange={setCurrentLanguage}
         onOpenProfile={() => setIsProfileOpen(true)}
         onSignOut={handleSignOut}
+        onDeleteAccount={() => setIsDeleteModalOpen(true)}
         onOpenAuth={handleOpenAuth}
         isAbhaVerified={patient.isAbhaVerified}
         patientName={patient.fullName}
@@ -634,6 +662,52 @@ function DashboardContent() {
         initialProfile={patient}
         onComplete={handleCompleteOnboarding}
       />
+
+      {/* Delete Account Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-rose-100 space-y-5">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+
+            <div className="text-center space-y-1.5">
+              <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+                Delete Setu Account?
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                This action is permanent and cannot be undone. All your uploaded medical prescriptions, diagnostic lab reports, clinical summaries, and profile records will be permanently erased.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                disabled={isDeletingAccount}
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="flex-1 py-2.5 px-4 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isDeletingAccount}
+                onClick={handleDeleteAccount}
+                className="flex-1 py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-2"
+              >
+                {isDeletingAccount ? (
+                  <span>Deleting...</span>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Delete Account</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

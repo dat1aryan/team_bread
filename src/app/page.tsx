@@ -51,6 +51,13 @@ export default function HomePage() {
   useEffect(() => {
     reloadData();
 
+    // Prevent signed-in users from staying in hero - redirect immediately to dashboard
+    const stored = HealthStorageService.getPatientProfile();
+    if (stored.isOnboarded && stored.id) {
+      router.replace('/dashboard');
+      return;
+    }
+
     // Listen for live Supabase Auth sessions
     const client = supabase;
     if (isSupabaseConfigured && client) {
@@ -93,6 +100,8 @@ export default function HomePage() {
                 return updated;
               });
               setIsOnboardingOpen(false);
+              // Always redirect authenticated users to dashboard
+              router.replace('/dashboard');
             } else {
               setPatient(prev => ({
                 ...prev,
@@ -162,8 +171,8 @@ export default function HomePage() {
       }).then();
     }
 
-    // Auto-navigate to dashboard once onboarding is complete
-    router.push('/dashboard');
+    // Auto-navigate from hero to dashboard once onboarding is complete
+    router.replace('/dashboard');
   };
 
   const handleSaveProfile = (updated: PatientProfile) => {
@@ -284,7 +293,7 @@ export default function HomePage() {
         onSuccess={() => {
           setIsAuthenticated(true);
           reloadData();
-          router.push('/dashboard');
+          router.replace('/dashboard');
         }}
       />
 

@@ -11,7 +11,8 @@ import {
   Sparkles, 
   ExternalLink,
   LayoutDashboard,
-  ArrowRight
+  ArrowRight,
+  Trash2
 } from 'lucide-react';
 import { LanguageCode } from '@/types';
 import { SUPPORTED_LANGUAGES, UI_TRANSLATIONS } from '@/lib/multilingual';
@@ -22,6 +23,7 @@ interface NavbarProps {
   onLanguageChange: (lang: LanguageCode) => void;
   onOpenProfile: () => void;
   onSignOut: () => void;
+  onDeleteAccount?: () => void;
   onOpenAuth: (mode?: 'signin' | 'signup') => void;
   isAbhaVerified: boolean;
   patientName?: string;
@@ -35,6 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLanguageChange,
   onOpenProfile,
   onSignOut,
+  onDeleteAccount,
   onOpenAuth,
   isAbhaVerified,
   patientName = 'Patient',
@@ -50,9 +53,9 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-200 shadow-xs transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
-        {/* Brand Logo & Title with Route to Home */}
+        {/* Brand Logo & Title: stays on dashboard when authenticated */}
         <Link 
-          href="/"
+          href={isAuthenticated ? "/dashboard" : "/"}
           className="flex items-center gap-3 cursor-pointer group text-inherit no-underline"
           title="Setu | AI-Powered Personal Health Copilot"
         >
@@ -210,11 +213,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setProfileMenuOpen(false);
                       onSignOut();
                     }}
-                    className="w-full text-left px-4 py-2 text-xs sm:text-sm font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+                    className="w-full text-left px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center gap-2.5 transition-colors cursor-pointer"
                   >
-                    <RotateCcw className="w-4 h-4 text-rose-500" />
+                    <RotateCcw className="w-4 h-4 text-slate-500" />
                     <span>Sign Out</span>
                   </button>
+
+                  {/* Option: Delete Account */}
+                  {onDeleteAccount && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileMenuOpen(false);
+                        onDeleteAccount();
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs sm:text-sm font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4 text-rose-500" />
+                      <span>Delete Account</span>
+                    </button>
+                  )}
                 </div>
               )}
             </div>
